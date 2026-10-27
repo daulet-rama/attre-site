@@ -1,0 +1,434 @@
+"""Сборка статического прототипа attré: data/*.json + src/ → site/.
+
+Только стандартная библиотека Python. Запуск:
+    python build.py                                   # для GitHub Pages (адрес по умолчанию)
+    ATTRE_BASE=/ ATTRE_ORIGIN=http://localhost:8000 python build.py   # локальный просмотр
+"""
+import hashlib
+import html
+import json
+import os
+import shutil
+from pathlib import Path
+from urllib.parse import quote
+
+ROOT = Path(__file__).resolve().parent
+OUT = ROOT / 'site'
+ORIGIN = os.environ.get('ATTRE_ORIGIN', 'https://daulet-rama.github.io').rstrip('/')
+BASE = os.environ.get('ATTRE_BASE', '/attre-site/')
+PROTOTYPE = True  # noindex + пометка в подвале; снять перед боевым запуском
+
+I18N = json.loads((ROOT / 'data' / 'i18n.json').read_text('utf-8'))
+DATA = json.loads((ROOT / 'data' / 'products.json').read_text('utf-8'))
+for _p in DATA['products']:
+    # Кадры готовит tools/prepare_images.py: основной и крупный план фактуры.
+    _p.setdefault('images', [f"{_p['slug']}-1", f"{_p['slug']}-2"])
+LANGS = I18N['langs']
+T = I18N['t']
+CATS = I18N['categories']
+MATS = I18N['materials']
+NBSP = ' '
+
+
+def e(s):
+    return html.escape(str(s), quote=True)
+
+
+def t(key, lang, **kw):
+    s = T[key][lang]
+    for k, v in kw.items():
+        s = s.replace('{' + k + '}', str(v))
+    return s
+
+
+def url(path=''):
+    return BASE + path
+
+
+def abs_url(path=''):
+    return ORIGIN + BASE + path
+
+
+def price(n):
+    return f'{n:,}'.replace(',', NBSP) + NBSP + '₸'
+
+
+def wa_link(text):
+    return f"https://wa.me/{DATA['whatsapp']}?text={quote(text)}"
+
+
+def asset_version(*paths):
+    h = hashlib.sha1()
+    for p in paths:
+        h.update((ROOT / p).read_bytes())
+    return h.hexdigest()[:8]
+
+
+VER = asset_version('src/css/site.css', 'src/js/site.js')
+
+WA_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" '
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+           '<path d="M3.6 20.4l1.3-4A8.4 8.4 0 1 1 8 19.3z"/>'
+           '<path d="M9.3 8.7c.2-.5.6-.6.9-.6h.4c.2 0 .4.1.5.4l.7 1.6c.1.2 0 .5-.1.7l-.5.6c-.1.2-.1.4 0 .6.6 1.1 1.5 2 2.6 2.6.2.1.4.1.6 0l.6-.5c.2-.2.5-.2.7-.1l1.6.7c.3.1.4.3.4.5v.4c0 .3-.1.7-.6.9-.6.3-1.5.5-2.6.1-1.9-.7-3.5-2.3-4.3-4.2-.4-1.1-.3-2 .1-2.6z"/>'
+           '</svg>')
+ARROW_LEFT = ('<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" '
+              'stroke-width="1.5" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>')
+
+
+def item_name(p, lang):
+    return p['name'][lang]
+
+
+def item_url(p, lang):
+    return url(f"{lang}/p/{p['slug']}/")
+
+
+def img_srcset(name):
+    return (f"{url('assets/img/p/' + name + '-450.webp')} 450w, "
+            f"{url('assets/img/p/' + name + '-900.webp')} 900w")
+
+
+def sold(p):
+    return p['stock'] <= 0
+
+
+# ——— Общий каркас страницы ———
+
+def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', body_class='', extra_head=''):
+    lang_cfg = next(l for l in LANGS if l['code'] == lang)
+    alternates = ''.join(
+        f'<link rel="alternate" hreflang="{l["html"]}" href="{e(abs_url(l["code"] + "/" + suffix))}">'
+        for l in LANGS)
+    alternates += f'<link rel="alternate" hreflang="x-default" href="{e(abs_url(I18N["default"] + "/" + suffix))}">'
+    robots = '<meta name="robots" content="noindex, nofollow">' if PROTOTYPE else ''
+    lang_links = ''.join(
+        f'<a href="{e(url(l["code"] + "/" + suffix))}" hreflang="{l["html"]}" lang="{l["html"]}"'
+        f'{" aria-current=\"true\"" if l["code"] == lang else ""}>'
+        f'<span aria-hidden="true">{e(l["label"])}</span><span class="sr-only">{e(l["name"])}</span></a>'
+        for l in LANGS)
+    return f'''<!doctype html>
+<html lang="{lang_cfg['html']}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ffffff">
+{robots}
+<title>{e(title)}</title>
+<meta name="description" content="{e(desc)}">
+<link rel="canonical" href="{e(abs_url(lang + '/' + suffix))}">
+{alternates}
+<meta property="og:site_name" content="attré">
+<meta property="og:type" content="{og_type}">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:url" content="{e(abs_url(lang + '/' + suffix))}">
+<meta property="og:image" content="{e(og_image)}">
+<meta property="og:locale" content="{lang_cfg['og']}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="{url('assets/img/brand/favicon.png')}" type="image/png">
+<link rel="apple-touch-icon" href="{url('assets/img/brand/apple-touch-icon.png')}">
+<link rel="preload" href="{url('assets/fonts/onest-var.woff2')}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{url('assets/css/site.css')}?v={VER}">
+{extra_head}
+</head>
+<body class="{body_class}">
+<div class="wrap">
+<header class="hdr">
+<a class="hdr__logo" href="{url(lang + '/')}" aria-label="{e(t('home', lang))}"><img src="{url('assets/img/brand/logo-black.png')}" alt="attré" width="52" height="20"></a>
+<nav class="lang" aria-label="{e(t('nav_lang', lang))}">{lang_links}</nav>
+<a class="icon-btn" href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a>
+</header>
+{body}
+{footer(lang)}
+</div>
+<script src="{url('assets/js/site.js')}?v={VER}" defer></script>
+</body>
+</html>
+'''
+
+
+def footer(lang):
+    info = url(f'{lang}/info/')
+    return f'''<footer class="ftr">
+<div class="ftr__brand">
+<a class="ftr__logo" href="{url(lang + '/')}" aria-label="{e(t('home', lang))}"><img src="{url('assets/img/brand/logo-red.png')}" alt="attré" width="93" height="36" loading="lazy"></a>
+<p class="ftr__slogan" lang="en">not mass. <span>not repeated.</span></p>
+</div>
+<div>
+<h2>{e(t('f_contacts', lang))}</h2>
+<ul>
+<li><a href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener">WhatsApp <span class="num">+7{NBSP}706{NBSP}723{NBSP}23{NBSP}49</span></a></li>
+<li><a href="https://www.instagram.com/{DATA['instagram']}/" target="_blank" rel="noopener">Instagram @{e(DATA['instagram'])}</a></li>
+<li><a href="mailto:{e(DATA['email'])}">{e(DATA['email'])}</a></li>
+<li><a href="{e(DATA['map_url'])}" target="_blank" rel="noopener">{e(t('address', lang))}</a></li>
+</ul>
+</div>
+<div>
+<h2>{e(t('f_buyers', lang))}</h2>
+<ul>
+<li><a href="{info}#delivery">{e(t('f_delivery', lang))}</a></li>
+<li><a href="{info}#returns">{e(t('f_returns', lang))}</a></li>
+<li><a href="{info}#about">{e(t('f_about', lang))}</a></li>
+<li><a href="{info}#credits">{e(t('f_credits', lang))}</a></li>
+</ul>
+</div>
+<div class="ftr__legal">
+<p>{e(t('f_seller', lang))}</p>
+<p>{e(t('f_prices', lang))}</p>
+<p>{e(t('f_consumer', lang))}</p>
+</div>
+{f'<p class="ftr__proto">{e(t("f_proto", lang))}</p>' if PROTOTYPE else ''}
+</footer>'''
+
+
+# ——— Каталог ———
+
+def card(p, lang, eager=False):
+    name = item_name(p, lang)
+    img = p['images'][0]
+    loading = 'eager" fetchpriority="high' if eager else 'lazy'
+    badge = f'<span class="badge">{e(t("sold", lang))}</span>' if sold(p) else ''
+    last = f'<span class="last">{e(t("last", lang))}</span>' if p['stock'] == 1 else ''
+    return f'''<li class="card" data-card{' data-sold' if sold(p) else ''}>
+<a class="card__link" href="{item_url(p, lang)}">
+<div class="card__media"><img src="{url('assets/img/p/' + img + '-450.webp')}" srcset="{img_srcset(img)}" sizes="(min-width: 960px) 25vw, (min-width: 600px) 33vw, 50vw" width="450" height="563" alt="{e(name)}" loading="{loading}" decoding="async">{badge}</div>
+<div class="card__body">
+<h3 class="card__name">{e(name)}</h3>
+<p class="card__mat">{e(MATS[p['material']][lang])} · {e(p['color'][lang])}</p>
+<p class="card__price"><span class="num">{price(p['price'])}</span>{last}</p>
+</div>
+</a>
+</li>'''
+
+
+def ordered(items):
+    # В наличии сначала, проданные в конце — проданные не удаляем, чтобы старые ссылки жили.
+    return sorted(items, key=lambda p: sold(p))
+
+
+def catalog_page(lang, cat=None):
+    present = [c for c in CATS if any(p['cat'] == c for p in DATA['products'])]
+    items = ordered([p for p in DATA['products'] if cat is None or p['cat'] == cat])
+    tabs = [(None, t('all', lang), url(lang + '/'))] + [
+        (c, CATS[c][lang], url(f'{lang}/c/{c}/')) for c in present]
+    tabs_html = ''.join(
+        f'<a class="tab" href="{href}" data-keep-instock{" aria-current=\"page\"" if c == cat else ""}>{e(label)}</a>'
+        for c, label, href in tabs)
+    cards = '\n'.join(card(p, lang, eager=i < 4) for i, p in enumerate(items))
+    heading = CATS[cat][lang] if cat else t('site_title', lang)
+    suffix = f'c/{cat}/' if cat else ''
+    body = f'''<main id="main">
+<h1 class="sr-only">{e(heading)}</h1>
+<section class="intro">
+<p class="intro__slogan" lang="en">not mass. <span>not repeated.</span></p>
+<p class="intro__sub">{e(t('intro_sub', lang))}</p>
+</section>
+<div class="tabs">
+<nav class="tabs__scroll" aria-label="{e(t('nav_cats', lang))}">{tabs_html}</nav>
+<button class="stock-toggle" type="button" aria-pressed="false" data-stock-toggle><span class="stock-toggle__box" aria-hidden="true"></span>{e(t('in_stock', lang))}</button>
+</div>
+<ul class="grid grid--catalog">
+{cards}
+</ul>
+{'' if items else f'<p class="empty">{e(t("empty", lang))}</p>'}
+<section class="store">
+<h2>{e(t('store_title', lang))}</h2>
+<p>{e(t('address', lang))}</p>
+<p>{e(t('hours', lang))}</p>
+<a class="link" href="{e(DATA['map_url'])}" target="_blank" rel="noopener">{e(t('map', lang))}</a>
+</section>
+</main>'''
+    title = f"{CATS[cat][lang]} — attré" if cat else t('site_title', lang)
+    return layout(lang, title=title, desc=t('site_desc', lang), body=body, suffix=suffix,
+                  og_image=abs_url('assets/img/brand/og.jpg'))
+
+
+# ——— Товар ———
+
+def similar(p):
+    others = [q for q in DATA['products'] if q['slug'] != p['slug']]
+    others.sort(key=lambda q: (q['cat'] != p['cat'], sold(q), q['material'] != p['material']))
+    return others[:4]
+
+
+def product_page(p, lang):
+    name = item_name(p, lang)
+    page_url = abs_url(f"{lang}/p/{p['slug']}/")
+    n = len(p['images'])
+    slides = ''.join(
+        f'<div class="gallery__slide"><img src="{url("assets/img/p/" + im + "-900.webp")}" srcset="{img_srcset(im)}" '
+        f'sizes="(min-width: 960px) 30vw, 100vw" width="900" height="1125" '
+        f'alt="{e(name)}{" — " + e(t("detail", lang)) if i else ""}" '
+        f'loading="{"eager" if i == 0 else "lazy"}"{" fetchpriority=\"high\"" if i == 0 else ""} decoding="async"></div>'
+        for i, im in enumerate(p['images']))
+    if sold(p):
+        status = f'<span class="dot dot--off" aria-hidden="true"></span><span>{e(t("sold", lang))}</span>'
+    elif p['stock'] == 1:
+        status = f'<span class="dot dot--red" aria-hidden="true"></span><span>{e(t("status_last", lang))}</span>'
+    else:
+        status = f'<span class="dot" aria-hidden="true"></span><span>{e(t("status_stock", lang))}</span>'
+    todo = f'<em class="todo">{e(t("todo", lang))}</em>'
+    size = (f'<span class="num">{e(t("p_size_fmt", lang, w=p["size"][0], h=p["size"][1], d=p["size"][2]))}</span>'
+            if p.get('size') else todo)
+    strap = e(p['strap'][lang]) if p.get('strap') else todo
+    rows = [
+        (t('p_material', lang), e(MATS[p['material']][lang])),
+        (t('p_color', lang), e(p['color'][lang])),
+        (t('p_size', lang), size),
+        (t('p_strap', lang), strap),
+        (t('p_maker', lang), todo),
+        (t('p_origin', lang), todo),
+    ]
+    passport = ''.join(f'<div><dt>{e(k)}</dt><dd>{v}</dd></div>' for k, v in rows)
+    if sold(p):
+        msg = t('wa_sold', lang, name=name, id=p['id'], url=page_url)
+        bar = (f'<div class="buybar__info"><p class="buybar__sold">{e(t("sold_word", lang))} <span lang="en">not repeated.</span></p></div>'
+               f'<a class="btn btn--ghost" href="{e(wa_link(msg))}" target="_blank" rel="noopener">{WA_ICON}{e(t("wa_btn_sold", lang))}</a>')
+    else:
+        msg = t('wa_product', lang, name=name, id=p['id'], price=price(p['price']), url=page_url)
+        bar = (f'<div class="buybar__info"><p class="buybar__name">{e(name)}</p><p class="buybar__price num">{price(p["price"])}</p></div>'
+               f'<a class="btn" href="{e(wa_link(msg))}" target="_blank" rel="noopener">{WA_ICON}{e(t("wa_btn", lang))}</a>')
+    sold_line = (f'<p class="pdp__status pdp__sold">{e(t("sold_word", lang))} <span lang="en">not repeated.</span></p>'
+                 if sold(p) else '')
+    cat_name = CATS[p['cat']][lang]
+    sim = '\n'.join(card(q, lang) for q in similar(p))
+    body = f'''<main id="main">
+<nav class="crumb"><a href="{url(f"{lang}/c/{p['cat']}/")}">{ARROW_LEFT}{e(t('back', lang, cat=cat_name))}</a></nav>
+<div class="pdp-wrap">
+<div class="gallery" data-gallery>
+<div class="gallery__track">{slides}</div>
+<span class="gallery__count" aria-hidden="true">1 / {n}</span>
+</div>
+<div class="pdp">
+<h1 class="pdp__name">{e(name)}</h1>
+<p class="pdp__price num">{price(p['price'])}</p>
+{sold_line or f'<p class="pdp__status">{status}</p>'}
+<p class="pdp__desc">{e(p['desc'][lang])}</p>
+<dl class="passport">{passport}</dl>
+<details class="acc"><summary>{e(t('acc_delivery', lang))}</summary><div class="acc__body"><p>{e(t('delivery_body', lang))}</p></div></details>
+<details class="acc"><summary>{e(t('acc_returns', lang))}</summary><div class="acc__body"><p>{e(t('returns_body', lang))}</p></div></details>
+<details class="acc"><summary>{e(t('acc_store', lang))}</summary><div class="acc__body"><p>{e(t('store_body', lang))}</p><p>{e(t('hours', lang))}</p></div></details>
+<div class="buybar">{bar}</div>
+</div>
+</div>
+<section class="similar">
+<h2 class="section-title">{e(t('similar', lang))}</h2>
+<ul class="grid">
+{sim}
+</ul>
+</section>
+</main>'''
+    desc = f"{MATS[p['material']][lang]} · {p['color'][lang]} · {price(p['price'])}"
+    return layout(lang, title=f'{name} — attré', desc=desc, body=body, suffix=f"p/{p['slug']}/",
+                  og_image=abs_url(f"assets/img/p/{p['slug']}-og.jpg"), og_type='product', body_class='has-buybar')
+
+
+# ——— Покупателям ———
+
+def info_page(lang):
+    credits = ''.join(
+        f'<li><a href="{e(p["photo"]["url"])}" target="_blank" rel="noopener">{e(p["photo"]["author"])}</a> — {e(item_name(p, lang))}</li>'
+        for p in DATA['products'] if p.get('photo'))
+    body = f'''<main id="main" class="page">
+<h1>{e(t('info_title', lang))}</h1>
+<h2 id="about">{e(t('about_title', lang))}</h2>
+<p>{e(t('about_body', lang))}</p>
+<h2 id="delivery">{e(t('delivery_title', lang))}</h2>
+<p>{e(t('delivery_body', lang))}</p>
+<p>{e(t('payment_body', lang))}</p>
+<h2 id="returns">{e(t('returns_title', lang))}</h2>
+<p>{e(t('returns_body', lang))}</p>
+<h2 id="contacts">{e(t('contacts_title', lang))}</h2>
+<p>{e(t('address', lang))}<br>{e(t('hours', lang))}</p>
+<p><a class="link" href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener">{e(t('wa_label', lang))}</a></p>
+<h2 id="seller">{e(t('seller_title', lang))}</h2>
+<p>{e(t('f_seller', lang))}</p>
+<p>{e(t('f_consumer', lang))}</p>
+<h2 id="credits">{e(t('credits_title', lang))}</h2>
+<p>{e(t('credits_body', lang))}</p>
+<ul>{credits}</ul>
+</main>'''
+    return layout(lang, title=f"{t('info_title', lang)} — attré", desc=t('site_desc', lang), body=body,
+                  suffix='info/', og_image=abs_url('assets/img/brand/og.jpg'))
+
+
+def root_redirect():
+    target = url(I18N['default'] + '/')
+    return f'''<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>attré</title>
+<script>
+(function () {{
+  var l = (navigator.languages || [navigator.language || '']).join(',').toLowerCase();
+  var t = 'ru';
+  if (/(^|,)kk/.test(l)) t = 'kz';
+  else if (!/(^|,)ru/.test(l) && /(^|,)en/.test(l)) t = 'en';
+  location.replace('{BASE}' + t + '/' + location.search);
+}})();
+</script>
+<noscript><meta http-equiv="refresh" content="0; url={target}"></noscript>
+</head>
+<body><p><a href="{BASE}ru/">Русский</a> · <a href="{BASE}kz/">Қазақша</a> · <a href="{BASE}en/">English</a></p></body>
+</html>
+'''
+
+
+def not_found():
+    rows = ''.join(
+        f'<p lang="{l["html"]}"><a class="link" href="{BASE}{l["code"]}/">{e(t("nf_title", l["code"]))} {e(t("nf_link", l["code"]))}</a></p>'
+        for l in LANGS)
+    return f'''<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>404 — attré</title>
+<link rel="stylesheet" href="{BASE}assets/css/site.css?v={VER}">
+</head>
+<body>
+<main class="nf">
+<img src="{BASE}assets/img/brand/logo-black.png" alt="attré" width="62" height="24">
+<h1 style="margin-top:32px">404. <span lang="en">not repeated.</span></h1>
+{rows}
+</main>
+</body>
+</html>
+'''
+
+
+def write(path, text):
+    f = OUT / path
+    f.parent.mkdir(parents=True, exist_ok=True)
+    f.write_text(text, 'utf-8')
+
+
+def main():
+    if OUT.exists():
+        shutil.rmtree(OUT)
+    shutil.copytree(ROOT / 'src', OUT / 'assets')
+    write('index.html', root_redirect())
+    write('404.html', not_found())
+    write('robots.txt', 'User-agent: *\nDisallow: /\n' if PROTOTYPE else 'User-agent: *\nAllow: /\n')
+    write('.nojekyll', '')
+    pages = 3
+    for l in LANGS:
+        lang = l['code']
+        write(f'{lang}/index.html', catalog_page(lang))
+        for c in CATS:
+            if any(p['cat'] == c for p in DATA['products']):
+                write(f'{lang}/c/{c}/index.html', catalog_page(lang, c)); pages += 1
+        for p in DATA['products']:
+            write(f'{lang}/p/{p["slug"]}/index.html', product_page(p, lang)); pages += 1
+        write(f'{lang}/info/index.html', info_page(lang))
+        pages += 2
+    print(f'site/: {pages} страниц, база {BASE}, адрес {ORIGIN}')
+
+
+if __name__ == '__main__':
+    main()
