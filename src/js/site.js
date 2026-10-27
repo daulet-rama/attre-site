@@ -33,6 +33,13 @@
     });
   }
 
+  // Строка категорий прокручивается: активная вкладка должна быть на виду.
+  var cur = document.querySelector('.tabs__scroll [aria-current="page"]');
+  if (cur) {
+    var sc = cur.parentNode;
+    sc.scrollLeft += cur.getBoundingClientRect().left - sc.getBoundingClientRect().left - (sc.clientWidth - cur.offsetWidth) / 2;
+  }
+
   // Галерея: «2 / 3» при пролистывании.
   document.querySelectorAll('[data-gallery]').forEach(function (g) {
     var track = g.querySelector('.gallery__track');

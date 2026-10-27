@@ -1,123 +1,427 @@
 {
   "langs": [
-    {"code": "ru", "html": "ru", "label": "рус", "name": "Русский", "og": "ru_RU"},
-    {"code": "kz", "html": "kk", "label": "қаз", "name": "Қазақша", "og": "kk_KZ"},
-    {"code": "en", "html": "en", "label": "eng", "name": "English", "og": "en_US"}
+    {
+      "code": "ru",
+      "html": "ru",
+      "label": "рус",
+      "name": "Русский",
+      "og": "ru_RU"
+    },
+    {
+      "code": "kz",
+      "html": "kk",
+      "label": "қаз",
+      "name": "Қазақша",
+      "og": "kk_KZ"
+    },
+    {
+      "code": "en",
+      "html": "en",
+      "label": "eng",
+      "name": "English",
+      "og": "en_US"
+    }
   ],
   "default": "ru",
   "categories": {
-    "bags":    {"ru": "сумки",    "kz": "сөмкелер",        "en": "bags"},
-    "clutch":  {"ru": "клатчи",   "kz": "клатчтар",        "en": "clutches"},
-    "belt":    {"ru": "поясные",  "kz": "белдік сөмкелер", "en": "belt bags"},
-    "shopper": {"ru": "шоперы",   "kz": "шоперлер",        "en": "shoppers"},
-    "acc":     {"ru": "аксессуары", "kz": "аксессуарлар",  "en": "accessories"}
+    "bags": {
+      "ru": "сумки",
+      "kz": "сөмкелер",
+      "en": "bags"
+    },
+    "clutch": {
+      "ru": "клатчи",
+      "kz": "клатчтар",
+      "en": "clutches"
+    },
+    "belt": {
+      "ru": "поясные",
+      "kz": "белдік сөмкелер",
+      "en": "belt bags"
+    },
+    "shopper": {
+      "ru": "шоперы",
+      "kz": "шоперлер",
+      "en": "shoppers"
+    },
+    "acc": {
+      "ru": "аксессуары",
+      "kz": "аксессуарлар",
+      "en": "accessories"
+    }
   },
   "materials": {
-    "leather": {"ru": "кожа",   "kz": "былғары",    "en": "leather"},
-    "suede":   {"ru": "замша",  "kz": "замша",      "en": "suede"},
-    "nubuck":  {"ru": "нубук",  "kz": "нубук",      "en": "nubuck"},
-    "canvas":  {"ru": "канвас", "kz": "канвас",     "en": "canvas"},
-    "cotton":  {"ru": "хлопок", "kz": "мақта мата", "en": "cotton"},
-    "textile": {"ru": "текстиль", "kz": "тоқыма",   "en": "textile"},
-    "beads":   {"ru": "бисер",  "kz": "моншақ",     "en": "beads"},
-    "metal":   {"ru": "металл", "kz": "металл",     "en": "metal"}
+    "leather": {
+      "ru": "кожа",
+      "kz": "былғары",
+      "en": "leather"
+    },
+    "suede": {
+      "ru": "замша",
+      "kz": "замша",
+      "en": "suede"
+    },
+    "nubuck": {
+      "ru": "нубук",
+      "kz": "нубук",
+      "en": "nubuck"
+    },
+    "canvas": {
+      "ru": "канвас",
+      "kz": "канвас",
+      "en": "canvas"
+    },
+    "cotton": {
+      "ru": "хлопок",
+      "kz": "мақта мата",
+      "en": "cotton"
+    },
+    "textile": {
+      "ru": "текстиль",
+      "kz": "текстиль",
+      "en": "textile"
+    },
+    "beads": {
+      "ru": "бисер",
+      "kz": "моншақ",
+      "en": "beads"
+    },
+    "metal": {
+      "ru": "металл",
+      "kz": "металл",
+      "en": "metal"
+    }
   },
   "t": {
-    "site_title":   {"ru": "attré — сумки в Алматы", "kz": "attré — Алматыдағы сөмкелер", "en": "attré — bags in Almaty"},
-    "site_desc":    {"ru": "Сумки, клатчи и аксессуары из натуральной кожи, замши и канваса. Магазин в Алматы, доставка по всему миру.",
-                     "kz": "Табиғи былғарыдан, замшадан және канвастан жасалған сөмкелер, клатчтар мен аксессуарлар. Алматыдағы дүкен, бүкіл әлемге жеткізу.",
-                     "en": "Bags, clutches and accessories in leather, suede and canvas. Store in Almaty, worldwide delivery."},
-    "intro_sub":    {"ru": "сумки и аксессуары · алматы · доставка по миру",
-                     "kz": "сөмкелер, аксессуарлар · алматы · әлемге жеткізу",
-                     "en": "bags & accessories · almaty · worldwide delivery"},
-    "nav_lang":     {"ru": "Язык", "kz": "Тіл", "en": "Language"},
-    "nav_cats":     {"ru": "Категории", "kz": "Санаттар", "en": "Categories"},
-    "home":         {"ru": "attré — на главную", "kz": "attré — басты бетке", "en": "attré — home"},
-    "all":          {"ru": "все", "kz": "барлығы", "en": "all"},
-    "in_stock":     {"ru": "в наличии", "kz": "қолда бар", "en": "in stock"},
-    "count":        {"ru": "в каталоге: {n}", "kz": "каталогта: {n}", "en": "in catalogue: {n}"},
-    "empty":        {"ru": "Сейчас здесь пусто — загляните в другие разделы или напишите нам.",
-                     "kz": "Қазір мұнда ештеңе жоқ — басқа бөлімдерді қараңыз немесе бізге жазыңыз.",
-                     "en": "Nothing here right now — try another section or message us."},
-    "sold":         {"ru": "продано", "kz": "сатылды", "en": "sold"},
-    "last":         {"ru": "последняя", "kz": "соңғысы", "en": "last one"},
-    "status_stock": {"ru": "в наличии в Алматы", "kz": "Алматыда қолда бар", "en": "in stock in Almaty"},
-    "status_last":  {"ru": "последняя в наличии", "kz": "қолда соңғысы қалды", "en": "last one in stock"},
-    "sold_word":    {"ru": "продано.", "kz": "сатылды.", "en": "sold."},
-    "wa_label":     {"ru": "Написать в WhatsApp", "kz": "WhatsApp-қа жазу", "en": "Message us on WhatsApp"},
-    "wa_btn":       {"ru": "написать в whatsapp", "kz": "whatsapp-қа жазу", "en": "message on whatsapp"},
-    "wa_btn_sold":  {"ru": "спросить похожую", "kz": "ұқсасын сұрау", "en": "ask for similar"},
-    "wa_general":   {"ru": "Здравствуйте! Пишу с сайта attré.",
-                     "kz": "Сәлеметсіз бе! attré сайтынан жазып отырмын.",
-                     "en": "Hello! I'm writing from the attré website."},
-    "wa_product":   {"ru": "Здравствуйте! Хочу «{name}» (№ {id}), {price} ₸. {url}",
-                     "kz": "Сәлеметсіз бе! Маған «{name}» ұнады (№ {id}), {price} ₸. {url}",
-                     "en": "Hello! I'd like «{name}» (No. {id}), {price} ₸. {url}"},
-    "wa_sold":      {"ru": "Здравствуйте! «{name}» (№ {id}) уже продана. Есть что-то похожее? {url}",
-                     "kz": "Сәлеметсіз бе! «{name}» (№ {id}) сатылып кетіпті. Ұқсас бірдеңе бар ма? {url}",
-                     "en": "Hello! «{name}» (No. {id}) is sold. Do you have anything similar? {url}"},
-    "photo_n":      {"ru": "фото {i} из {n}", "kz": "{n} фотоның {i}-сі", "en": "photo {i} of {n}"},
-    "detail":       {"ru": "деталь", "kz": "бөлшек", "en": "detail"},
-    "p_material":   {"ru": "материал", "kz": "материалы", "en": "material"},
-    "p_color":      {"ru": "цвет", "kz": "түсі", "en": "colour"},
-    "p_size":       {"ru": "размеры", "kz": "өлшемдері", "en": "size"},
-    "p_size_fmt":   {"ru": "{w} × {h} × {d} см", "kz": "{w} × {h} × {d} см", "en": "{w} × {h} × {d} cm"},
-    "p_size_hint":  {"ru": "ширина × высота × глубина", "kz": "ені × биіктігі × тереңдігі", "en": "width × height × depth"},
-    "p_strap":      {"ru": "ручка / ремень", "kz": "тұтқасы / бауы", "en": "handle / strap"},
-    "p_maker":      {"ru": "производитель", "kz": "өндіруші", "en": "maker"},
-    "p_origin":     {"ru": "страна производства", "kz": "шығарылған елі", "en": "country of origin"},
-    "todo":         {"ru": "уточняется", "kz": "нақтыланады", "en": "to be confirmed"},
-    "acc_delivery": {"ru": "доставка", "kz": "жеткізу", "en": "delivery"},
-    "acc_returns":  {"ru": "возврат и обмен", "kz": "қайтару және айырбастау", "en": "returns & exchanges"},
-    "acc_store":    {"ru": "посмотреть в магазине", "kz": "дүкенде көру", "en": "see it in store"},
-    "delivery_body":{"ru": "Доставляем по Алматы, Казахстану и всему миру. Способ, стоимость и срок подскажет менеджер в WhatsApp.",
-                     "kz": "Алматы, Қазақстан және бүкіл әлем бойынша жеткіземіз. Тәсілін, құнын және мерзімін менеджер WhatsApp-та айтады.",
-                     "en": "We deliver across Almaty, Kazakhstan and worldwide. Our manager will confirm the method, cost and timing on WhatsApp."},
-    "returns_body": {"ru": "Вещь можно вернуть или обменять в течение 14 дней, если она не была в использовании, сохранены товарный вид, ярлыки и чек.",
-                     "kz": "Тауар пайдаланылмаған болса, тауарлық түрі, жапсырмалары мен чегі сақталса, оны 14 күн ішінде қайтаруға немесе айырбастауға болады.",
-                     "en": "You can return or exchange an item within 14 days if it hasn't been used and its condition, tags and receipt are kept."},
-    "store_body":   {"ru": "Приходите посмотреть вживую: Алматы, ул. Кабанбай батыра, 96. Перед визитом можно написать в WhatsApp и уточнить наличие.",
-                     "kz": "Келіп, өз көзіңізбен көріңіз: Алматы, Қабанбай батыр к-сі, 96. Келер алдында WhatsApp-қа жазып, тауардың бар-жоғын нақтылауға болады.",
-                     "en": "Come and see it in person: 96 Kabanbay Batyr St, Almaty. You can message us on WhatsApp beforehand to check availability."},
-    "store_title":  {"ru": "магазин в алматы", "kz": "алматыдағы дүкен", "en": "our store in almaty"},
-    "address":      {"ru": "Алматы, ул. Кабанбай батыра, 96", "kz": "Алматы, Қабанбай батыр к-сі, 96", "en": "96 Kabanbay Batyr St, Almaty"},
-    "hours":        {"ru": "часы работы: [уточняется]", "kz": "жұмыс уақыты: [нақтыланады]", "en": "opening hours: [to be confirmed]"},
-    "map":          {"ru": "открыть в 2ГИС", "kz": "2ГИС-те ашу", "en": "open in 2GIS"},
-    "similar":      {"ru": "похожие", "kz": "ұқсас тауарлар", "en": "you may also like"},
-    "back":         {"ru": "назад: {cat}", "kz": "артқа: {cat}", "en": "back to {cat}"},
-    "f_contacts":   {"ru": "контакты", "kz": "байланыс", "en": "contacts"},
-    "f_buyers":     {"ru": "покупателям", "kz": "сатып алушыларға", "en": "customer care"},
-    "f_delivery":   {"ru": "доставка и оплата", "kz": "жеткізу және төлем", "en": "delivery & payment"},
-    "f_returns":    {"ru": "возврат и обмен", "kz": "қайтару және айырбастау", "en": "returns & exchanges"},
-    "f_about":      {"ru": "о магазине", "kz": "дүкен туралы", "en": "about us"},
-    "f_seller":     {"ru": "Продавец: [ИП/ТОО — уточняется], ИИН/БИН: [—]. Адрес, режим работы и сведения о регистрации — [уточняется].",
-                     "kz": "Сатушы: [ЖК/ЖШС — нақтыланады], ЖСН/БСН: [—]. Мекенжайы, жұмыс уақыты және тіркеу туралы мәліметтер — [нақтыланады].",
-                     "en": "Seller: [sole proprietor / LLP — to be confirmed], IIN/BIN: [—]. Address, opening hours and registration details — [to be confirmed]."},
-    "f_prices":     {"ru": "Цены указаны в тенге.", "kz": "Бағалар теңгемен көрсетілген.", "en": "Prices are in tenge (KZT)."},
-    "f_consumer":   {"ru": "По вопросам защиты прав потребителей: [ссылка на уполномоченный орган — уточняется].",
-                     "kz": "Тұтынушылардың құқықтарын қорғау мәселелері бойынша: [уәкілетті органның сілтемесі — нақтыланады].",
-                     "en": "Consumer protection: [link to the authorised body — to be confirmed]."},
-    "f_proto":      {"ru": "Прототип сайта. Фото — Unsplash; названия, цены и характеристики условные.",
-                     "kz": "Сайттың прототипі. Фотолар — Unsplash; атаулары, бағалары мен сипаттамалары шартты.",
-                     "en": "Website prototype. Photos from Unsplash; names, prices and specs are placeholders."},
-    "f_credits":    {"ru": "авторы фото", "kz": "фото авторлары", "en": "photo credits"},
-    "info_title":   {"ru": "покупателям", "kz": "сатып алушыларға", "en": "customer care"},
-    "about_title":  {"ru": "о магазине", "kz": "дүкен туралы", "en": "about us"},
-    "about_body":   {"ru": "attré — магазин сумок в Алматы. Подбираем сумки, клатчи и аксессуары из натуральной кожи, замши, канваса и плотного хлопка — с вниманием к материалу и форме.",
-                     "kz": "attré — Алматыдағы сөмке дүкені. Табиғи былғарыдан, замшадан, канвастан және тығыз мақта матадан жасалған сөмкелерді, клатчтар мен аксессуарларды материалы мен пішініне мән бере отырып іріктейміз.",
-                     "en": "attré is a bag store in Almaty. We select bags, clutches and accessories in leather, suede, canvas and heavy cotton, with attention to material and form."},
-    "delivery_title":{"ru": "доставка и оплата", "kz": "жеткізу және төлем", "en": "delivery & payment"},
-    "payment_body": {"ru": "Онлайн-оплаты на сайте пока нет. Напишите нам в WhatsApp — менеджер подтвердит наличие и предложит удобный способ оплаты.",
-                     "kz": "Сайтта әзірге онлайн төлем жоқ. Бізге WhatsApp-қа жазыңыз — менеджер тауардың бар екенін растап, ыңғайлы төлем тәсілін ұсынады.",
-                     "en": "There's no online payment on the website yet. Message us on WhatsApp — our manager will confirm availability and suggest a convenient way to pay."},
-    "returns_title":{"ru": "возврат и обмен", "kz": "қайтару және айырбастау", "en": "returns & exchanges"},
-    "contacts_title":{"ru": "контакты", "kz": "байланыс", "en": "contacts"},
-    "seller_title": {"ru": "сведения о продавце", "kz": "сатушы туралы мәліметтер", "en": "seller details"},
-    "credits_title":{"ru": "авторы фото", "kz": "фото авторлары", "en": "photo credits"},
-    "credits_body": {"ru": "В прототипе использованы фото с Unsplash по лицензии Unsplash License.",
-                     "kz": "Прототипте Unsplash License лицензиясы бойынша Unsplash фотолары пайдаланылған.",
-                     "en": "This prototype uses photos from Unsplash under the Unsplash License."},
-    "nf_title":     {"ru": "такой страницы нет.", "kz": "мұндай бет жоқ.", "en": "this page doesn't exist."},
-    "nf_link":      {"ru": "в каталог", "kz": "каталогқа", "en": "to the catalogue"}
+    "site_title": {
+      "ru": "attré — сумки в Алматы",
+      "kz": "attré — Алматыдағы сөмкелер",
+      "en": "attré — bags in Almaty"
+    },
+    "site_desc": {
+      "ru": "Сумки, клатчи и аксессуары из натуральной кожи, замши и канваса. Магазин в Алматы, доставка по всему миру.",
+      "kz": "Табиғи былғарыдан, замшадан және канвастан жасалған сөмкелер, клатчтар мен аксессуарлар. Алматыдағы дүкен, бүкіл әлемге жеткізу.",
+      "en": "Bags, clutches and accessories in leather, suede and canvas. Store in Almaty, worldwide delivery."
+    },
+    "intro_sub": {
+      "ru": "сумки и аксессуары · алматы · доставка по миру",
+      "kz": "сөмкелер мен аксессуарлар · алматы · әлемге жеткізу",
+      "en": "bags & accessories · almaty · worldwide delivery"
+    },
+    "nav_lang": {
+      "ru": "Язык",
+      "kz": "Тіл",
+      "en": "Language"
+    },
+    "nav_cats": {
+      "ru": "Категории",
+      "kz": "Санаттар",
+      "en": "Categories"
+    },
+    "home": {
+      "ru": "attré — на главную",
+      "kz": "attré — басты бетке",
+      "en": "attré — home"
+    },
+    "all": {
+      "ru": "все",
+      "kz": "бәрі",
+      "en": "all"
+    },
+    "in_stock": {
+      "ru": "в наличии",
+      "kz": "қолда бар",
+      "en": "in stock"
+    },
+    "count": {
+      "ru": "в каталоге: {n}",
+      "kz": "каталогта: {n}",
+      "en": "in catalogue: {n}"
+    },
+    "empty": {
+      "ru": "Сейчас здесь пусто — загляните в другие разделы или напишите нам.",
+      "kz": "Қазір мұнда ештеңе жоқ — басқа бөлімдерді қараңыз немесе бізге жазыңыз.",
+      "en": "Nothing here right now — try another section or message us."
+    },
+    "sold": {
+      "ru": "продано",
+      "kz": "сатылды",
+      "en": "sold"
+    },
+    "last": {
+      "ru": "остался 1",
+      "kz": "соңғы дана",
+      "en": "last one"
+    },
+    "status_stock": {
+      "ru": "в наличии в Алматы",
+      "kz": "Алматыда қолда бар",
+      "en": "in stock in Almaty"
+    },
+    "status_last": {
+      "ru": "последний экземпляр в наличии",
+      "kz": "соңғы дана қалды",
+      "en": "last one in stock"
+    },
+    "sold_word": {
+      "ru": "продано.",
+      "kz": "сатылды.",
+      "en": "sold."
+    },
+    "wa_label": {
+      "ru": "Написать в WhatsApp",
+      "kz": "WhatsApp-қа жазу",
+      "en": "Message us on WhatsApp"
+    },
+    "wa_btn": {
+      "ru": "написать в whatsapp",
+      "kz": "whatsapp-қа жазу",
+      "en": "message on whatsapp"
+    },
+    "wa_btn_sold": {
+      "ru": "спросить о похожих",
+      "kz": "ұқсасын сұрау",
+      "en": "ask for similar"
+    },
+    "wa_general": {
+      "ru": "Здравствуйте! Пишу с сайта attré.",
+      "kz": "Сәлеметсіз бе! attré сайтынан жазып отырмын.",
+      "en": "Hello! I’m writing from the attré website."
+    },
+    "wa_product": {
+      "ru": "Здравствуйте! Хочу «{name}» (№ {id}), {price}. {url}",
+      "kz": "Сәлеметсіз бе! «{name}» тауарын алғым келеді (№ {id}, {price}). {url}",
+      "en": "Hello! I’d like “{name}” (No. {id}), {price}. {url}"
+    },
+    "wa_sold": {
+      "ru": "Здравствуйте! «{name}» (№ {id}) уже нет в наличии. Есть что-то похожее? {url}",
+      "kz": "Сәлеметсіз бе! «{name}» (№ {id}) сатылып кетіпті. Осыған ұқсасы бар ма? {url}",
+      "en": "Hello! “{name}” (No. {id}) is already sold. Do you have anything similar? {url}"
+    },
+    "photo_n": {
+      "ru": "фото {i} из {n}",
+      "kz": "фото {i} / {n}",
+      "en": "photo {i} of {n}"
+    },
+    "detail": {
+      "ru": "крупный план",
+      "kz": "ірі план",
+      "en": "close-up"
+    },
+    "p_material": {
+      "ru": "материал",
+      "kz": "материалы",
+      "en": "material"
+    },
+    "p_color": {
+      "ru": "цвет",
+      "kz": "түсі",
+      "en": "colour"
+    },
+    "p_size": {
+      "ru": "размеры",
+      "kz": "өлшемдері",
+      "en": "dimensions"
+    },
+    "p_size_fmt": {
+      "ru": "{w} × {h} × {d} см",
+      "kz": "{w} × {h} × {d} см",
+      "en": "{w} × {h} × {d} cm"
+    },
+    "p_size_hint": {
+      "ru": "ширина × высота × глубина",
+      "kz": "ені × биіктігі × тереңдігі",
+      "en": "width × height × depth"
+    },
+    "p_strap": {
+      "ru": "ручки и ремни",
+      "kz": "тұтқасы / бауы",
+      "en": "handles & straps"
+    },
+    "p_maker": {
+      "ru": "производитель",
+      "kz": "өндіруші",
+      "en": "manufacturer"
+    },
+    "p_origin": {
+      "ru": "страна производства",
+      "kz": "шығарылған елі",
+      "en": "country of origin"
+    },
+    "todo": {
+      "ru": "уточняется",
+      "kz": "нақтыланады",
+      "en": "to be confirmed"
+    },
+    "acc_delivery": {
+      "ru": "доставка",
+      "kz": "жеткізу",
+      "en": "delivery"
+    },
+    "acc_returns": {
+      "ru": "возврат и обмен",
+      "kz": "қайтару және айырбастау",
+      "en": "returns & exchanges"
+    },
+    "acc_store": {
+      "ru": "посмотреть в магазине",
+      "kz": "дүкенде көру",
+      "en": "see it in store"
+    },
+    "delivery_body": {
+      "ru": "Доставляем по Алматы, Казахстану и всему миру. Способ, стоимость и срок подскажет менеджер в WhatsApp.",
+      "kz": "Алматы, Қазақстан және бүкіл әлем бойынша жеткіземіз. Жеткізу тәсілін, құнын және мерзімін менеджер WhatsApp-та айтып береді.",
+      "en": "We deliver within Almaty, across Kazakhstan and worldwide. Our manager will confirm the method, cost and timing on WhatsApp."
+    },
+    "returns_body": {
+      "ru": "Вещь надлежащего качества можно вернуть или обменять в течение 14 дней, если её не использовали и сохранены товарный вид, ярлыки и чек. Если обнаружится брак, действуют права потребителя по законодательству РК.",
+      "kz": "Тиісті сападағы тауарды 14 күн ішінде қайтаруға немесе айырбастауға болады: ол пайдаланылмаған, тауарлық түрі, заттаңбалары мен чегі сақталған болуы керек. Ақау анықталса, Қазақстан Республикасының заңнамасы бойынша тұтынушының құқықтары қолданылады.",
+      "en": "An item of proper quality can be returned or exchanged within 14 days if it is unused and its original condition, tags and receipt are intact. If an item turns out to be defective, your rights under Kazakhstan consumer law apply."
+    },
+    "store_body": {
+      "ru": "Приходите посмотреть вживую: Алматы, ул. Кабанбай батыра, 96. Перед визитом можно написать в WhatsApp и уточнить наличие.",
+      "kz": "Келіп, өз көзіңізбен көріңіз: Алматы, Қабанбай батыр к-сі, 96. Келер алдында WhatsApp-қа жазып, тауардың бар-жоғын нақтылауға болады.",
+      "en": "Come and see it in person: 96 Kabanbay Batyr St, Almaty. You can message us on WhatsApp beforehand to check availability."
+    },
+    "store_title": {
+      "ru": "магазин в алматы",
+      "kz": "алматыдағы дүкен",
+      "en": "our store in almaty"
+    },
+    "address": {
+      "ru": "Алматы, ул. Кабанбай батыра, 96",
+      "kz": "Алматы, Қабанбай батыр к-сі, 96",
+      "en": "96 Kabanbay Batyr St, Almaty"
+    },
+    "hours": {
+      "ru": "часы работы: [уточняется]",
+      "kz": "жұмыс уақыты: [нақтыланады]",
+      "en": "opening hours: [to be confirmed]"
+    },
+    "map": {
+      "ru": "открыть в 2ГИС",
+      "kz": "2ГИС-те ашу",
+      "en": "open in 2GIS"
+    },
+    "similar": {
+      "ru": "похожие",
+      "kz": "ұқсас тауарлар",
+      "en": "you may also like"
+    },
+    "back": {
+      "ru": "назад: {cat}",
+      "kz": "барлық {cat}",
+      "en": "back to {cat}"
+    },
+    "f_contacts": {
+      "ru": "контакты",
+      "kz": "байланыс",
+      "en": "contacts"
+    },
+    "f_buyers": {
+      "ru": "покупателям",
+      "kz": "сатып алушыларға",
+      "en": "customer care"
+    },
+    "f_delivery": {
+      "ru": "доставка и оплата",
+      "kz": "жеткізу және төлем",
+      "en": "delivery & payment"
+    },
+    "f_returns": {
+      "ru": "возврат и обмен",
+      "kz": "қайтару және айырбастау",
+      "en": "returns & exchanges"
+    },
+    "f_about": {
+      "ru": "о магазине",
+      "kz": "дүкен туралы",
+      "en": "about us"
+    },
+    "f_seller": {
+      "ru": "Продавец: [ИП/ТОО — уточняется], ИИН/БИН: [—]. Адрес, часы работы и сведения о регистрации — [уточняется].",
+      "kz": "Сатушы: [ЖК/ЖШС — нақтыланады], ЖСН/БСН: [—]. Мекенжайы, жұмыс уақыты және тіркеу туралы мәліметтер — [нақтыланады].",
+      "en": "Seller: [sole proprietor / LLP — to be confirmed], IIN/BIN: [—]. Address, opening hours and registration details — [to be confirmed]."
+    },
+    "f_prices": {
+      "ru": "Цены указаны в тенге.",
+      "kz": "Бағалар теңгемен көрсетілген.",
+      "en": "Prices are in tenge (KZT)."
+    },
+    "f_consumer": {
+      "ru": "По вопросам защиты прав потребителей: [ссылка на уполномоченный орган — уточняется].",
+      "kz": "Тұтынушылардың құқықтарын қорғау мәселелері бойынша: [уәкілетті органға сілтеме — нақтыланады].",
+      "en": "Consumer protection: [link to the competent authority — to be confirmed]."
+    },
+    "f_proto": {
+      "ru": "Прототип сайта. Фото — Unsplash; названия, цены и характеристики условные.",
+      "kz": "Сайттың прототипі. Фотолар — Unsplash; атаулары, бағалары мен сипаттамалары шартты.",
+      "en": "Website prototype. Photos from Unsplash; names, prices and specs are placeholders."
+    },
+    "f_credits": {
+      "ru": "авторы фото",
+      "kz": "фото авторлары",
+      "en": "photo credits"
+    },
+    "info_title": {
+      "ru": "покупателям",
+      "kz": "сатып алушыларға",
+      "en": "customer care"
+    },
+    "about_title": {
+      "ru": "о магазине",
+      "kz": "дүкен туралы",
+      "en": "about us"
+    },
+    "about_body": {
+      "ru": "attré — магазин сумок в Алматы. Подбираем сумки, клатчи и аксессуары из натуральной кожи, замши, канваса и плотного хлопка — с вниманием к материалу и форме.",
+      "kz": "attré — Алматыдағы сөмке дүкені. Табиғи былғарыдан, замшадан, канвастан және тығыз мақта матадан жасалған сөмкелер, клатчтар мен аксессуарларды іріктейміз — материалы мен пішініне ерекше мән береміз.",
+      "en": "attré is a bag store in Almaty. We select bags, clutches and accessories made of leather, suede, canvas and heavy cotton, with close attention to material and form."
+    },
+    "delivery_title": {
+      "ru": "доставка и оплата",
+      "kz": "жеткізу және төлем",
+      "en": "delivery & payment"
+    },
+    "payment_body": {
+      "ru": "Оплатить на сайте пока нельзя. Напишите нам в WhatsApp — менеджер подтвердит наличие и предложит удобный способ оплаты.",
+      "kz": "Сайтта әзірге онлайн төлем жоқ. Бізге WhatsApp-қа жазыңыз — менеджер тауардың бар екенін растап, ыңғайлы төлем тәсілін ұсынады.",
+      "en": "Online payment isn’t available on the website yet. Message us on WhatsApp — our manager will confirm availability and suggest a convenient way to pay."
+    },
+    "returns_title": {
+      "ru": "возврат и обмен",
+      "kz": "қайтару және айырбастау",
+      "en": "returns & exchanges"
+    },
+    "contacts_title": {
+      "ru": "контакты",
+      "kz": "байланыс",
+      "en": "contacts"
+    },
+    "seller_title": {
+      "ru": "сведения о продавце",
+      "kz": "сатушы туралы мәліметтер",
+      "en": "seller details"
+    },
+    "credits_title": {
+      "ru": "авторы фото",
+      "kz": "фото авторлары",
+      "en": "photo credits"
+    },
+    "credits_body": {
+      "ru": "В прототипе использованы фото с Unsplash по лицензии Unsplash License.",
+      "kz": "Прототипте Unsplash фотолары Unsplash License шарттарымен пайдаланылған.",
+      "en": "This prototype uses photos from Unsplash under the Unsplash License."
+    },
+    "nf_title": {
+      "ru": "такой страницы нет.",
+      "kz": "мұндай бет жоқ.",
+      "en": "this page doesn't exist."
+    },
+    "nf_link": {
+      "ru": "в каталог",
+      "kz": "каталогқа",
+      "en": "back to the catalogue"
+    }
   }
 }

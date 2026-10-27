@@ -49,8 +49,9 @@ def abs_url(path=''):
     return ORIGIN + BASE + path
 
 
-def price(n):
-    return f'{n:,}'.replace(',', NBSP) + NBSP + '₸'
+def price(n, lang='ru'):
+    s = f'{n:,}' if lang == 'en' else f'{n:,}'.replace(',', NBSP)
+    return s + NBSP + '₸'
 
 
 def wa_link(text):
@@ -184,7 +185,7 @@ def footer(lang):
 
 # ——— Каталог ———
 
-def card(p, lang, eager=False):
+def card(p, lang, eager=False, h='h3'):
     name = item_name(p, lang)
     img = p['images'][0]
     loading = 'eager" fetchpriority="high' if eager else 'lazy'
@@ -192,11 +193,11 @@ def card(p, lang, eager=False):
     last = f'<span class="last">{e(t("last", lang))}</span>' if p['stock'] == 1 else ''
     return f'''<li class="card" data-card{' data-sold' if sold(p) else ''}>
 <a class="card__link" href="{item_url(p, lang)}">
-<div class="card__media"><img src="{url('assets/img/p/' + img + '-450.webp')}" srcset="{img_srcset(img)}" sizes="(min-width: 960px) 25vw, (min-width: 600px) 33vw, 50vw" width="450" height="563" alt="{e(name)}" loading="{loading}" decoding="async">{badge}</div>
+<div class="card__media"><img src="{url('assets/img/p/' + img + '-450.webp')}" srcset="{img_srcset(img)}" sizes="(min-width: 960px) 25vw, (min-width: 600px) 33vw, 50vw" width="450" height="563" alt="" loading="{loading}" decoding="async">{badge}</div>
 <div class="card__body">
-<h3 class="card__name">{e(name)}</h3>
+<{h} class="card__name">{e(name)}</{h}>
 <p class="card__mat">{e(MATS[p['material']][lang])} · {e(p['color'][lang])}</p>
-<p class="card__price"><span class="num">{price(p['price'])}</span>{last}</p>
+<p class="card__price"><span class="num">{price(p['price'], lang)}</span>{last}</p>
 </div>
 </a>
 </li>'''
@@ -215,7 +216,7 @@ def catalog_page(lang, cat=None):
     tabs_html = ''.join(
         f'<a class="tab" href="{href}" data-keep-instock{" aria-current=\"page\"" if c == cat else ""}>{e(label)}</a>'
         for c, label, href in tabs)
-    cards = '\n'.join(card(p, lang, eager=i < 4) for i, p in enumerate(items))
+    cards = '\n'.join(card(p, lang, eager=i < 4, h='h2') for i, p in enumerate(items))
     heading = CATS[cat][lang] if cat else t('site_title', lang)
     suffix = f'c/{cat}/' if cat else ''
     body = f'''<main id="main">
@@ -228,6 +229,7 @@ def catalog_page(lang, cat=None):
 <nav class="tabs__scroll" aria-label="{e(t('nav_cats', lang))}">{tabs_html}</nav>
 <button class="stock-toggle" type="button" aria-pressed="false" data-stock-toggle><span class="stock-toggle__box" aria-hidden="true"></span>{e(t('in_stock', lang))}</button>
 </div>
+<p class="sr-only" role="status" data-count data-template="{e(t('count', lang))}"></p>
 <ul class="grid grid--catalog">
 {cards}
 </ul>
@@ -286,8 +288,8 @@ def product_page(p, lang):
         bar = (f'<div class="buybar__info"><p class="buybar__sold">{e(t("sold_word", lang))} <span lang="en">not repeated.</span></p></div>'
                f'<a class="btn btn--ghost" href="{e(wa_link(msg))}" target="_blank" rel="noopener">{WA_ICON}{e(t("wa_btn_sold", lang))}</a>')
     else:
-        msg = t('wa_product', lang, name=name, id=p['id'], price=price(p['price']), url=page_url)
-        bar = (f'<div class="buybar__info"><p class="buybar__name">{e(name)}</p><p class="buybar__price num">{price(p["price"])}</p></div>'
+        msg = t('wa_product', lang, name=name, id=p['id'], price=price(p['price'], lang), url=page_url)
+        bar = (f'<div class="buybar__info"><p class="buybar__name">{e(name)}</p><p class="buybar__price num">{price(p["price"], lang)}</p></div>'
                f'<a class="btn" href="{e(wa_link(msg))}" target="_blank" rel="noopener">{WA_ICON}{e(t("wa_btn", lang))}</a>')
     sold_line = (f'<p class="pdp__status pdp__sold">{e(t("sold_word", lang))} <span lang="en">not repeated.</span></p>'
                  if sold(p) else '')
@@ -302,7 +304,7 @@ def product_page(p, lang):
 </div>
 <div class="pdp">
 <h1 class="pdp__name">{e(name)}</h1>
-<p class="pdp__price num">{price(p['price'])}</p>
+<p class="pdp__price num">{price(p['price'], lang)}</p>
 {sold_line or f'<p class="pdp__status">{status}</p>'}
 <p class="pdp__desc">{e(p['desc'][lang])}</p>
 <dl class="passport">{passport}</dl>
@@ -319,7 +321,7 @@ def product_page(p, lang):
 </ul>
 </section>
 </main>'''
-    desc = f"{MATS[p['material']][lang]} · {p['color'][lang]} · {price(p['price'])}"
+    desc = f"{MATS[p['material']][lang]} · {p['color'][lang]} · {price(p['price'], lang)}"
     return layout(lang, title=f'{name} — attré', desc=desc, body=body, suffix=f"p/{p['slug']}/",
                   og_image=abs_url(f"assets/img/p/{p['slug']}-og.jpg"), og_type='product', body_class='has-buybar')
 
@@ -364,11 +366,14 @@ def root_redirect():
 <title>attré</title>
 <script>
 (function () {{
-  var l = (navigator.languages || [navigator.language || '']).join(',').toLowerCase();
+  var ls = navigator.languages || [navigator.language || ''];
+  var map = {{ru: 'ru', kk: 'kz', en: 'en'}};
   var t = 'ru';
-  if (/(^|,)kk/.test(l)) t = 'kz';
-  else if (!/(^|,)ru/.test(l) && /(^|,)en/.test(l)) t = 'en';
-  location.replace('{BASE}' + t + '/' + location.search);
+  for (var i = 0; i < ls.length; i++) {{
+    var c = map[String(ls[i]).toLowerCase().slice(0, 2)];
+    if (c) {{ t = c; break; }}
+  }}
+  location.replace('{BASE}' + t + '/' + location.search + location.hash);
 }})();
 </script>
 <noscript><meta http-equiv="refresh" content="0; url={target}"></noscript>
@@ -380,7 +385,7 @@ def root_redirect():
 
 def not_found():
     rows = ''.join(
-        f'<p lang="{l["html"]}"><a class="link" href="{BASE}{l["code"]}/">{e(t("nf_title", l["code"]))} {e(t("nf_link", l["code"]))}</a></p>'
+        f'<p lang="{l["html"]}">{e(t("nf_title", l["code"]))} <a class="link" href="{BASE}{l["code"]}/">{e(t("nf_link", l["code"]))}</a></p>'
         for l in LANGS)
     return f'''<!doctype html>
 <html lang="ru">

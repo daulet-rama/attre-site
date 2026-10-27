@@ -5,172 +5,561 @@
   "map_url": "https://2gis.kz/almaty/search/attre",
   "products": [
     {
-      "id": "001", "slug": "woven-tote-cognac", "cat": "bags", "material": "leather",
-      "name":  {"ru": "плетёный тоут", "kz": "өрілген тоут", "en": "woven tote"},
-      "color": {"ru": "коньячный", "kz": "коньяк түсті", "en": "cognac"},
-      "desc":  {"ru": "Мягкий тоут из плетёной кожи с цепочкой. Помещает ноутбук 13″ и всё, что нужно на день.",
-                "kz": "Шынжыры бар өрілген былғарыдан жасалған жұмсақ тоут. 13″ ноутбук пен күнге керек заттың бәрі сыяды.",
-                "en": "Soft woven-leather tote with a chain. Fits a 13″ laptop and everything you need for the day."},
-      "size": [42, 30, 14],
-      "strap": {"ru": "две ручки и цепочка", "kz": "екі тұтқа және шынжыр", "en": "two handles and a chain"},
-      "price": 145000, "stock": 2,
-      "photo": {"src": "https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6", "author": "Irene Kredenets",
-                "url": "https://unsplash.com/photos/brown-leather-handbag-on-white-surface-tcVH_BwHtrc",
-                "focus": [0.5, 0.56], "zoom": 1.12, "detail": [0.42, 0.62, 2.8]}
+      "id": "001",
+      "slug": "woven-tote-cognac",
+      "cat": "bags",
+      "material": "leather",
+      "name": {
+        "ru": "плетёный тоут",
+        "kz": "өрілген тоут",
+        "en": "woven tote"
+      },
+      "color": {
+        "ru": "коньячный",
+        "kz": "коньяк түсті",
+        "en": "cognac"
+      },
+      "desc": {
+        "ru": "Мягкий тоут из плетёной кожи с цепочкой. В него помещается ноутбук 13 дюймов и всё необходимое на день.",
+        "kz": "Өрілген былғарыдан жасалған жұмсақ тоут, шынжыры бар. Ішіне 13 дюймдік ноутбук пен күнделікті керек заттың бәрі сыяды.",
+        "en": "Soft woven-leather tote with a chain. Fits a 13-inch laptop and everything you need for the day."
+      },
+      "size": [
+        42,
+        30,
+        14
+      ],
+      "strap": {
+        "ru": "две ручки и цепочка",
+        "kz": "екі тұтқа және шынжыр",
+        "en": "two handles and a chain"
+      },
+      "price": 145000,
+      "stock": 2,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6",
+        "author": "Irene Kredenets",
+        "url": "https://unsplash.com/photos/brown-leather-handbag-on-white-surface-tcVH_BwHtrc",
+        "focus": [
+          0.5,
+          0.56
+        ],
+        "zoom": 1.12,
+        "detail": [
+          0.42,
+          0.62,
+          2.8
+        ]
+      }
     },
     {
-      "id": "002", "slug": "suede-shoulder-red", "cat": "bags", "material": "suede",
-      "name":  {"ru": "замшевая сумка через плечо", "kz": "иыққа асатын замша сөмке", "en": "suede shoulder bag"},
-      "color": {"ru": "красный", "kz": "қызыл", "en": "red"},
-      "desc":  {"ru": "Красная замша с кожаными вставками и декоративной строчкой. Длинный ремень через плечо.",
-                "kz": "Былғары қосымшалары мен сәндік тігісі бар қызыл замша. Иыққа асатын ұзын бауы бар.",
-                "en": "Red suede with leather inserts and decorative stitching. Long shoulder strap."},
-      "size": [30, 22, 8],
-      "strap": {"ru": "длинный ремень", "kz": "ұзын бау", "en": "long strap"},
-      "price": 98000, "stock": 1,
-      "photo": {"src": "https://images.unsplash.com/photo-1526326881828-23b172e634de", "author": "Paolo Nicolello",
-                "url": "https://unsplash.com/photos/red-leather-handbag-on-grasses-tZ6_GLHcok8",
-                "focus": [0.5, 0.5], "zoom": 1.1, "detail": [0.5, 0.45, 3.0]}
+      "id": "002",
+      "slug": "suede-shoulder-red",
+      "cat": "bags",
+      "material": "suede",
+      "name": {
+        "ru": "замшевая сумка через плечо",
+        "kz": "иыққа асатын замша сөмке",
+        "en": "suede shoulder bag"
+      },
+      "color": {
+        "ru": "красный",
+        "kz": "қызыл",
+        "en": "red"
+      },
+      "desc": {
+        "ru": "Красная замша с кожаными вставками и декоративной строчкой. Длинный ремень через плечо.",
+        "kz": "Былғары бөліктері мен сәндік тігісі бар қызыл замша сөмке. Бауы ұзын, иыққа асуға ыңғайлы.",
+        "en": "Red suede with leather inserts and decorative stitching. Long shoulder strap."
+      },
+      "size": [
+        30,
+        22,
+        8
+      ],
+      "strap": {
+        "ru": "длинный ремень",
+        "kz": "ұзын бау",
+        "en": "long strap"
+      },
+      "price": 98000,
+      "stock": 1,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1526326881828-23b172e634de",
+        "author": "Paolo Nicolello",
+        "url": "https://unsplash.com/photos/red-leather-handbag-on-grasses-tZ6_GLHcok8",
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "zoom": 1.1,
+        "detail": [
+          0.5,
+          0.45,
+          3.0
+        ]
+      }
     },
     {
-      "id": "003", "slug": "hobo-black-grain", "cat": "bags", "material": "leather",
-      "name":  {"ru": "хобо из зернистой кожи", "kz": "бүртікті былғары хобо", "en": "grained leather hobo"},
-      "color": {"ru": "чёрный", "kz": "қара", "en": "black"},
-      "desc":  {"ru": "Мягкая сумка-хобо из зернистой кожи с двумя молниями и регулируемым ремнём.",
-                "kz": "Екі сыдырмасы мен реттелетін бауы бар бүртікті былғарыдан жасалған жұмсақ хобо сөмке.",
-                "en": "Soft grained-leather hobo with two zips and an adjustable strap."},
-      "size": [36, 28, 12],
-      "strap": {"ru": "регулируемый ремень", "kz": "реттелетін бау", "en": "adjustable strap"},
-      "price": 132000, "stock": 2,
-      "photo": {"src": "https://images.unsplash.com/photo-1751242864911-1461a0b3a2aa", "author": "Joceline Painho",
-                "url": "https://unsplash.com/photos/a-black-leather-bag-is-on-display-UQ4IdXTusKU",
-                "focus": [0.53, 0.5], "zoom": 1.05, "detail": [0.55, 0.5, 3.0]}
+      "id": "003",
+      "slug": "hobo-black-grain",
+      "cat": "bags",
+      "material": "leather",
+      "name": {
+        "ru": "хобо из зернистой кожи",
+        "kz": "бүртікті былғары хобо",
+        "en": "grained-leather hobo"
+      },
+      "color": {
+        "ru": "чёрный",
+        "kz": "қара",
+        "en": "black"
+      },
+      "desc": {
+        "ru": "Мягкая сумка-хобо из зернистой кожи с двумя молниями и регулируемым ремнём.",
+        "kz": "Бүртікті былғарыдан жасалған жұмсақ хобо сөмке. Екі сыдырмасы бар, бауы реттеледі.",
+        "en": "Soft grained-leather hobo with two zips and an adjustable strap."
+      },
+      "size": [
+        36,
+        28,
+        12
+      ],
+      "strap": {
+        "ru": "регулируемый ремень",
+        "kz": "реттелетін бау",
+        "en": "adjustable strap"
+      },
+      "price": 132000,
+      "stock": 2,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1751242864911-1461a0b3a2aa",
+        "author": "Joceline Painho",
+        "url": "https://unsplash.com/photos/a-black-leather-bag-is-on-display-UQ4IdXTusKU",
+        "focus": [
+          0.53,
+          0.5
+        ],
+        "zoom": 1.05,
+        "detail": [
+          0.55,
+          0.5,
+          3.0
+        ]
+      }
     },
     {
-      "id": "004", "slug": "drawstring-bag-olive", "cat": "bags", "material": "textile",
-      "name":  {"ru": "сумка-кисет", "kz": "қапшық сөмке", "en": "drawstring bag"},
-      "color": {"ru": "оливковый", "kz": "зәйтүн түсті", "en": "olive"},
-      "desc":  {"ru": "Сумка-кисет из плотного текстиля с кожаной отделкой и широким ремнём через плечо.",
-                "kz": "Былғары әрлеуі және кең иық бауы бар тығыз тоқыма қапшық сөмке.",
-                "en": "Drawstring bag in dense textile with leather trims and a wide shoulder strap."},
-      "size": [24, 22, 16],
-      "strap": {"ru": "широкий ремень", "kz": "кең бау", "en": "wide strap"},
-      "price": 68000, "stock": 3,
-      "photo": {"src": "https://images.unsplash.com/photo-1788416636027-739e2a429e78", "author": "Kouji Tsuru",
-                "url": "https://unsplash.com/photos/olive-green-drawstring-bag-on-chair-VW90_n-U1A4",
-                "focus": [0.55, 0.64], "zoom": 1.3, "detail": [0.52, 0.62, 3.2]}
+      "id": "004",
+      "slug": "drawstring-bag-olive",
+      "cat": "bags",
+      "material": "textile",
+      "name": {
+        "ru": "сумка-кисет",
+        "kz": "қапшық сөмке",
+        "en": "drawstring bag"
+      },
+      "color": {
+        "ru": "оливковый",
+        "kz": "зәйтүн түсті",
+        "en": "olive"
+      },
+      "desc": {
+        "ru": "Сумка-кисет из плотного текстиля с кожаной отделкой и широким ремнём через плечо.",
+        "kz": "Тығыз текстильден тігілген қапшық сөмке: былғары әрлеуі және иыққа асатын кең бауы бар.",
+        "en": "Drawstring bag in sturdy textile with leather trim and a wide shoulder strap."
+      },
+      "size": [
+        24,
+        22,
+        16
+      ],
+      "strap": {
+        "ru": "широкий ремень",
+        "kz": "кең бау",
+        "en": "wide strap"
+      },
+      "price": 68000,
+      "stock": 3,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1788416636027-739e2a429e78",
+        "author": "Kouji Tsuru",
+        "url": "https://unsplash.com/photos/olive-green-drawstring-bag-on-chair-VW90_n-U1A4",
+        "focus": [
+          0.55,
+          0.64
+        ],
+        "zoom": 1.3,
+        "detail": [
+          0.52,
+          0.62,
+          3.2
+        ]
+      }
     },
     {
-      "id": "005", "slug": "quilted-clutch-white", "cat": "clutch", "material": "leather",
-      "name":  {"ru": "стёганый клатч", "kz": "сырылған клатч", "en": "quilted clutch"},
-      "color": {"ru": "белый", "kz": "ақ", "en": "white"},
-      "desc":  {"ru": "Стёганый клатч из мягкой кожи на съёмной цепочке.",
-                "kz": "Алынбалы шынжыры бар жұмсақ былғарыдан жасалған сырылған клатч.",
-                "en": "Quilted soft-leather clutch on a detachable chain."},
-      "size": [24, 14, 5],
-      "strap": {"ru": "съёмная цепочка", "kz": "алынбалы шынжыр", "en": "detachable chain"},
-      "price": 84000, "stock": 2,
-      "photo": {"src": "https://images.unsplash.com/photo-1783700475749-6e6521a503fa", "author": "Zulfugar Karimov",
-                "url": "https://unsplash.com/photos/hands-holding-a-white-quilted-clutch-rings-and-bracelet-WD3GGwQEscU",
-                "focus": [0.6, 0.55], "zoom": 1.1, "detail": [0.62, 0.62, 2.6]}
+      "id": "005",
+      "slug": "quilted-clutch-white",
+      "cat": "clutch",
+      "material": "leather",
+      "name": {
+        "ru": "стёганый клатч",
+        "kz": "сырылған клатч",
+        "en": "quilted clutch"
+      },
+      "color": {
+        "ru": "белый",
+        "kz": "ақ",
+        "en": "white"
+      },
+      "desc": {
+        "ru": "Стёганый клатч из мягкой кожи на съёмной цепочке.",
+        "kz": "Жұмсақ былғарыдан жасалған сырылған клатч. Шынжыры алынады.",
+        "en": "Quilted soft-leather clutch on a detachable chain."
+      },
+      "size": [
+        24,
+        14,
+        5
+      ],
+      "strap": {
+        "ru": "съёмная цепочка",
+        "kz": "алынбалы шынжыр",
+        "en": "detachable chain"
+      },
+      "price": 84000,
+      "stock": 2,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1783700475749-6e6521a503fa",
+        "author": "Zulfugar Karimov",
+        "url": "https://unsplash.com/photos/hands-holding-a-white-quilted-clutch-rings-and-bracelet-WD3GGwQEscU",
+        "focus": [
+          0.6,
+          0.55
+        ],
+        "zoom": 1.1,
+        "detail": [
+          0.62,
+          0.62,
+          2.6
+        ]
+      }
     },
     {
-      "id": "006", "slug": "bucket-black", "cat": "bags", "material": "leather",
-      "name":  {"ru": "сумка-ведро", "kz": "шелек сөмке", "en": "bucket bag"},
-      "color": {"ru": "чёрный", "kz": "қара", "en": "black"},
-      "desc":  {"ru": "Сумка-ведро из гладкой кожи на широком контрастном ремне.",
-                "kz": "Кең контрасты бауы бар тегіс былғарыдан жасалған шелек сөмке.",
-                "en": "Smooth-leather bucket bag on a wide contrast strap."},
-      "size": [22, 24, 14],
-      "strap": {"ru": "широкий ремень", "kz": "кең бау", "en": "wide strap"},
-      "price": 118000, "stock": 1,
-      "photo": {"src": "https://images.unsplash.com/photo-1702325107940-88f9cd4468c2", "author": "Fatemeh Sheklabadi",
-                "url": "https://unsplash.com/photos/a-black-purse-sitting-on-top-of-a-table-aRTqdeuv_D4",
-                "focus": [0.5, 0.55], "detail": [0.5, 0.58, 2.6]}
+      "id": "006",
+      "slug": "bucket-black",
+      "cat": "bags",
+      "material": "leather",
+      "name": {
+        "ru": "сумка-ведро",
+        "kz": "шелек сөмке",
+        "en": "bucket bag"
+      },
+      "color": {
+        "ru": "чёрный",
+        "kz": "қара",
+        "en": "black"
+      },
+      "desc": {
+        "ru": "Сумка-ведро из гладкой кожи на широком контрастном ремне.",
+        "kz": "Тегіс былғарыдан жасалған шелек сөмке. Бауы кең, ашық түсті.",
+        "en": "Smooth-leather bucket bag on a wide contrasting strap."
+      },
+      "size": [
+        22,
+        24,
+        14
+      ],
+      "strap": {
+        "ru": "широкий ремень",
+        "kz": "кең бау",
+        "en": "wide strap"
+      },
+      "price": 118000,
+      "stock": 1,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1702325107940-88f9cd4468c2",
+        "author": "Fatemeh Sheklabadi",
+        "url": "https://unsplash.com/photos/a-black-purse-sitting-on-top-of-a-table-aRTqdeuv_D4",
+        "focus": [
+          0.5,
+          0.55
+        ],
+        "detail": [
+          0.5,
+          0.58,
+          2.6
+        ]
+      }
     },
     {
-      "id": "007", "slug": "mini-tote-taupe", "cat": "bags", "material": "suede",
-      "name":  {"ru": "мини-тоут", "kz": "шағын тоут", "en": "mini tote"},
-      "color": {"ru": "тауп", "kz": "сұрғылт қоңыр", "en": "taupe"},
-      "desc":  {"ru": "Компактная сумка из замши с двумя ручками и кожаными петлями.",
-                "kz": "Екі тұтқасы мен былғары ілмектері бар ықшам замша сөмке.",
-                "en": "Compact suede bag with two handles and leather loops."},
-      "size": [26, 20, 10],
-      "strap": {"ru": "две ручки", "kz": "екі тұтқа", "en": "two handles"},
-      "price": 76000, "stock": 2,
-      "photo": {"src": "https://images.unsplash.com/photo-1792334787239-0423d55192c4", "author": "selcuk sarikoz",
-                "url": "https://unsplash.com/photos/brown-suede-handbag-on-cafe-table-WNIWwZHY5gk",
-                "focus": [0.6, 0.5], "zoom": 1.2, "detail": [0.62, 0.62, 3.2]}
+      "id": "007",
+      "slug": "mini-tote-taupe",
+      "cat": "bags",
+      "material": "suede",
+      "name": {
+        "ru": "мини-тоут",
+        "kz": "шағын тоут",
+        "en": "mini tote"
+      },
+      "color": {
+        "ru": "тауп",
+        "kz": "сұрғылт қоңыр",
+        "en": "taupe"
+      },
+      "desc": {
+        "ru": "Компактная сумка из замши с двумя ручками и кожаными петлями.",
+        "kz": "Екі тұтқасы мен былғары ілмектері бар ықшам замша сөмке.",
+        "en": "Compact suede bag with two handles and leather loops."
+      },
+      "size": [
+        26,
+        20,
+        10
+      ],
+      "strap": {
+        "ru": "две ручки",
+        "kz": "екі тұтқа",
+        "en": "two handles"
+      },
+      "price": 76000,
+      "stock": 2,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1792334787239-0423d55192c4",
+        "author": "selcuk sarikoz",
+        "url": "https://unsplash.com/photos/brown-suede-handbag-on-cafe-table-WNIWwZHY5gk",
+        "focus": [
+          0.6,
+          0.5
+        ],
+        "zoom": 1.2,
+        "detail": [
+          0.62,
+          0.62,
+          3.2
+        ]
+      }
     },
     {
-      "id": "008", "slug": "leather-clutch-brown", "cat": "clutch", "material": "leather",
-      "name":  {"ru": "клатч-конверт", "kz": "конверт-клатч", "en": "envelope clutch"},
-      "color": {"ru": "тёмно-коричневый", "kz": "қою қоңыр", "en": "dark brown"},
-      "desc":  {"ru": "Плоский клатч из натуральной кожи на кнопке.",
-                "kz": "Түймелі, табиғи былғарыдан жасалған жалпақ клатч.",
-                "en": "Flat genuine-leather clutch with a snap."},
-      "size": [28, 14, 2],
+      "id": "008",
+      "slug": "leather-clutch-brown",
+      "cat": "clutch",
+      "material": "leather",
+      "name": {
+        "ru": "клатч-конверт",
+        "kz": "конверт-клатч",
+        "en": "envelope clutch"
+      },
+      "color": {
+        "ru": "тёмно-коричневый",
+        "kz": "қою қоңыр",
+        "en": "dark brown"
+      },
+      "desc": {
+        "ru": "Плоский клатч из кожи, застёгивается на кнопку.",
+        "kz": "Былғарыдан жасалған жалпақ клатч, кнопкамен жабылады.",
+        "en": "Flat leather clutch with a press-stud closure."
+      },
+      "size": [
+        28,
+        14,
+        2
+      ],
       "strap": null,
-      "price": 62000, "stock": 2,
-      "photo": {"src": "https://images.unsplash.com/photo-1749294435693-4f39ec7e0ab2", "author": "Ocult Store",
-                "url": "https://unsplash.com/photos/a-brown-leather-clutch-sits-on-a-wooden-table-WnC8n76Q584",
-                "focus": [0.4, 0.52], "zoom": 1.45, "detail": [0.42, 0.53, 3.0]}
+      "price": 62000,
+      "stock": 2,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1749294435693-4f39ec7e0ab2",
+        "author": "Ocult Store",
+        "url": "https://unsplash.com/photos/a-brown-leather-clutch-sits-on-a-wooden-table-WnC8n76Q584",
+        "focus": [
+          0.4,
+          0.52
+        ],
+        "zoom": 1.45,
+        "detail": [
+          0.42,
+          0.53,
+          3.0
+        ]
+      }
     },
     {
-      "id": "009", "slug": "contrast-stitch-tote", "cat": "bags", "material": "leather",
-      "name":  {"ru": "тоут с контрастной строчкой", "kz": "контрасты тігісі бар тоут", "en": "contrast-stitch tote"},
-      "color": {"ru": "чёрный", "kz": "қара", "en": "black"},
-      "desc":  {"ru": "Структурный тоут из гладкой кожи с белой строчкой и латунной фурнитурой.",
-                "kz": "Ақ тігісі және жез фурнитурасы бар тегіс былғарыдан жасалған пішінді тоут.",
-                "en": "Structured smooth-leather tote with white stitching and brass hardware."},
-      "size": [38, 32, 15],
-      "strap": {"ru": "две ручки", "kz": "екі тұтқа", "en": "two handles"},
-      "price": 158000, "stock": 0,
-      "photo": {"src": "https://images.unsplash.com/photo-1702326626601-74d2e86922b4", "author": "Fatemeh Sheklabadi",
-                "url": "https://unsplash.com/photos/a-black-handbag-with-a-gold-handle-iFQhTLUFSv4",
-                "focus": [0.5, 0.5], "detail": [0.45, 0.62, 2.4]}
+      "id": "009",
+      "slug": "contrast-stitch-tote",
+      "cat": "bags",
+      "material": "leather",
+      "name": {
+        "ru": "тоут с контрастной строчкой",
+        "kz": "ақ тігісті тоут",
+        "en": "contrast-stitch tote"
+      },
+      "color": {
+        "ru": "чёрный",
+        "kz": "қара",
+        "en": "black"
+      },
+      "desc": {
+        "ru": "Тоут с чёткой формой из гладкой кожи, с белой строчкой и фурнитурой цвета латуни.",
+        "kz": "Тегіс былғарыдан жасалған, пішінін жақсы ұстайтын тоут. Тігісі ақ, фурнитурасы жез түстес.",
+        "en": "Structured smooth-leather tote with white stitching and brass-tone hardware."
+      },
+      "size": [
+        38,
+        32,
+        15
+      ],
+      "strap": {
+        "ru": "две ручки",
+        "kz": "екі тұтқа",
+        "en": "two handles"
+      },
+      "price": 158000,
+      "stock": 0,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1702326626601-74d2e86922b4",
+        "author": "Fatemeh Sheklabadi",
+        "url": "https://unsplash.com/photos/a-black-handbag-with-a-gold-handle-iFQhTLUFSv4",
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "detail": [
+          0.45,
+          0.62,
+          2.4
+        ]
+      }
     },
     {
-      "id": "010", "slug": "beaded-clutch-ivory", "cat": "clutch", "material": "beads",
-      "name":  {"ru": "клатч с бисером", "kz": "моншақты клатч", "en": "beaded clutch"},
-      "color": {"ru": "молочный", "kz": "сүт түсті", "en": "ivory"},
-      "desc":  {"ru": "Вечерний клатч, расшитый бисером, на тонкой цепочке.",
-                "kz": "Жіңішке шынжыры бар, моншақпен кестеленген кешкі клатч.",
-                "en": "Evening clutch embroidered with beads, on a fine chain."},
-      "size": [20, 12, 4],
-      "strap": {"ru": "тонкая цепочка", "kz": "жіңішке шынжыр", "en": "fine chain"},
-      "price": 56000, "stock": 3,
-      "photo": {"src": "https://images.unsplash.com/photo-1783700549620-a6699881dc45", "author": "Zulfugar Karimov",
-                "url": "https://unsplash.com/photos/hands-holding-a-white-beaded-clutch-bag-with-rings-7VAGwA7ZpYI",
-                "focus": [0.52, 0.62], "zoom": 1.15, "detail": [0.5, 0.66, 2.8]}
+      "id": "010",
+      "slug": "beaded-clutch-ivory",
+      "cat": "clutch",
+      "material": "beads",
+      "name": {
+        "ru": "клатч с бисером",
+        "kz": "моншақты клатч",
+        "en": "beaded clutch"
+      },
+      "color": {
+        "ru": "молочный",
+        "kz": "сүт түсті",
+        "en": "cream"
+      },
+      "desc": {
+        "ru": "Вечерний клатч, расшитый бисером, на тонкой цепочке.",
+        "kz": "Жіңішке шынжыры бар, моншақпен кестеленген кешкі клатч.",
+        "en": "Evening clutch embroidered with beads, on a fine chain."
+      },
+      "size": [
+        20,
+        12,
+        4
+      ],
+      "strap": {
+        "ru": "тонкая цепочка",
+        "kz": "жіңішке шынжыр",
+        "en": "fine chain"
+      },
+      "price": 56000,
+      "stock": 3,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1783700549620-a6699881dc45",
+        "author": "Zulfugar Karimov",
+        "url": "https://unsplash.com/photos/hands-holding-a-white-beaded-clutch-bag-with-rings-7VAGwA7ZpYI",
+        "focus": [
+          0.52,
+          0.62
+        ],
+        "zoom": 1.15,
+        "detail": [
+          0.5,
+          0.66,
+          2.8
+        ]
+      }
     },
     {
-      "id": "011", "slug": "canvas-shopper-natural", "cat": "shopper", "material": "canvas",
-      "name":  {"ru": "шопер из канваса", "kz": "канвас шопер", "en": "canvas shopper"},
-      "color": {"ru": "натуральный", "kz": "табиғи түс", "en": "natural"},
-      "desc":  {"ru": "Лёгкий шопер из плотного хлопкового канваса на длинных ручках.",
-                "kz": "Ұзын тұтқалы, тығыз мақта канвастан жасалған жеңіл шопер.",
-                "en": "Light shopper in heavy cotton canvas with long handles."},
+      "id": "011",
+      "slug": "canvas-shopper-natural",
+      "cat": "shopper",
+      "material": "canvas",
+      "name": {
+        "ru": "шопер из канваса",
+        "kz": "канвас шопер",
+        "en": "canvas shopper"
+      },
+      "color": {
+        "ru": "экрю",
+        "kz": "экрю",
+        "en": "ecru"
+      },
+      "desc": {
+        "ru": "Лёгкий шопер из плотного хлопкового канваса на длинных ручках.",
+        "kz": "Тығыз мақта канвастан жасалған, ұзын тұтқалы жеңіл шопер.",
+        "en": "Lightweight shopper in heavy cotton canvas with long handles."
+      },
       "size": null,
-      "strap": {"ru": "длинные ручки", "kz": "ұзын тұтқалар", "en": "long handles"},
-      "price": 18000, "stock": 5,
-      "photo": {"src": "https://images.unsplash.com/photo-1574365569389-a10d488ca3fb", "author": "Brando Makes Branding",
-                "url": "https://unsplash.com/photos/white-reusable-bag-on-gray-surface-smTDI-z1rlY",
-                "focus": [0.5, 0.5], "detail": [0.5, 0.62, 3.0]}
+      "strap": {
+        "ru": "длинные ручки",
+        "kz": "ұзын тұтқалар",
+        "en": "long handles"
+      },
+      "price": 18000,
+      "stock": 5,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1574365569389-a10d488ca3fb",
+        "author": "Brando Makes Branding",
+        "url": "https://unsplash.com/photos/white-reusable-bag-on-gray-surface-smTDI-z1rlY",
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "detail": [
+          0.5,
+          0.62,
+          3.0
+        ]
+      }
     },
     {
-      "id": "012", "slug": "feather-bag-charm", "cat": "acc", "material": "metal",
-      "name":  {"ru": "брелок-перо", "kz": "қауырсын салпыншақ", "en": "feather bag charm"},
-      "color": {"ru": "серебристый", "kz": "күміс түсті", "en": "silver"},
-      "desc":  {"ru": "Металлический брелок для сумки в форме пера, на карабине.",
-                "kz": "Сөмкеге арналған қауырсын пішінді металл салпыншақ, карабинмен бекітіледі.",
-                "en": "Feather-shaped metal bag charm on a clasp."},
+      "id": "012",
+      "slug": "feather-bag-charm",
+      "cat": "acc",
+      "material": "metal",
+      "name": {
+        "ru": "брелок-пёрышко",
+        "kz": "қауырсын брелок",
+        "en": "feather bag charm"
+      },
+      "color": {
+        "ru": "серебристый",
+        "kz": "күміс түсті",
+        "en": "silver"
+      },
+      "desc": {
+        "ru": "Металлический брелок для сумки в форме пёрышка, на карабине.",
+        "kz": "Сөмкеге арналған қауырсын пішінді металл брелок, карабинмен бекітіледі.",
+        "en": "Feather-shaped metal bag charm with a carabiner clip."
+      },
       "size": null,
       "strap": null,
-      "price": 12000, "stock": 4,
-      "photo": {"src": "https://images.unsplash.com/photo-1678329190150-adc0cf6fd4a3", "author": "Coppertist Wu",
-                "url": "https://unsplash.com/photos/a-brown-leather-bag-with-a-feather-charm-hanging-from-it-ZsVKuRE1Vgk",
-                "focus": [0.33, 0.5], "zoom": 1.15, "detail": [0.385, 0.62, 2.2]}
+      "price": 12000,
+      "stock": 4,
+      "photo": {
+        "src": "https://images.unsplash.com/photo-1678329190150-adc0cf6fd4a3",
+        "author": "Coppertist Wu",
+        "url": "https://unsplash.com/photos/a-brown-leather-bag-with-a-feather-charm-hanging-from-it-ZsVKuRE1Vgk",
+        "focus": [
+          0.33,
+          0.5
+        ],
+        "zoom": 1.15,
+        "detail": [
+          0.385,
+          0.62,
+          2.2
+        ]
+      }
     }
   ]
 }
