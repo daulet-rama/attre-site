@@ -1,7 +1,8 @@
 /* attré · Вариант 4 «Витрина» — структура Ushatava × лёгкая типографика Massimo Dutti × крупные фото Antihero.
    Mobile-first (360–430px), расширения для ≥600 и ≥960 внизу.
    Текст — Onest 300, 12px/1.6; подписи — 11px капсом с разрядкой .16em (400). Цвета: #000, #fff,
-   #737373 — вторичный текст (4.7:1), #f6f6f6 — подложка фото, #cc0000 — красный бренда (полоса бонуса ?bar=red).
+   #737373 — вторичный текст (4.7:1), #f6f6f6 — подложка фото, #cc0000 — красный бренда (полоса бонуса ?bar=red),
+   #a9c7e5 — подвал (голубой PANTONE 277, просьба заказчиц; вторичный текст на нём — #3b4650, 5.5:1).
    Без радиусов и теней. «Бирки» — белые плашки с чёрной подписью поверх фото, как ярлыки в витрине.
    Движения при прокрутке нет: фото стоят на местах и не проявляются. Двигается только то, что открыл человек
    (меню, нижний лист, строка details) — и всё это выключено при prefers-reduced-motion. */
@@ -20,6 +21,7 @@
   --line: #e5e5e5;     /* линии-разделители (не текст) */
   --pad: #f6f6f6;      /* подложка фото */
   --red: #cc0000;
+  --foot: #a9c7e5;     /* подвал — голубой PANTONE 277 */
   --g: 16px;           /* боковые поля */
   --promo: 40px;
   --hdr: 44px;
@@ -46,7 +48,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-wrap: break-word;
+  /* Подвал прижат к низу экрана и на короткой странице (пустая корзина): под голубым подвалом нет белой полосы */
+  display: flex; flex-direction: column; min-height: 100vh;
 }
+main { flex: 1 0 auto; }
 img, video { display: block; max-width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
 button, input { font: inherit; letter-spacing: inherit; color: inherit; }
@@ -611,8 +616,13 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 .note { padding: 14px 16px; background: var(--pad); }
 .ilinks { margin-top: 4px; }
 
-/* ——— Подвал: строки капсом, языки, юр. строки, крупный логотип ——— */
-.ftr { margin-top: 96px; padding: 0 var(--g) calc(28px + env(safe-area-inset-bottom)); }
+/* ——— Подвал: голубой на всю ширину, строки капсом, языки, юр. строки, крупный логотип ——— */
+.ftr {
+  margin-top: 96px; padding: 32px var(--g) calc(28px + env(safe-area-inset-bottom));
+  background: var(--foot);
+  --mute: #3b4650;     /* вторичный текст на голубом: 5.5:1 (#737373 дал бы 2.7:1) */
+  --line: #95afca;     /* линии — тот же голубой, темнее на 12 %: заметны, как #e5e5e5 на белом */
+}
 .p-home .ftr { margin-top: 72px; }
 .ftr__accs { border-top: 1px solid var(--line); }
 .flist a, .flist span { display: inline-flex; align-items: center; gap: .3em; min-height: 40px; }
