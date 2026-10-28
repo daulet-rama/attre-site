@@ -18,7 +18,16 @@
     "kz": "қара, зәйтүн түсті",
     "en": "black, olive"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "black",
+    "green"
+  ],
+  "new": true,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

@@ -1,0 +1,53 @@
+{
+  "id": "049",
+  "published": true,
+  "order": 475,
+  "cat": "cardholder",
+  "name": {
+    "ru": "Кардхолдер из эко-кожи",
+    "kz": "Эко-былғары кардхолдер",
+    "en": "Faux leather cardholder"
+  },
+  "type": {
+    "ru": "кардхолдер",
+    "kz": "кардхолдер",
+    "en": "cardholder"
+  },
+  "color": {
+    "ru": "розовый и бордовый, тиснение под крокодила",
+    "kz": "қызғылт және күрең, крокодил бедері",
+    "en": "pink and burgundy, croc-embossed"
+  },
+  "materials": [
+    "eco-leather"
+  ],
+  "colors": [
+    "pink",
+    "red"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/cardholder-eco-1.jpg",
+    "media/products/cardholder-eco-2.jpg",
+    "media/products/cardholder-eco-3.jpg"
+  ]
+}

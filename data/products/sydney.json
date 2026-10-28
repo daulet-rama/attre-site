@@ -18,7 +18,18 @@
     "kz": "қара (зебра принт), сүт түсті және көк",
     "en": "black with zebra print, cream with blue"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "black",
+    "white",
+    "blue",
+    "animal"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

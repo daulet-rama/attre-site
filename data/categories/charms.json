@@ -1,0 +1,10 @@
+{
+  "key": "charms",
+  "parent": "acc",
+  "order": 70,
+  "name": {
+    "ru": "брелоки",
+    "kz": "брелоктар",
+    "en": "bag charms"
+  }
+}

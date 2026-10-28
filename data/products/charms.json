@@ -2,7 +2,7 @@
   "id": "046",
   "published": true,
   "order": 460,
-  "cat": "acc",
+  "cat": "charms",
   "name": {
     "ru": "Брелоки",
     "kz": "Брелоктар",
@@ -18,11 +18,22 @@
     "kz": "түрлі-түсті",
     "en": "multicolor"
   },
-  "material": null,
+  "materials": [],
+  "colors": [
+    "black",
+    "pink",
+    "green",
+    "blue",
+    "beige",
+    "white"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
-    "ru": "",
-    "kz": "",
-    "en": ""
+    "ru": "Брелоки сейчас есть по 1–2 штуки каждого вида — наличие и расцветки уточняйте в WhatsApp.",
+    "kz": "Қазір брелоктардың әр түрінен 1–2 данадан бар — бар-жоғын және түстерін WhatsApp арқылы нақтылаңыз.",
+    "en": "Each charm comes in just 1–2 pieces right now — message us on WhatsApp to check what’s available."
   },
   "strap": {
     "ru": "",

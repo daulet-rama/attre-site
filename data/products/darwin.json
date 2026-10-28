@@ -18,7 +18,16 @@
     "kz": "қоңыр, сүт түсті",
     "en": "brown, cream"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "brown",
+    "beige"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

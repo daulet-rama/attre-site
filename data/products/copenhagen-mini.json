@@ -18,7 +18,16 @@
     "kz": "құм түсті, қою сұр",
     "en": "sand, graphite grey"
   },
-  "material": null,
+  "materials": [
+    "textile"
+  ],
+  "colors": [
+    "beige",
+    "grey"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

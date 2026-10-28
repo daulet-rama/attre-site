@@ -2,7 +2,7 @@
   "id": "009",
   "published": true,
   "order": 90,
-  "cat": "shopper",
+  "cat": "bags",
   "name": {
     "ru": "Santorini",
     "kz": "Santorini",
@@ -18,7 +18,15 @@
     "kz": "бежевый, қара жиекті",
     "en": "natural beige with black trim"
   },
-  "material": null,
+  "materials": [
+    "textile"
+  ],
+  "colors": [
+    "beige"
+  ],
+  "new": false,
+  "popular": true,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

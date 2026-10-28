@@ -18,7 +18,18 @@
     "kz": "қызыл, сары (қыша түсті), ашық жасыл",
     "en": "red, mustard yellow, lime green"
   },
-  "material": null,
+  "materials": [
+    "suede"
+  ],
+  "colors": [
+    "red",
+    "mustard",
+    "green",
+    "black"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

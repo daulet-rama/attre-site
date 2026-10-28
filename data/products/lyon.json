@@ -2,7 +2,7 @@
   "id": "030",
   "published": true,
   "order": 300,
-  "cat": "shopper",
+  "cat": "bags",
   "name": {
     "ru": "Lyon",
     "kz": "Lyon",
@@ -18,7 +18,17 @@
     "kz": "қою көк, сұр-қоңыр (тауп)",
     "en": "navy blue, taupe"
   },
-  "material": null,
+  "materials": [
+    "textile",
+    "suede"
+  ],
+  "colors": [
+    "blue",
+    "brown"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

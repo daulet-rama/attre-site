@@ -18,7 +18,16 @@
     "kz": "қызыл, хаки",
     "en": "red, khaki"
   },
-  "material": null,
+  "materials": [
+    "suede"
+  ],
+  "colors": [
+    "red",
+    "green"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

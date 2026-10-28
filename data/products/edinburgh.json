@@ -18,7 +18,15 @@
     "kz": "сұр",
     "en": "grey"
   },
-  "material": null,
+  "materials": [
+    "suede"
+  ],
+  "colors": [
+    "grey"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": true,
   "desc": {
     "ru": "",
     "kz": "",

@@ -1,0 +1,56 @@
+{
+  "id": "047",
+  "published": true,
+  "order": 470,
+  "cat": "cardholder",
+  "name": {
+    "ru": "Кардхолдер из кожи",
+    "kz": "Былғары кардхолдер",
+    "en": "Leather cardholder"
+  },
+  "type": {
+    "ru": "кардхолдер",
+    "kz": "кардхолдер",
+    "en": "cardholder"
+  },
+  "color": {
+    "ru": "чёрный, тёмно-коричневый, оливковый, серебристый",
+    "kz": "қара, қою қоңыр, зәйтүн, күміс",
+    "en": "black, dark brown, olive, silver"
+  },
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "black",
+    "brown",
+    "green",
+    "grey"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/cardholder-leather-1.jpg",
+    "media/products/cardholder-leather-2.jpg",
+    "media/products/cardholder-leather-3.jpg",
+    "media/products/cardholder-leather-4.jpg"
+  ]
+}

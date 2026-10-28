@@ -18,7 +18,19 @@
     "kz": "қызғылт, сары, қызыл",
     "en": "pink, yellow, red"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "mustard",
+    "pink",
+    "red",
+    "brown",
+    "blue"
+  ],
+  "new": true,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

@@ -18,7 +18,16 @@
     "kz": "қара, қою қоңыр",
     "en": "black, dark brown"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "black",
+    "brown"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

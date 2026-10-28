@@ -1,7 +1,7 @@
-// attré · Вариант 4 «Витрина». site.js подключён ради общего флага; всё поведение темы — здесь:
-// меню и нижние листы (фокус внутри, Esc), плавные строки details, проявление фото при появлении,
-// мягкая смена второго фото у видимых карточек, счётчик и стрелки галереи.
-// Без JS всё видно: скрытые состояния в CSS — только при html.js; движение — только без reduced motion.
+// attré · Вариант 4 «Витрина». Меню и нижние листы (фокус внутри, Esc), строки details, ленты со свайпом
+// (слайдер главной, фото товара, подборки: стрелки для мыши, счётчик «1 / 5»), избранное (localStorage),
+// фильтр и сортировка каталога, видео «за кадром». Анимаций при прокрутке нет: фото просто стоят на местах.
+// Без JS всё видно и листается пальцем; не работают только избранное, фильтр и сортировка.
 (function () {
   'use strict';
   var d = document, root = d.documentElement, w = window;
@@ -12,11 +12,13 @@
   var still = mq('(prefers-reduced-motion: reduce)');
   var fine = mq('(hover: hover) and (pointer: fine)');   // мышь: второе фото — по наведению
   var broad = mq('(min-width: 600px)');                    // крупная карточка — два фото рядом
-  var moving = function () { return !still.matches; };
   var each = function (sel, fn, ctx) { Array.prototype.forEach.call((ctx || d).querySelectorAll(sel), fn); };
+  var fill = function (s, k, v) { return String(s).split('{' + k + '}').join(v); };
   var hasIO = 'IntersectionObserver' in w;
   var conn = navigator.connection;
   var thrifty = !!(conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || '')));
+  var T = {};
+  try { T = JSON.parse(d.getElementById('v4-t').textContent); } catch (e) { /* без текстов остаются подписи из разметки */ }
 
   // ——— Меню и нижние листы: открыт один, подложка общая ———
   var scrim = d.createElement('div');
@@ -59,7 +61,7 @@
   }
   function trap(ev, box) {
     var f = Array.prototype.filter.call(
-      box.querySelectorAll('a[href], button:not([disabled]), summary, [tabindex]:not([tabindex="-1"])'),
+      box.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), summary, [tabindex]:not([tabindex="-1"])'),
       function (x) { return x.getClientRects().length > 0; });
     if (!f.length) return;
     var first = f[0], last = f[f.length - 1], a = d.activeElement;
@@ -86,7 +88,6 @@
     if (ev.key === 'Escape' || ev.key === 'Esc') { ev.preventDefault(); close(true); return; }
     if (ev.key === 'Tab') trap(ev, panel);
   });
-  w.addEventListener('pageshow', function (ev) { if (ev.persisted) close(false); });
 
   // ——— Строки details: высота плавно 0fr → 1fr (CSS); без движения — родное поведение ———
   each('details.acc', function (dt) {
@@ -100,7 +101,7 @@
       else dt.classList.remove('is-open');
     });
     sum.addEventListener('click', function (ev) {
-      if (!moving()) return;
+      if (still.matches) return;
       ev.preventDefault();
       if (dt.classList.contains('is-open')) {
         dt.classList.remove('is-open');
@@ -116,24 +117,8 @@
     });
   });
 
-  // ——— Фото: готово (загружено и раскодировано) ———
-  function ready(imgs, fn, ms) {
-    var left = imgs.length, done = false;
-    var fin = function () { if (!done) { done = true; fn(); } };
-    if (!left) { fin(); return; }
-    var one = function () { if (--left <= 0) fin(); };
-    imgs.forEach(function (i) {
-      if (i.decode) i.decode().then(one, one);
-      else if (i.complete) one();
-      else { i.addEventListener('load', one); i.addEventListener('error', one); }
-    });
-    setTimeout(fin, ms || 2600);   // сеть медленная — не держим витрину пустой
-  }
-  function real(i) {
-    var s = i.getAttribute('src') || '';
-    return s && s.indexOf('data:') !== 0 && i.getClientRects().length > 0;
-  }
-  function hydrate(i) {   // второе фото карточки: адрес подставляем только когда оно нужно
+  // ——— Второе фото карточки: по наведению мыши и рядом с первым у крупных карточек на компьютере ———
+  function hydrate(i) {
     if (!i || !i.hasAttribute('data-src')) return;
     i.addEventListener('load', function () { i.classList.add('is-ld'); }, { once: true });
     var ss = i.getAttribute('data-srcset');
@@ -142,158 +127,298 @@
     i.removeAttribute('data-src');
     i.removeAttribute('data-srcset');
   }
-  function pairShown(card) { return broad.matches && !!card && card.classList.contains('vc--w'); }
-  function prime(box) {
-    each('img[loading="lazy"]', function (i) { i.loading = 'eager'; }, box);
-    each('img[data-src]', function (i) {
-      if (pairShown(i.closest('.vc')) || fine.matches) hydrate(i);
-    }, box);
-  }
-
-  // Обложка и главное фото товара «оседают», когда фото готово. Ушли с экрана или досмотрели —
-  // движение заканчиваем (is-rest): меньше одновременных анимаций и снимаем will-change.
-  each('[data-settle]', function (box) {
-    var img = box.querySelector('img');
-    var rest = function () { box.classList.add('is-rest'); };
-    var go = function () { box.classList.add('is-in'); };
-    if (!img || !moving()) { go(); rest(); return; }
-    ready([img], go, 3000);
-    img.addEventListener('transitionend', function (ev) { if (ev.propertyName === 'scale') rest(); });
-    if (hasIO) {
-      var io = new IntersectionObserver(function (es) {
-        if (!es[0].isIntersecting && box.classList.contains('is-in')) { rest(); io.disconnect(); }
-      });
-      io.observe(box);
-    }
-  });
-
-  // ——— Проявление при появлении: один раз, когда фото рядом с экраном и готово ———
-  // Наблюдаем карточку, а не саму «штору»: у элемента с clip-path IntersectionObserver видит площадь 0,
-  // а ленивые фото внутри полностью обрезанного блока Chrome не грузит — их грузит prime().
-  var pending = Array.prototype.slice.call(d.querySelectorAll('[data-rv]'));
-  var nears = Array.prototype.slice.call(d.querySelectorAll('[data-rv], [data-near]'));
-  function show(b) {
-    if (b.__rv) return;
-    b.__rv = 1;
-    prime(b);
-    if (!moving()) { b.classList.add('is-in'); return; }
-    ready(Array.prototype.filter.call(b.querySelectorAll('img'), real), function () { b.classList.add('is-in'); });
-  }
-  if (!hasIO) {
-    nears.forEach(prime);
-    pending.forEach(show);
-  } else {
-    var near = new IntersectionObserver(function (es) {
-      es.forEach(function (en) { if (en.isIntersecting) { near.unobserve(en.target); prime(en.target); } });
-    }, { rootMargin: '600px 0px 900px 0px' });
-    nears.forEach(function (b) { near.observe(b); });
-    var rio = new IntersectionObserver(function (es) {
-      es.forEach(function (en) { if (en.isIntersecting) { rio.unobserve(en.target); show(en.target); } });
-    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
-    pending.forEach(function (b) { rio.observe(b); });
-    // Страховка: после остановки прокрутки всё, что на экране и ещё скрыто, проявляем
-    var sweepT = 0;
-    var sweep = function () {
-      var vw = w.innerWidth || root.clientWidth, vh = w.innerHeight || root.clientHeight;
-      pending = pending.filter(function (b) {
-        if (b.__rv) return false;
-        var r = b.getBoundingClientRect();
-        if (r.width && r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw) { show(b); return false; }
-        return true;
-      });
-    };
-    w.addEventListener('scroll', function () { clearTimeout(sweepT); sweepT = setTimeout(sweep, 500); }, { passive: true });
-    w.addEventListener('load', function () { setTimeout(sweep, 1500); });
-  }
-  if (broad.addEventListener) {
-    broad.addEventListener('change', function () {
-      if (broad.matches) each('.vc--w.is-in .vc__img--b[data-src]', hydrate);
+  var near = hasIO ? new IntersectionObserver(function (es) {
+    es.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      en.target.__near = 1;
+      if (broad.matches && en.target.classList.contains('vc--w')) hydrate(en.target.querySelector('.vc__img--b'));
     });
+  }, { rootMargin: '800px 0px' }) : null;
+  each('.vc', function (c) { if (near) near.observe(c); });
+  function pairs(box) {
+    if (!broad.matches) return;
+    each('.vc--w', function (c) { if (!near || c.__near) hydrate(c.querySelector('.vc__img--b')); }, box);
   }
-  if (fine.matches) {   // мышь: второе фото подгружаем и по наведению, если до него не дошла очередь
+  if (broad.addEventListener) broad.addEventListener('change', function () { pairs(d); });
+  if (fine.matches) {
     d.addEventListener('pointerover', function (ev) {
       var c = ev.target && ev.target.closest && ev.target.closest('.vc');
-      if (c) hydrate(c.querySelector('.vc__img--b[data-src]'));
+      if (c) hydrate(c.querySelector('.vc__img--b'));
     }, { passive: true });
   }
 
-  // ——— Второе фото сменяет первое: только видимые карточки, по одной за раз, раз в ~4 c ———
-  var cards = [];
-  if (hasIO && moving() && !fine.matches && !thrifty) {
-    each('[data-vc]', function (c) {
-      var m = c.querySelector('.vc__media'), b = c.querySelector('.vc__img--b');
-      if (m && b) cards.push({ el: c, m: m, b: b, t: 0, vis: false });
-    });
-  }
-  var timer = 0, lastFlip = 0;
-  function eligible(c) {
-    return c.vis && c.b.classList.contains('is-ld') && c.el.classList.contains('is-in') && !pairShown(c.el);
-  }
-  function tick() {
-    if (d.hidden || panel) return;
-    var now = Date.now();
-    if (now - lastFlip < 1400) return;   // смена идёт 1.2 c — следующая только после неё
-    var best = null;
-    cards.forEach(function (c) {
-      if (eligible(c) && now - c.t >= 4000 && (!best || c.t < best.t)) best = c;
-    });
-    if (!best) return;
-    best.m.classList.toggle('is-alt');
-    best.t = now;
-    lastFlip = now;
-  }
-  function pace() {   // таймер живёт, только пока на экране есть такие карточки
-    var any = cards.some(function (c) { return c.vis; });
-    if (any && !timer) timer = setInterval(tick, 200);
-    else if (!any && timer) { clearInterval(timer); timer = 0; }
-  }
-  if (cards.length) {
-    var vio = new IntersectionObserver(function (es) {
-      var now = Date.now();
-      es.forEach(function (en) {
-        var c = en.target.__v4;
-        var v = en.isIntersecting && en.intersectionRatio >= 0.5;
-        if (v && !c.vis) { c.t = now; hydrate(c.b); }   // первая смена — не раньше чем через ~4 c на экране
-        c.vis = v;
-      });
-      pace();
-    }, { threshold: [0, 0.5] });
-    cards.forEach(function (c) { c.el.__v4 = c; vio.observe(c.el); });
-  }
-
-  // ——— Галерея товара: счётчик «2 / 5», стрелки по кругу, следующее фото — заранее ———
-  each('[data-pg]', function (g) {
-    var track = g.querySelector('.pg__track');
-    var out = g.querySelector('.pg__count');
-    var slides = track ? track.children : [];
-    var n = slides.length;
-    if (!track || n < 2) return;
+  // ——— Ленты: слайдер главной и фото товара (по одному, по кругу, счётчик), подборки (страницами) ———
+  each('[data-rail]', function (r) {
+    var track = r.querySelector('[data-track]');
+    if (!track) return;
+    var items = track.children, n = items.length;
+    var slides = r.getAttribute('data-rail') === 'slides';
+    var out = r.querySelector('[data-count]');
+    var prev = r.querySelector('[data-step="-1"]'), next = r.querySelector('[data-step="1"]');
+    if (n < 2) { [out, prev, next].forEach(function (x) { if (x) x.hidden = true; }); return; }
     track.tabIndex = 0;   // листается стрелками клавиатуры
-    var index = function () {
-      var wd = track.clientWidth;
-      return wd ? Math.max(0, Math.min(n - 1, Math.round(track.scrollLeft / wd))) : 0;
-    };
+    var step = function () { return (items[1].offsetLeft - items[0].offsetLeft) || track.clientWidth; };
+    var max = function () { return track.scrollWidth - track.clientWidth; };
     var cur = -1;
     var update = function () {
-      var i = index();
-      if (i === cur) return;
-      cur = i;
-      if (out) out.textContent = (i + 1) + ' / ' + n;
-      if (slides[i].hasAttribute('data-rv')) show(slides[i]);   // на случай, если наблюдатель не сработал
-      var nx = slides[i + 1] && slides[i + 1].querySelector('img[loading="lazy"]');
-      if (nx) nx.loading = 'eager';
+      var x = track.scrollLeft;
+      if (out) {
+        var i = Math.max(0, Math.min(n - 1, Math.round(x / step())));
+        if (i !== cur) { cur = i; out.textContent = (i + 1) + ' / ' + n; }
+      }
+      if (!slides) {
+        if (prev) prev.disabled = x <= 2;
+        if (next) next.disabled = x >= max() - 2;
+      }
     };
     var raf = 0;
     track.addEventListener('scroll', function () {
       if (!raf) raf = requestAnimationFrame(function () { raf = 0; update(); });
     }, { passive: true });
+    w.addEventListener('resize', update);
     update();
-    each('[data-step]', function (b) {
-      b.addEventListener('click', function () {
-        var i = index() + Number(b.getAttribute('data-step'));
-        if (i < 0) i = n - 1; else if (i >= n) i = 0;
-        track.scrollTo({ left: i * track.clientWidth, behavior: moving() ? 'smooth' : 'auto' });
+    var aim = null, aimT = 0;   // куда уже едем: быстрые повторные нажатия считаются от цели, а не от середины пути
+    var go = function (dir) {
+      var x = aim !== null ? aim : track.scrollLeft, m = max(), s = step(), to;
+      if (slides) {
+        to = x + dir * s;
+        if (dir > 0 && x >= m - 2) to = 0;          // с последнего — на первое
+        else if (dir < 0 && x <= 2) to = m;         // с первого — на последнее
+      } else {
+        to = x + dir * s * Math.max(1, Math.floor(track.clientWidth / s));   // страница — сколько карточек видно
+      }
+      aim = Math.max(0, Math.min(m, to));
+      clearTimeout(aimT);
+      aimT = setTimeout(function () { aim = null; }, 700);
+      track.scrollTo({ left: aim, behavior: still.matches ? 'auto' : 'smooth' });
+    };
+    if (prev) prev.addEventListener('click', function () { go(-1); });
+    if (next) next.addEventListener('click', function () { go(1); });
+  });
+  // Остальные фото слайдера и товара — после загрузки страницы, чтобы при свайпе они уже были
+  w.addEventListener('load', function () {
+    each('.pg img[loading="lazy"], .hero img[loading="lazy"]', function (i) { i.loading = 'eager'; });
+  });
+  // Строка категорий: текущая — на виду
+  each('.tabs__in', function (sc) {
+    var a = sc.querySelector('[aria-current]');
+    if (a && sc.scrollWidth > sc.clientWidth) sc.scrollLeft = a.offsetLeft - (sc.clientWidth - a.offsetWidth) / 2;
+  });
+
+  // ——— Избранное: список адресов вещей в localStorage (живёт после перезагрузки, но только в этом браузере) ———
+  var KEY = 'attre-fav', mem = [];
+  function read() {
+    try {
+      var v = JSON.parse(w.localStorage.getItem(KEY) || '[]');
+      if (Array.isArray(v)) return v.filter(function (s) { return typeof s === 'string'; });
+    } catch (e) { /* приватный режим или хранилище запрещено — список живёт, пока открыта страница */ }
+    return mem.slice();
+  }
+  function write(list) {
+    mem = list.slice();
+    try { w.localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) { /* см. read() */ }
+  }
+  var favGrid = d.querySelector('[data-fav-grid]');
+  function favPage(list) {
+    var cards = {}, shown = [], lost = false;
+    each('[data-slug]', function (li) { cards[li.getAttribute('data-slug')] = li; }, favGrid);
+    var known = list.filter(function (s) { return cards[s]; });
+    if (known.length < list.length) {   // вещь сняли с сайта — убираем из списка, чтобы не врал счётчик
+      write(known);
+      each('[data-fav-n]', function (el) { el.textContent = known.length ? String(known.length) : ''; });
+      list = known;
+    }
+    for (var i = list.length - 1; i >= 0; i--) if (cards[list[i]]) shown.push(cards[list[i]]);   // недавние — первыми
+    each('[data-slug]', function (li) {
+      var on = shown.indexOf(li) >= 0;
+      if (!on && !li.hidden && li.contains(d.activeElement)) lost = true;
+      li.hidden = !on;
+    }, favGrid);
+    shown.forEach(function (li) { favGrid.appendChild(li); });
+    var empty = d.querySelector('[data-fav-empty]'), send = d.querySelector('[data-fav-send]'), wa = d.querySelector('[data-fav-wa]');
+    if (empty) empty.hidden = shown.length > 0;
+    if (send) send.hidden = !shown.length;
+    if (wa && shown.length && T.wa) {
+      var lines = shown.map(function (li) {
+        var a = li.querySelector('a[href]');
+        return fill(fill(fill(T.waItem, 'name', li.getAttribute('data-name')), 'id', li.getAttribute('data-id')), 'url', a ? a.href : '');
       });
-    }, g);
+      wa.href = 'https://wa.me/' + T.wa + '?text=' + encodeURIComponent(T.waFav + '\n' + lines.join('\n'));
+    }
+    if (lost) { var m = d.getElementById('main'); if (m) m.focus({ preventScroll: true }); }
+  }
+  function sync() {
+    var list = read();
+    each('[data-fav]', function (b) {
+      var on = list.indexOf(b.getAttribute('data-fav')) >= 0;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (T.favAdd) b.title = on ? T.favDel : T.favAdd;
+    });
+    each('[data-fav-n]', function (el) { el.textContent = list.length ? String(list.length) : ''; });
+    if (favGrid) favPage(list);
+  }
+  d.addEventListener('click', function (ev) {
+    var b = ev.target && ev.target.closest && ev.target.closest('[data-fav]');
+    if (!b) return;
+    ev.preventDefault();
+    var s = b.getAttribute('data-fav'), list = read(), i = list.indexOf(s);
+    if (i >= 0) list.splice(i, 1); else list.push(s);
+    write(list);
+    sync();
+  });
+  w.addEventListener('storage', function (ev) { if (ev.key === KEY) sync(); });   // другая вкладка
+  w.addEventListener('pageshow', function (ev) { if (ev.persisted) { close(false); sync(); } });   // «назад» из кэша
+  sync();
+
+  // ——— Каталог: фильтр (материал, цвет, цена) и сортировка; ритм витрины перестраивается под найденное ———
+  var SIZES = { w1: '(min-width: 600px) 50vw, 100vw', w2: '(min-width: 600px) 25vw, 100vw', h: '(min-width: 600px) 25vw, 50vw' };
+  function rhythm(n) {   // как rhythm() в themes/v4.py
+    var out = [];
+    for (var i = 0; i < n; i++) {
+      var c = i % 3;
+      out.push({ k: c === 0 ? 'w' : c === 1 ? 'h' : 'h2', r: c === 0 && Math.floor(i / 3) % 2 === 1 && i + 2 < n });
+    }
+    if (n % 3 === 2) { out[n - 2] = { k: 'h', r: false }; out[n - 1] = { k: 'h2', r: false }; }
+    return out;
+  }
+  var grid = d.querySelector('[data-grid]'), form = d.querySelector('[data-filter]');
+  function relayout(list) {
+    var ks = rhythm(list.length);
+    list.forEach(function (c, i) {
+      var k = ks[i], wide = k.k === 'w';
+      c.classList.toggle('vc--w', wide);
+      c.classList.toggle('vc--2', k.k === 'h2');
+      c.classList.toggle('vc--r', k.r);
+      var sz = wide ? (c.classList.contains('vc--one') ? SIZES.w1 : SIZES.w2) : SIZES.h;
+      each('.vc__img', function (im) { if (im.getAttribute('sizes') !== sz) im.setAttribute('sizes', sz); }, c);
+    });
+    pairs(grid);
+  }
+  if (grid && form) {
+    var words = function (el, a) { return (el.getAttribute(a) || '').split(' ').filter(Boolean); };
+    var all = Array.prototype.map.call(grid.children, function (c, i) {
+      return { el: c, i: i, mat: words(c, 'data-mat'), col: words(c, 'data-col'), price: Number(c.getAttribute('data-price')) || 0,
+               isNew: c.hasAttribute('data-new'), pop: c.hasAttribute('data-pop'), sold: c.hasAttribute('data-sold') };
+    });
+    var range = form.querySelector('[data-range]');
+    var lo = range ? Number(range.getAttribute('data-min')) : 0, hi = range ? Number(range.getAttribute('data-max')) : 0;
+    var rMin = form.querySelector('input[name="min"]'), rMax = form.querySelector('input[name="max"]');
+    var bar = form.querySelector('[data-fill]');
+    var none = d.querySelector('[data-none]'), nOut = d.querySelector('[data-n]'), fc = d.querySelector('[data-fcount]');
+    var show = form.querySelector('[data-f-show]');
+    var money = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, T.sep || ' ') + ' ₸'; };
+    var live = !!(rMin && rMax && !rMin.disabled);
+    var picked = function (name) {
+      return Array.prototype.filter.call(form.querySelectorAll('input[name="' + name + '"]'), function (x) { return x.checked; })
+        .map(function (x) { return x.value; });
+    };
+    var state = function () {
+      var r = form.querySelector('input[name="sort"]:checked');
+      return { sort: r ? r.value : 'rec', mat: picked('mat'), col: picked('col'),
+               min: live ? Number(rMin.value) : lo, max: live ? Number(rMax.value) : hi };
+    };
+    var narrowed = function (s) { return s.min > lo || s.max < hi; };
+    var any = function (want, has) { return !want.length || want.some(function (x) { return has.indexOf(x) >= 0; }); };
+    var match = function (c, s) {
+      return any(s.mat, c.mat) && any(s.col, c.col) && (!narrowed(s) || (c.price && c.price >= s.min && c.price <= s.max));
+    };
+    var cmp = function (sort) {
+      return function (a, b) {
+        if (a.sold !== b.sold) return a.sold ? 1 : -1;   // проданные — в конце при любой сортировке
+        var k = 0;
+        if (sort === 'new') k = b.isNew - a.isNew;
+        else if (sort === 'pop') k = b.pop - a.pop;
+        else if (sort === 'asc' || sort === 'desc') {
+          if (!a.price !== !b.price) return a.price ? -1 : 1;   // «цена по запросу» — после вещей с ценой
+          k = sort === 'asc' ? a.price - b.price : b.price - a.price;
+        }
+        return k || a.i - b.i;
+      };
+    };
+    var paint = function () {   // бегунок: полоса между ручками и подписи «от — до»
+      if (!rMin || !rMax) return;
+      var a = Number(rMin.value), b = Number(rMax.value), span = (hi - lo) || 1;
+      if (bar) { bar.style.left = ((a - lo) / span * 100) + '%'; bar.style.right = ((hi - b) / span * 100) + '%'; }
+      rMin.style.zIndex = a > lo + span / 2 ? 3 : 1;   // у правого края левую ручку тоже можно взять
+      var oa = form.querySelector('[data-out="min"]'), ob = form.querySelector('[data-out="max"]');
+      if (oa) oa.textContent = money(a);
+      if (ob) ob.textContent = money(b);
+    };
+    var remember = function (s) {   // фильтр живёт в адресе: ссылкой можно поделиться, «назад» вернёт к нему
+      var q = [];
+      if (s.sort !== 'rec') q.push('sort=' + s.sort);
+      if (s.mat.length) q.push('mat=' + s.mat.join(','));
+      if (s.col.length) q.push('col=' + s.col.join(','));
+      if (narrowed(s)) q.push('price=' + s.min + '-' + s.max);
+      try { history.replaceState(null, '', location.pathname + (q.length ? '?' + q.join('&') : '') + location.hash); } catch (e) { /* file:// */ }
+    };
+    var restore = function () {
+      var q = {};
+      location.search.replace(/^\?/, '').split('&').forEach(function (kv) {
+        var p = kv.split('=');
+        if (p[0]) { try { q[p[0]] = decodeURIComponent(p[1] || ''); } catch (e) { /* битый адрес */ } }
+      });
+      each('input[name="sort"]', function (x) { if (x.value === q.sort) x.checked = true; }, form);
+      ['mat', 'col'].forEach(function (name) {
+        var want = (q[name] || '').split(',');
+        each('input[name="' + name + '"]', function (x) { x.checked = want.indexOf(x.value) >= 0; }, form);
+      });
+      var m = /^(\d+)-(\d+)$/.exec(q.price || '');
+      if (m && live) { rMin.value = m[1]; rMax.value = m[2]; }
+    };
+    var apply = function (save) {
+      var s = state();
+      var list = all.filter(function (c) { return match(c, s); }).sort(cmp(s.sort));
+      all.forEach(function (c) { c.el.hidden = list.indexOf(c) < 0; });
+      list.forEach(function (c) { grid.appendChild(c.el); });
+      relayout(list.map(function (c) { return c.el; }));
+      if (nOut) nOut.textContent = list.length;
+      if (show && T.show) show.textContent = fill(T.show, 'n', list.length);
+      var k = s.mat.length + s.col.length + (narrowed(s) ? 1 : 0);
+      if (fc) fc.textContent = k ? '(' + k + ')' : '';
+      if (none) none.hidden = list.length > 0;
+      if (save) remember(s);
+    };
+    form.addEventListener('input', function (ev) {
+      var x = ev.target;
+      if (live && (x === rMin || x === rMax)) {   // ручки не перескакивают друг через друга
+        var gap = Number(rMin.step) || 50;
+        if (Number(rMin.value) > Number(rMax.value) - gap) {
+          if (x === rMin) rMin.value = Number(rMax.value) - gap; else rMax.value = Number(rMin.value) + gap;
+        }
+        paint();
+      }
+      apply(true);
+    });
+    form.addEventListener('change', function () { apply(true); });   // старые Safari шлют у радио только change
+    form.addEventListener('submit', function (ev) { ev.preventDefault(); });
+    form.addEventListener('reset', function () { setTimeout(function () { paint(); apply(true); }, 0); });
+    each('[data-f-reset]', function (b) { if (!form.contains(b)) b.addEventListener('click', function () { form.reset(); }); });
+    restore();
+    paint();
+    apply(false);
+  }
+
+  // ——— Видео «за кадром»: играет без звука, пока на экране; кнопка пауза/смотреть ———
+  // При «уменьшить движение» и экономии трафика само не запускается.
+  each('[data-film]', function (v) {
+    var btn = v.parentNode.querySelector('[data-film-btn]');
+    v.removeAttribute('controls');
+    var wish = null;   // выбор человека важнее автозапуска
+    var auto = !still.matches && !thrifty;
+    var label = function () { if (btn && T.play) btn.textContent = v.paused ? T.play : T.pause; };
+    var play = function () { var pr = v.play(); if (pr && pr.catch) pr.catch(label); };
+    v.addEventListener('play', label);
+    v.addEventListener('pause', label);
+    if (btn) btn.addEventListener('click', function () {
+      if (v.paused) { wish = 'play'; play(); } else { wish = 'pause'; v.pause(); }
+    });
+    if (hasIO) {
+      new IntersectionObserver(function (es) {
+        if (es[0].isIntersecting) { if (wish === 'play' || (wish === null && auto)) play(); }
+        else if (!v.paused) v.pause();
+      }, { threshold: 0.3 }).observe(v);
+    }
+    label();
   });
 })();

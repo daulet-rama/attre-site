@@ -30,9 +30,9 @@
       "en": "attré — bags in Almaty"
     },
     "site_desc": {
-      "ru": "Сумки, клатчи и аксессуары из натуральной кожи, замши и канваса. Магазин в Алматы, доставка по всему миру.",
-      "kz": "Табиғи былғарыдан, замшадан және канвастан жасалған сөмкелер, клатчтар мен аксессуарлар. Алматыдағы дүкен, бүкіл әлемге жеткізу.",
-      "en": "Bags, clutches and accessories in leather, suede and canvas. Store in Almaty, worldwide delivery."
+      "ru": "Сумки и аксессуары ATTRE STUDIO из кожи, замши и текстиля. Магазин в Алматы, доставка по всему миру.",
+      "kz": "ATTRE STUDIO сөмкелері мен аксессуарлары: былғары, замша, текстиль. Алматыдағы дүкен, бүкіл әлемге жеткізу.",
+      "en": "ATTRE STUDIO bags and accessories in leather, suede and textile. Store in Almaty, worldwide delivery."
     },
     "intro_sub": {
       "ru": "сумки и аксессуары · алматы · доставка по миру",
@@ -225,9 +225,9 @@
       "en": "96 Kabanbay Batyr St, Almaty"
     },
     "hours": {
-      "ru": "часы работы: [уточняется]",
-      "kz": "жұмыс уақыты: [нақтыланады]",
-      "en": "opening hours: [to be confirmed]"
+      "ru": "Часы работы: 11:00–20:00",
+      "kz": "Жұмыс уақыты: 11:00–20:00",
+      "en": "Opening hours: 11:00–20:00"
     },
     "map": {
       "ru": "открыть в 2ГИС",
@@ -265,14 +265,14 @@
       "en": "returns & exchanges"
     },
     "f_about": {
-      "ru": "о магазине",
-      "kz": "дүкен туралы",
-      "en": "about us"
+      "ru": "о бренде",
+      "kz": "бренд туралы",
+      "en": "about the brand"
     },
     "f_seller": {
-      "ru": "Продавец: [ИП/ТОО — уточняется], ИИН/БИН: [—]. Адрес, часы работы и сведения о регистрации — [уточняется].",
-      "kz": "Сатушы: [ЖК/ЖШС — нақтыланады], ЖСН/БСН: [—]. Мекенжайы, жұмыс уақыты және тіркеу туралы мәліметтер — [нақтыланады].",
-      "en": "Seller: [sole proprietor / LLP — to be confirmed], IIN/BIN: [—]. Address, opening hours and registration details — [to be confirmed]."
+      "ru": "Продавец: [ИП/ТОО — уточняется], ИИН/БИН: [—], сведения о регистрации — [уточняется]. Магазин: Алматы, ул. Кабанбай батыра, 96, часы работы 11:00–20:00.",
+      "kz": "Сатушы: [ЖК/ЖШС — нақтыланады], ЖСН/БСН: [—], тіркеу туралы мәліметтер — [нақтыланады]. Дүкен: Алматы, Қабанбай батыр к-сі, 96, жұмыс уақыты 11:00–20:00.",
+      "en": "Seller: [sole proprietor / LLP — to be confirmed], IIN/BIN: [—], registration details — [to be confirmed]. Store: 96 Kabanbay Batyr St, Almaty, open 11:00–20:00."
     },
     "f_prices": {
       "ru": "Цены указаны в тенге.",
@@ -300,14 +300,14 @@
       "en": "customer care"
     },
     "about_title": {
-      "ru": "о магазине",
-      "kz": "дүкен туралы",
-      "en": "about us"
+      "ru": "о бренде",
+      "kz": "бренд туралы",
+      "en": "about the brand"
     },
     "about_body": {
-      "ru": "attré — магазин сумок в Алматы. Подбираем сумки, клатчи и аксессуары из натуральной кожи, замши, канваса и плотного хлопка — с вниманием к материалу и форме.",
-      "kz": "attré — Алматыдағы сөмке дүкені. Табиғи былғарыдан, замшадан, канвастан және тығыз мақта матадан жасалған сөмкелер, клатчтар мен аксессуарларды іріктейміз — материалы мен пішініне ерекше мән береміз.",
-      "en": "attré is a bag store in Almaty. We select bags, clutches and accessories made of leather, suede, canvas and heavy cotton, with close attention to material and form."
+      "ru": "ATTRE STUDIO — бренд сумок, основанный Дамирой и Жанной, двумя девушками, объединёнными любовью к путешествиям, эстетике и поиску вдохновения в деталях.\n\nКаждая модель нашей коллекции носит имя города в разных уголках мира. Для нас это не просто названия, а отражение мест, которые вдохновляют нас, наших путешествий и воспоминаний.\n\nМы верим, что сумка — это больше, чем аксессуар. Это часть личного стиля, повседневной жизни и маленьких историй, которые мы создаём каждый день.\n\nСоздавая ATTRE STUDIO, мы хотим, чтобы каждая сумка стала частью вашей собственной истории — куда бы вы ни отправились.",
+      "kz": "ATTRE STUDIO — саяхатқа, эстетикаға және ұсақ детальдардан шабыт іздеуге деген сүйіспеншілік біріктірген екі қыз — Дамира мен Жанна негізін қалаған сөмке бренді.\n\nКоллекциямыздағы әр модель әлемнің әр түкпіріндегі қаланың атымен аталады. Біз үшін бұл жай атау емес: олар бізді шабыттандыратын жерлерді, саяхаттарымыз бен естеліктерімізді бейнелейді.\n\nСөмке — аксессуардан әлдеқайда көп деп сенеміз. Ол — жеке стильдің, күнделікті өмірдің және біз күн сайын жасайтын шағын оқиғалардың бір бөлігі.\n\nATTRE STUDIO-ны құра отырып, әр сөмке қайда барсаңыз да сіздің жеке тарихыңыздың бір бөлігі болғанын қалаймыз.",
+      "en": "ATTRE STUDIO is a bag brand founded by Damira and Zhanna, two women brought together by a love of travel, beauty and finding inspiration in the details.\n\nEvery model in our collection is named after a city somewhere in the world. To us these are more than names: they reflect the places that inspire us, our journeys and our memories.\n\nWe believe a bag is more than an accessory. It is part of your personal style, your everyday life and the small stories we create each day.\n\nWith ATTRE STUDIO, we want every bag to become part of your own story, wherever you go."
     },
     "delivery_title": {
       "ru": "доставка и оплата",
@@ -440,9 +440,9 @@
       "en": "not repeated."
     },
     "promo": {
-      "ru": "Бонус 2 000 ₸ на первый заказ",
-      "kz": "Алғашқы тапсырысқа 2 000 ₸ бонус",
-      "en": "2,000 ₸ bonus on your first order"
+      "ru": "Дарим 2 000 ₸ на первый заказ",
+      "kz": "Алғашқы тапсырысқа 2 000 ₸ сыйлаймыз",
+      "en": "A 2,000 ₸ gift on your first order"
     },
     "bonus_short": {
       "ru": "Бонус 2 000 ₸ на первый заказ",
@@ -503,6 +503,191 @@
       "ru": "смотреть",
       "kz": "қарау",
       "en": "view"
+    },
+    "new_title": {
+      "ru": "новинки",
+      "kz": "жаңа үлгілер",
+      "en": "new in"
+    },
+    "pop_title": {
+      "ru": "популярное",
+      "kz": "танымал",
+      "en": "popular"
+    },
+    "wear_title": {
+      "ru": "нас носят",
+      "kz": "бізді таңдағандар",
+      "en": "worn by you"
+    },
+    "wear_note": {
+      "ru": "Отмечайте @attre.studio в Instagram — лучшие фото покажем здесь.",
+      "kz": "Instagram-да @attre.studio белгілеңіз — ең әдемі фотоларды осында көрсетеміз.",
+      "en": "Tag @attre.studio on Instagram and we’ll share our favourite photos here."
+    },
+    "film_title": {
+      "ru": "за кадром",
+      "kz": "кадр сыртында",
+      "en": "behind the scenes"
+    },
+    "film_play": {
+      "ru": "смотреть",
+      "kz": "көру",
+      "en": "play"
+    },
+    "film_pause": {
+      "ru": "пауза",
+      "kz": "кідірту",
+      "en": "pause"
+    },
+    "catalog_btn": {
+      "ru": "каталог",
+      "kz": "каталог",
+      "en": "catalogue"
+    },
+    "see_all": {
+      "ru": "смотреть все",
+      "kz": "барлығын көру",
+      "en": "view all"
+    },
+    "fav_title": {
+      "ru": "избранное",
+      "kz": "таңдаулылар",
+      "en": "favourites"
+    },
+    "fav_add": {
+      "ru": "добавить в избранное",
+      "kz": "таңдаулыларға қосу",
+      "en": "add to favourites"
+    },
+    "fav_del": {
+      "ru": "убрать из избранного",
+      "kz": "таңдаулылардан алып тастау",
+      "en": "remove from favourites"
+    },
+    "fav_empty": {
+      "ru": "Отмечайте вещи сердечком — они появятся здесь.",
+      "kz": "Ұнаған тауарды жүрекшемен белгілеңіз — ол осында шығады.",
+      "en": "Tap the heart on any item to keep it here."
+    },
+    "fav_note": {
+      "ru": "Список хранится в этом браузере на этом телефоне или компьютере.",
+      "kz": "Тізім осы телефондағы немесе компьютердегі браузерде сақталады.",
+      "en": "The list is kept in this browser on this phone or computer."
+    },
+    "fav_send": {
+      "ru": "отправить список в WhatsApp",
+      "kz": "тізімді WhatsApp-қа жіберу",
+      "en": "send the list on WhatsApp"
+    },
+    "wa_fav": {
+      "ru": "Здравствуйте! Меня интересуют:",
+      "kz": "Сәлеметсіз бе! Мені мына тауарлар қызықтырады:",
+      "en": "Hello! I’m interested in:"
+    },
+    "fav_nojs": {
+      "ru": "Избранное работает при включённом JavaScript.",
+      "kz": "Таңдаулылар JavaScript қосулы болғанда жұмыс істейді.",
+      "en": "Favourites need JavaScript turned on."
+    },
+    "soon": {
+      "ru": "скоро в наличии",
+      "kz": "жақында сатылымда",
+      "en": "coming soon"
+    },
+    "wa_btn_soon": {
+      "ru": "узнать о поступлении",
+      "kz": "түскенде хабарлау",
+      "en": "notify me"
+    },
+    "wa_soon": {
+      "ru": "Здравствуйте! Сообщите, пожалуйста, когда появится «{name}» (№ {id}). {url}",
+      "kz": "Сәлеметсіз бе! «{name}» (№ {id}) сатылымға түскенде хабарлаңызшы. {url}",
+      "en": "Hello! Please let me know when “{name}” (No. {id}) is available. {url}"
+    },
+    "new_tag": {
+      "ru": "новинка",
+      "kz": "жаңа",
+      "en": "new"
+    },
+    "filter": {
+      "ru": "фильтр",
+      "kz": "сүзгі",
+      "en": "filter"
+    },
+    "sort": {
+      "ru": "сортировка",
+      "kz": "сұрыптау",
+      "en": "sort by"
+    },
+    "sort_rec": {
+      "ru": "рекомендуем",
+      "kz": "ұсынамыз",
+      "en": "recommended"
+    },
+    "sort_new": {
+      "ru": "сначала новинки",
+      "kz": "алдымен жаңалары",
+      "en": "newest first"
+    },
+    "sort_pop": {
+      "ru": "сначала популярные",
+      "kz": "алдымен танымалдары",
+      "en": "most popular"
+    },
+    "sort_asc": {
+      "ru": "сначала дешевле",
+      "kz": "алдымен арзандары",
+      "en": "price: low to high"
+    },
+    "sort_desc": {
+      "ru": "сначала дороже",
+      "kz": "алдымен қымбаттары",
+      "en": "price: high to low"
+    },
+    "f_mat": {
+      "ru": "материал",
+      "kz": "материал",
+      "en": "material"
+    },
+    "f_col": {
+      "ru": "цвет",
+      "kz": "түсі",
+      "en": "colour"
+    },
+    "f_price": {
+      "ru": "цена",
+      "kz": "бағасы",
+      "en": "price"
+    },
+    "f_reset": {
+      "ru": "сбросить",
+      "kz": "тазалау",
+      "en": "reset"
+    },
+    "f_show": {
+      "ru": "показать ({n})",
+      "kz": "көрсету ({n})",
+      "en": "show ({n})"
+    },
+    "f_none": {
+      "ru": "Ничего не нашлось — уберите часть фильтров.",
+      "kz": "Ештеңе табылмады — сүзгілердің бірін алып тастаңыз.",
+      "en": "Nothing found — try removing a filter."
+    },
+    "f_price_off": {
+      "ru": "Фильтр по цене заработает, когда у вещей появятся цены.",
+      "kz": "Тауарларға баға қойылғанда, баға сүзгісі іске қосылады.",
+      "en": "The price filter will work once prices are added."
+    },
+    "price_min": {
+      "ru": "цена от",
+      "kz": "бағасы, бастап",
+      "en": "minimum price"
+    },
+    "price_max": {
+      "ru": "цена до",
+      "kz": "бағасы, дейін",
+      "en": "maximum price"
     }
   }
 }

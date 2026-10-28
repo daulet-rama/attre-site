@@ -18,7 +18,17 @@
     "kz": "бежевый (замша), қара",
     "en": "beige (suede), black"
   },
-  "material": null,
+  "materials": [
+    "suede",
+    "leather"
+  ],
+  "colors": [
+    "beige",
+    "black"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

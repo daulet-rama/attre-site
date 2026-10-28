@@ -59,10 +59,15 @@ def main():
     core.write('robots.txt', 'User-agent: *\nDisallow: /\n' if core.PROTOTYPE else 'User-agent: *\nAllow: /\n')
     core.write('.nojekyll', '')
     core.write('variants/index.html', variants_page(themes))
+    products = core.DATA['products']
     total = 0
     for name, sub, title, _ in themes:
         theme = import_module(f'themes.{name}')
         core.set_theme(name, sub)
+        # Подкатегории (кардхолдеры, брелоки) знает только тема с NESTED_CATS; остальным — «аксессуары» целиком
+        nested = getattr(theme, 'NESTED_CATS', False)
+        core.DATA['products'] = products if nested else core.flat_cats(products)
+        cats = core.cat_pages() if nested else core.present_cats()
         pages = 0
         for l in core.LANGS:
             lang = l['code']
@@ -70,7 +75,9 @@ def main():
             core.write(f'{lang}/catalog/index.html', theme.catalog(lang))
             core.write(f'{lang}/info/index.html', theme.info(lang))
             pages += 3
-            for c in core.present_cats():
+            for path, page in getattr(theme, 'PAGES', {}).items():   # свои страницы темы: о бренде, избранное
+                core.write(f'{lang}/{path}index.html', page(lang)); pages += 1
+            for c in cats:
                 core.write(f'{lang}/c/{c}/index.html', theme.catalog(lang, c)); pages += 1
             for p in core.DATA['products']:
                 core.write(f'{lang}/p/{p["slug"]}/index.html', theme.product(p, lang)); pages += 1
@@ -78,6 +85,7 @@ def main():
             core.write('index.html', f'<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={core.ROOT_BASE}{sub}ru/">')
         total += pages
         print(f'{title}: {pages} страниц → {core.ROOT_BASE}{sub}')
+    core.DATA['products'] = products
     print(f'site/: {total} страниц, {len(core.DATA["products"])} вещей, адрес {core.ORIGIN}{core.ROOT_BASE}')
     if core.WARNINGS:
         print(f'Предупреждений: {len(core.WARNINGS)} (см. выше)')

@@ -1,0 +1,110 @@
+[
+  {
+    "key": "black",
+    "hex": "#111111",
+    "name": {
+      "ru": "чёрный",
+      "kz": "қара",
+      "en": "black"
+    }
+  },
+  {
+    "key": "red",
+    "hex": "#b3141c",
+    "name": {
+      "ru": "красный",
+      "kz": "қызыл",
+      "en": "red"
+    }
+  },
+  {
+    "key": "blue",
+    "hex": "#22408c",
+    "name": {
+      "ru": "синий",
+      "kz": "көк",
+      "en": "blue"
+    }
+  },
+  {
+    "key": "brown",
+    "hex": "#6a4328",
+    "name": {
+      "ru": "коричневый",
+      "kz": "қоңыр",
+      "en": "brown"
+    }
+  },
+  {
+    "key": "turquoise",
+    "hex": "#2a9d9a",
+    "name": {
+      "ru": "бирюзовый",
+      "kz": "бирюза",
+      "en": "turquoise"
+    }
+  },
+  {
+    "key": "grey",
+    "hex": "#9a9a9a",
+    "name": {
+      "ru": "серый",
+      "kz": "сұр",
+      "en": "grey"
+    }
+  },
+  {
+    "key": "green",
+    "hex": "#58693c",
+    "name": {
+      "ru": "зелёный",
+      "kz": "жасыл",
+      "en": "green"
+    }
+  },
+  {
+    "key": "beige",
+    "hex": "#d9c4a3",
+    "name": {
+      "ru": "бежевый",
+      "kz": "беж",
+      "en": "beige"
+    }
+  },
+  {
+    "key": "white",
+    "hex": "#ffffff",
+    "name": {
+      "ru": "белый",
+      "kz": "ақ",
+      "en": "white"
+    }
+  },
+  {
+    "key": "animal",
+    "hex": null,
+    "name": {
+      "ru": "анималистичный принт",
+      "kz": "анималистік принт",
+      "en": "animal print"
+    }
+  },
+  {
+    "key": "pink",
+    "hex": "#e8a8b9",
+    "name": {
+      "ru": "розовый",
+      "kz": "қызғылт",
+      "en": "pink"
+    }
+  },
+  {
+    "key": "mustard",
+    "hex": "#c9980f",
+    "name": {
+      "ru": "горчичный",
+      "kz": "қыша түсті",
+      "en": "mustard"
+    }
+  }
+]

@@ -18,7 +18,16 @@
     "kz": "бежевый, қара",
     "en": "beige and black"
   },
-  "material": null,
+  "materials": [
+    "textile"
+  ],
+  "colors": [
+    "beige",
+    "black"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

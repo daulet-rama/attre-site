@@ -2,7 +2,7 @@
   "id": "048",
   "published": true,
   "order": 480,
-  "cat": "shopper",
+  "cat": "bags",
   "name": {
     "ru": "Шопер",
     "kz": "Шопер",
@@ -18,7 +18,16 @@
     "kz": "сүт түсті, қызыл гүл принтімен",
     "en": "cream with red floral print"
   },
-  "material": null,
+  "materials": [
+    "textile"
+  ],
+  "colors": [
+    "red",
+    "beige"
+  ],
+  "new": true,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

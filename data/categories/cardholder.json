@@ -1,0 +1,10 @@
+{
+  "key": "cardholder",
+  "parent": "acc",
+  "order": 60,
+  "name": {
+    "ru": "кардхолдеры",
+    "kz": "кардхолдерлер",
+    "en": "cardholders"
+  }
+}

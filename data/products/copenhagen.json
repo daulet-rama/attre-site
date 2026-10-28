@@ -2,7 +2,7 @@
   "id": "004",
   "published": true,
   "order": 40,
-  "cat": "shopper",
+  "cat": "bags",
   "name": {
     "ru": "Copenhagen",
     "kz": "Copenhagen",
@@ -18,7 +18,16 @@
     "kz": "хаки",
     "en": "khaki"
   },
-  "material": null,
+  "materials": [
+    "textile"
+  ],
+  "colors": [
+    "green",
+    "grey"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

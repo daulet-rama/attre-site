@@ -18,7 +18,16 @@
     "kz": "бежевый, қоңыр, қою қоңыр",
     "en": "beige, brown, dark brown"
   },
-  "material": null,
+  "materials": [
+    "suede"
+  ],
+  "colors": [
+    "beige",
+    "brown"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": true,
   "desc": {
     "ru": "",
     "kz": "",

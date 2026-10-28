@@ -18,7 +18,15 @@
     "kz": "қоңыр",
     "en": "brown"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "brown"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

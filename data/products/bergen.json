@@ -18,7 +18,16 @@
     "kz": "сүт түсті, қара",
     "en": "cream, black"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "white",
+    "black"
+  ],
+  "new": false,
+  "popular": true,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

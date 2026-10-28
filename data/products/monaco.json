@@ -18,7 +18,16 @@
     "kz": "қара нүктелі қызғылт, қою нүктелі бежевый",
     "en": "pink with black polka dots, beige with dark polka dots"
   },
-  "material": null,
+  "materials": [
+    "suede"
+  ],
+  "colors": [
+    "pink",
+    "beige"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

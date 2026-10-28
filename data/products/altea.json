@@ -18,7 +18,17 @@
     "kz": "сүт түсті, қара, қызыл",
     "en": "cream, black, red"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "white",
+    "black",
+    "red"
+  ],
+  "new": true,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

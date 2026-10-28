@@ -2,7 +2,7 @@
   "id": "013",
   "published": true,
   "order": 130,
-  "cat": "shopper",
+  "cat": "bags",
   "name": {
     "ru": "Ibiza",
     "kz": "Ibiza",
@@ -18,7 +18,19 @@
     "kz": "табиғи құм түсті, қара, қоңыр",
     "en": "natural sand, black, brown"
   },
-  "material": null,
+  "materials": [
+    "textile"
+  ],
+  "colors": [
+    "beige",
+    "black",
+    "brown",
+    "green",
+    "red"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

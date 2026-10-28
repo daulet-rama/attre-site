@@ -18,7 +18,15 @@
     "kz": "қара-ақ (далматин), қоңыр дақты ақ",
     "en": "black-and-white dalmatian print, cream with brown spots"
   },
-  "material": null,
+  "materials": [
+    "pony"
+  ],
+  "colors": [
+    "animal"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

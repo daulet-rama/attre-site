@@ -18,7 +18,16 @@
     "kz": "сүт түсті, қызғылт",
     "en": "cream, pink"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "white",
+    "pink"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

@@ -18,7 +18,16 @@
     "kz": "құм түсті, қара, сүт түсті",
     "en": "sand, black, cream"
   },
-  "material": null,
+  "materials": [
+    "textile"
+  ],
+  "colors": [
+    "beige",
+    "black"
+  ],
+  "new": false,
+  "popular": true,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

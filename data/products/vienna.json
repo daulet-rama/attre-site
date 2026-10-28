@@ -2,23 +2,32 @@
   "id": "043",
   "published": true,
   "order": 430,
-  "cat": "clutch",
+  "cat": "bags",
   "name": {
     "ru": "Vienna",
     "kz": "Vienna",
     "en": "Vienna"
   },
   "type": {
-    "ru": "клатч",
-    "kz": "клатч",
-    "en": "clutch"
+    "ru": "сумка-пауч",
+    "kz": "пауч сөмке",
+    "en": "pouch bag"
   },
   "color": {
     "ru": "чёрный, молочный (айвори)",
     "kz": "қара, сүт түсті",
     "en": "black, ivory"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "white",
+    "black"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

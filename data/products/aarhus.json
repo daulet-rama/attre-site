@@ -18,7 +18,16 @@
     "kz": "сүт түсті, ашық сұр",
     "en": "cream, light grey"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "white",
+    "grey"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

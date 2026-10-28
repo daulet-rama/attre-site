@@ -18,7 +18,15 @@
     "kz": "леопард принті, қоңыр-ақ (сиыр принті)",
     "en": "leopard print, brown-and-white cow print"
   },
-  "material": null,
+  "materials": [
+    "pony"
+  ],
+  "colors": [
+    "animal"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

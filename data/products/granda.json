@@ -18,7 +18,15 @@
     "kz": "ашық қоңыр, қою қоңыр",
     "en": "caramel brown, dark brown"
   },
-  "material": null,
+  "materials": [
+    "suede"
+  ],
+  "colors": [
+    "brown"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

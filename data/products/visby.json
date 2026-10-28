@@ -18,7 +18,16 @@
     "kz": "сұр-бежевый (хаки), қара",
     "en": "greige/khaki with black trim"
   },
-  "material": null,
+  "materials": [
+    "textile"
+  ],
+  "colors": [
+    "green",
+    "beige"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

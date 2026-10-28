@@ -18,7 +18,17 @@
     "kz": "бордо, қою қоңыр",
     "en": "burgundy, dark brown"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "red",
+    "brown",
+    "black"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

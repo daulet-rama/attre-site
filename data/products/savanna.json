@@ -18,7 +18,15 @@
     "kz": "қара-ақ (зебра принті)",
     "en": "black and white zebra print"
   },
-  "material": null,
+  "materials": [
+    "pony"
+  ],
+  "colors": [
+    "animal"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

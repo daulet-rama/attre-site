@@ -18,7 +18,15 @@
     "kz": "қызыл",
     "en": "red"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "red"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

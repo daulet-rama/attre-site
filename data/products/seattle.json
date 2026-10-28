@@ -18,7 +18,15 @@
     "kz": "қара",
     "en": "black"
   },
-  "material": null,
+  "materials": [
+    "leather"
+  ],
+  "colors": [
+    "black"
+  ],
+  "new": true,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

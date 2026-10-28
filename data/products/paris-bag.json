@@ -18,7 +18,15 @@
     "kz": "қою қоңыр",
     "en": "dark brown"
   },
-  "material": null,
+  "materials": [
+    "suede"
+  ],
+  "colors": [
+    "brown"
+  ],
+  "new": false,
+  "popular": true,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

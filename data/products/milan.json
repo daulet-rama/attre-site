@@ -18,7 +18,18 @@
     "kz": "қара, бежевый, сүттей ақ",
     "en": "black, beige, cream"
   },
-  "material": null,
+  "materials": [
+    "leather",
+    "suede"
+  ],
+  "colors": [
+    "black",
+    "white",
+    "beige"
+  ],
+  "new": false,
+  "popular": false,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

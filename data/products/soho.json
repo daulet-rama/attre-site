@@ -18,7 +18,16 @@
     "kz": "қою қоңыр, зәйтүн жасыл (хаки)",
     "en": "dark brown, olive"
   },
-  "material": null,
+  "materials": [
+    "suede"
+  ],
+  "colors": [
+    "green",
+    "brown"
+  ],
+  "new": false,
+  "popular": true,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",

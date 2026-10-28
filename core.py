@@ -75,8 +75,13 @@ def dict_by_key(items):
     return out
 
 
-CATS = dict_by_key(load_dir('categories'))
+_CAT_ITEMS = load_dir('categories')
+CATS = dict_by_key(_CAT_ITEMS)
+# Родитель категории: кардхолдеры и брелоки лежат внутри «аксессуаров»
+PARENT = {str(d.get('key') or d['_file']).strip(): (d.get('parent') or None) for d in _CAT_ITEMS}
 MATS = dict_by_key(load_dir('materials'))
+# Палитра цветов для фильтра: ключ, hex, названия на трёх языках (порядок — как у заказчика)
+COLORS = {c['key']: {'hex': c.get('hex', '#ccc'), **tri(c.get('name'))} for c in json.loads((ROOT / 'data' / 'colors.json').read_text('utf-8'))}
 SETTINGS = json.loads((ROOT / 'data' / 'settings.json').read_text('utf-8'))
 HOME = json.loads((ROOT / 'data' / 'home.json').read_text('utf-8'))
 
@@ -103,10 +108,15 @@ def clean_product(d):
     if d.get('cat') not in CATS:
         warn(f'products/{f}.json: нет категории «{d.get("cat")}» — пропущен')
         return None
-    mat = d.get('material') or None
-    if mat and mat not in MATS:
-        warn(f'products/{f}.json: нет материала «{mat}» — поле скрыто')
-        mat = None
+    mats = [m for m in (d.get('materials') or ([d['material']] if d.get('material') else [])) if m]
+    for m in mats:
+        if m not in MATS:
+            warn(f'products/{f}.json: нет материала «{m}» — не учитывается')
+    mats = [m for m in mats if m in MATS]
+    colors = [c for c in (d.get('colors') or []) if c in COLORS]
+    for c in d.get('colors') or []:
+        if c not in COLORS:
+            warn(f'products/{f}.json: нет цвета «{c}» в data/colors.json — не учитывается')
     srcs = []
     for x in d.get('images') or []:
         x = x.get('image') if isinstance(x, dict) else x
@@ -127,7 +137,8 @@ def clean_product(d):
     stock = num(d.get('stock'))
     return {
         'slug': f, 'id': str(d.get('id') or f), 'order': num(d.get('order')) or 9999,
-        'cat': d['cat'], 'material': mat,
+        'cat': d['cat'], 'material': mats[0] if mats else None, 'materials': mats, 'colors': colors,
+        'is_new': bool(d.get('new')), 'popular': bool(d.get('popular')), 'soon': bool(d.get('soon')),
         'name': name, 'type': tri(d.get('type')), 'color': tri(d.get('color')), 'desc': tri(d.get('desc')),
         'strap': strap if strap['ru'] else None,
         'size': [f'{v:g}' for v in dims] if all(dims) else None,
@@ -292,7 +303,8 @@ def render_images():
 
     hout = OUT_ROOT / 'assets' / 'img' / 'home'
     hout.mkdir(parents=True, exist_ok=True)
-    for item in [HOME['cover'], *HOME['banners']]:
+    extra = [x for x in (HOME.get('about'), HOME.get('video')) if x]
+    for item in [HOME['cover'], *HOME['banners'], *HOME.get('hero', []), *HOME.get('wear', []), *extra]:
         src = HOME_MEDIA / item['image']
         im = open_rgb(src)
         w, h = im.size
@@ -311,6 +323,10 @@ def render_images():
         item['_stem'] = stem
         item['_widths'] = [w_ for w_ in (750, 1125, 1600) if (hout / f'{stem}-{w_}.webp').exists()]
         item['_ratio'] = ratio
+    if HOME.get('video'):   # видео уже сжато (H.264, 4:5, ~2,4 МБ) — кладём как есть
+        vout = OUT_ROOT / 'assets' / 'video'
+        vout.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(HOME_MEDIA / HOME['video']['file'], vout / HOME['video']['file'])
 
 
 def home_srcset(item):
@@ -325,8 +341,45 @@ def lang_row(lang, suffix):
         for l in LANGS) + '</div>'
 
 
+def in_cat(p, c):
+    """Вещь в категории c — напрямую или через подкатегорию (кардхолдер ∈ аксессуары)."""
+    return p['cat'] == c or PARENT.get(p['cat']) == c
+
+
+def top_cat(key):
+    return PARENT.get(key) or key
+
+
 def present_cats():
-    return [c for c in CATS if any(p['cat'] == c for p in DATA['products'])]
+    """Верхние категории, где есть вещи (сумки, аксессуары)."""
+    return [c for c in CATS if not PARENT.get(c) and any(in_cat(p, c) for p in DATA['products'])]
+
+
+def subcats(c):
+    """Подкатегории c, где есть вещи."""
+    return [k for k in CATS if PARENT.get(k) == c and any(p['cat'] == k for p in DATA['products'])]
+
+
+def leaf_cats():
+    """Конечные разделы для меню: сумки, кардхолдеры, брелоки (родитель без своих вещей не показывается)."""
+    out = []
+    for c in present_cats():
+        subs = subcats(c)
+        if subs:
+            out += subs
+        else:
+            out.append(c)
+    return out
+
+
+def cat_pages():
+    """Все страницы категорий: верхние и подкатегории."""
+    return present_cats() + [k for c in present_cats() for k in subcats(c)]
+
+
+def flat_cats(products):
+    """Те же вещи, но кардхолдеры и брелоки — просто «аксессуары»: для вариантов, где подкатегорий нет."""
+    return [dict(p, cat=top_cat(p['cat'])) for p in products]
 
 
 def ordered(items):
@@ -336,7 +389,7 @@ def ordered(items):
 
 def similar(p):
     others = [q for q in DATA['products'] if q['slug'] != p['slug'] and not sold(q)]
-    others.sort(key=lambda q: (q['cat'] != p['cat'], q['order']))
+    others.sort(key=lambda q: (top_cat(q['cat']) != top_cat(p['cat']), q['order']))
     return others[:4]
 
 
