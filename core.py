@@ -303,7 +303,7 @@ def render_images():
 
     hout = OUT_ROOT / 'assets' / 'img' / 'home'
     hout.mkdir(parents=True, exist_ok=True)
-    extra = [x for x in (HOME.get('about'), HOME.get('video')) if x]
+    extra = [x for x in (HOME.get('hero_wide'), HOME.get('about'), HOME.get('video')) if x]
     for item in [HOME['cover'], *HOME['banners'], *HOME.get('hero', []), *HOME.get('wear', []), *extra]:
         src = HOME_MEDIA / item['image']
         im = open_rgb(src)

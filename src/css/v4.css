@@ -598,6 +598,10 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 .ftr__logo { display: block; width: fit-content; margin: 48px auto 0; }   /* по центру, небольшой */
 .ftr__logo img { width: 150px; height: auto; }
 .ftr__logo:focus-visible { outline-offset: 4px; }
+.ftr__slogan {   /* под логотипом, по центру (просьба заказчицы) */
+  margin-top: 14px; text-align: center;
+  font-size: 11px; line-height: 1.4; font-weight: 400; letter-spacing: .24em; text-transform: uppercase;
+}
 
 /* ——— Наведение (только мышь): второе фото карточки, побледнение ссылок ——— */
 @media (hover: hover) and (pointer: fine) {
@@ -663,6 +667,25 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
     min-height: 520px;
   }
   .hero__cap { bottom: 24px; }
+  /* Есть горизонтальное фото: оно одно на весь экран, кнопка «каталог» по центру — как у muliér */
+  .hero--wide .hero__slide:not(:first-child), .hero--wide .rail__count, html.js .hero--wide .rail__arr { display: none; }
+  .hero--wide .hero__slide img { object-position: 50% 50%; }
+  .hero--wide .hero__cap {
+    inset: 0; max-width: none;
+    align-items: center; justify-content: center; pointer-events: none;
+  }
+  /* Кнопка как на макете заказчицы: прозрачная, тонкая белая рамка, белые буквы нашим шрифтом */
+  .hero--wide .hero__cta {
+    pointer-events: auto;
+    min-height: 48px; padding: 0 34px;
+    background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, .92);
+    font-size: 12px; letter-spacing: .24em;
+    text-shadow: 0 0 10px rgba(0, 0, 0, .18);
+    transition: background-color .25s ease, color .25s ease;
+  }
+  .hero--wide .hero__cta .arr { display: none; }
+  .hero--wide .hero__cta:hover { background: #fff; color: var(--ink); text-shadow: none; opacity: 1; }
+  .hero--wide .hero__cta:focus-visible { outline: 1px solid #fff; outline-offset: 3px; }
   .vc--row { flex-basis: calc(20% - 2px); }
   .wear__i { flex-basis: calc(20% - 2px); }
   .film { grid-template-columns: 440px minmax(0, 1fr); column-gap: 64px; margin-top: 96px; }

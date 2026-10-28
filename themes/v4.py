@@ -85,6 +85,13 @@ def cat_rows(lang):
         (c, CATS[c][lang], url(f'{lang}/c/{c}/'), sum(1 for p in ps if in_cat(p, c))) for c in leaf_cats()]
 
 
+def slogan(lang):
+    """Слоган английский на всех языках — помечаем, чтобы экранный диктор читал его по-английски."""
+    s1, s2 = t('slogan_1', lang), t('slogan_2', lang)
+    s_lang = ' lang="en"' if lang != 'en' and s1 == t('slogan_1', 'en') else ''
+    return f'<span{s_lang}>{e(s1)} {e(s2)}</span>'
+
+
 def paras(text):
     return ''.join(f'<p>{e(x.strip())}</p>' for x in text.split('\n\n') if x.strip())
 
@@ -203,6 +210,7 @@ def footer(lang, suffix):
 {proto}
 </div>
 <a class="ftr__logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="300" height="116" loading="lazy" decoding="async"></a>
+<p class="ftr__slogan">{slogan(lang)}</p>
 </footer>'''
 
 
@@ -549,10 +557,18 @@ def product(p, lang):
 def home(lang):
     cat_url = url(lang + '/catalog/')
     slides = HOME.get('hero') or [HOME['cover']]
-    hero_slides = ''.join(
-        f'<figure class="hero__slide" style="--fy:{round(s.get("focus", [.5, .4])[1] * 100)}%">{home_img(s, "100vw", lang, load="high" if i == 0 else "eager" if i == 1 else "lazy")}</figure>'
-        for i, s in enumerate(slides))
-    hero = f'''<section class="hero rail" data-rail="slides" aria-label="{e(tx('hero', lang))}">
+    wide = HOME.get('hero_wide')
+    wide = wide if wide and wide.get('_widths') else None
+
+    def hero_slide(i, s):
+        img = home_img(s, "100vw", lang, load="high" if i == 0 else "lazy")
+        if i == 0 and wide:   # ноутбук: горизонтальное фото на весь экран (как у muliér — просьба заказчицы)
+            img = img.replace('<img ', f'<img data-alt-wide="{e(tri(wide.get("alt"))[lang])}" ', 1)
+            img = f'<picture><source media="(min-width: 960px)" srcset="{home_srcset(wide)}" sizes="100vw">{img}</picture>'
+        return f'<figure class="hero__slide" style="--fy:{round(s.get("focus", [.5, .4])[1] * 100)}%">{img}</figure>'
+
+    hero_slides = ''.join(hero_slide(i, s) for i, s in enumerate(slides))
+    hero = f'''<section class="hero{' hero--wide' if wide else ''} rail" data-rail="slides" aria-label="{e(tx('hero', lang))}">
 <div class="hero__track" data-track>{hero_slides}</div>
 <div class="hero__cap"><a class="ptag hero__cta" href="{cat_url}">{e(t('catalog_btn', lang))}{ARROW}</a></div>
 {rail_nav(lang, len(slides))}

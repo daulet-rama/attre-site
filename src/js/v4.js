@@ -237,8 +237,20 @@
   });
   // Остальные фото слайдера и товара — после загрузки страницы, чтобы при свайпе они уже были
   w.addEventListener('load', function () {
-    each('.pg img[loading="lazy"], .hero img[loading="lazy"]', function (i) { i.loading = 'eager'; });
+    each('.pg img[loading="lazy"], .hero img[loading="lazy"]', function (i) {
+      if (i.getClientRects().length) i.loading = 'eager';   // скрытые на ноутбуке слайды не качаем
+    });
   });
+  // Первый слайд на ноутбуке показывает другое (горизонтальное) фото — подпись для диктора меняем вместе с ним
+  var wideMq = mq('(min-width: 960px)');
+  var altSwap = function () {
+    each('img[data-alt-wide]', function (i) {
+      if (i.__alt === undefined) i.__alt = i.alt;
+      i.alt = wideMq.matches ? i.getAttribute('data-alt-wide') : i.__alt;
+    });
+  };
+  altSwap();
+  if (wideMq.addEventListener) wideMq.addEventListener('change', altSwap);
   // Строка категорий: текущая — на виду
   each('.tabs__in', function (sc) {
     var a = sc.querySelector('[aria-current]');
