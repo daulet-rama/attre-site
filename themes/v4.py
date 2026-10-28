@@ -421,9 +421,10 @@ def filter_sheet(items, lang):
     lo = min([PRICE_RANGE[0], *prices]) // PRICE_STEP * PRICE_STEP
     hi = -(-max([PRICE_RANGE[1], *prices]) // PRICE_STEP) * PRICE_STEP
     off = '' if len(prices) > 1 else ' disabled'
-    sorts = [('rec', 'sort_rec'), ('new', 'sort_new'), ('pop', 'sort_pop'), ('asc', 'sort_asc'), ('desc', 'sort_desc')]
+    # «рекомендуем» убран (просьба заказчицы): без отметки — обычный порядок, «сбросить» возвращает к нему
+    sorts = [('new', 'sort_new'), ('pop', 'sort_pop'), ('asc', 'sort_asc'), ('desc', 'sort_desc')]
     sort_html = ''.join(
-        f'<label class="opt"><input type="radio" name="sort" value="{v}"{" checked" if v == "rec" else ""}><span>{e(t(k, lang))}</span></label>'
+        f'<label class="opt"><input type="radio" name="sort" value="{v}"><span>{e(t(k, lang))}</span></label>'
         for v, k in sorts)
     mat_html = ''.join(
         f'<label class="chip"><input type="checkbox" name="mat" value="{m}"><span>{e(MATS[m][lang])}</span></label>' for m in mats)
