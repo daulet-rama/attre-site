@@ -1,0 +1,43 @@
+{
+  "id": "014",
+  "published": true,
+  "order": 140,
+  "cat": "bags",
+  "name": {
+    "ru": "Aarhus",
+    "kz": "Aarhus",
+    "en": "Aarhus"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "молочный, светло-серый",
+    "kz": "сүт түсті, ашық сұр",
+    "en": "cream, light grey"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/aarhus-1.jpg",
+    "media/products/aarhus-2.jpg"
+  ]
+}

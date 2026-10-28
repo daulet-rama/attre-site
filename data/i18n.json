@@ -23,75 +23,6 @@
     }
   ],
   "default": "ru",
-  "categories": {
-    "bags": {
-      "ru": "сумки",
-      "kz": "сөмкелер",
-      "en": "bags"
-    },
-    "clutch": {
-      "ru": "клатчи",
-      "kz": "клатчтар",
-      "en": "clutches"
-    },
-    "belt": {
-      "ru": "поясные",
-      "kz": "белдік сөмкелер",
-      "en": "belt bags"
-    },
-    "shopper": {
-      "ru": "шоперы",
-      "kz": "шоперлер",
-      "en": "shoppers"
-    },
-    "acc": {
-      "ru": "аксессуары",
-      "kz": "аксессуарлар",
-      "en": "accessories"
-    }
-  },
-  "materials": {
-    "leather": {
-      "ru": "кожа",
-      "kz": "былғары",
-      "en": "leather"
-    },
-    "suede": {
-      "ru": "замша",
-      "kz": "замша",
-      "en": "suede"
-    },
-    "nubuck": {
-      "ru": "нубук",
-      "kz": "нубук",
-      "en": "nubuck"
-    },
-    "canvas": {
-      "ru": "канвас",
-      "kz": "канвас",
-      "en": "canvas"
-    },
-    "cotton": {
-      "ru": "хлопок",
-      "kz": "мақта мата",
-      "en": "cotton"
-    },
-    "textile": {
-      "ru": "текстиль",
-      "kz": "текстиль",
-      "en": "textile"
-    },
-    "beads": {
-      "ru": "бисер",
-      "kz": "моншақ",
-      "en": "beads"
-    },
-    "metal": {
-      "ru": "металл",
-      "kz": "металл",
-      "en": "metal"
-    }
-  },
   "t": {
     "site_title": {
       "ru": "attré — сумки в Алматы",
@@ -189,9 +120,9 @@
       "en": "Hello! I’m writing from the attré website."
     },
     "wa_product": {
-      "ru": "Здравствуйте! Хочу «{name}» (№ {id}), {price}. {url}",
-      "kz": "Сәлеметсіз бе! «{name}» тауарын алғым келеді (№ {id}, {price}). {url}",
-      "en": "Hello! I’d like “{name}” (No. {id}), {price}. {url}"
+      "ru": "Здравствуйте! Интересует «{name}» (№ {id}). {url}",
+      "kz": "Сәлеметсіз бе! «{name}» (№ {id}) қызықтырады. {url}",
+      "en": "Hello! I’m interested in “{name}” (No. {id}). {url}"
     },
     "wa_sold": {
       "ru": "Здравствуйте! «{name}» (№ {id}) уже нет в наличии. Есть что-то похожее? {url}",
@@ -354,9 +285,9 @@
       "en": "Consumer protection: [link to the competent authority — to be confirmed]."
     },
     "f_proto": {
-      "ru": "Прототип сайта. Фото — Unsplash; названия, цены и характеристики условные.",
-      "kz": "Сайттың прототипі. Фотолар — Unsplash; атаулары, бағалары мен сипаттамалары шартты.",
-      "en": "Website prototype. Photos from Unsplash; names, prices and specs are placeholders."
+      "ru": "Прототип сайта. Цены и характеристики уточняются.",
+      "kz": "Сайттың прототипі. Бағалары мен сипаттамалары нақтыланады.",
+      "en": "Website prototype. Prices and specs to be confirmed."
     },
     "f_credits": {
       "ru": "авторы фото",
@@ -474,9 +405,9 @@
       "en": "tightly woven and light — for everyday use"
     },
     "instock_title": {
-      "ru": "сейчас в наличии",
-      "kz": "қазір қолда бар",
-      "en": "in stock now"
+      "ru": "наш выбор",
+      "kz": "біздің таңдау",
+      "en": "our edit"
     },
     "all_catalog": {
       "ru": "весь каталог",
@@ -507,6 +438,71 @@
       "ru": "not repeated.",
       "kz": "not repeated.",
       "en": "not repeated."
+    },
+    "promo": {
+      "ru": "Бонус 2 000 ₸ на первый заказ",
+      "kz": "Алғашқы тапсырысқа 2 000 ₸ бонус",
+      "en": "2,000 ₸ bonus on your first order"
+    },
+    "bonus_short": {
+      "ru": "Бонус 2 000 ₸ на первый заказ",
+      "kz": "Алғашқы тапсырысқа 2 000 ₸ бонус",
+      "en": "2,000 ₸ bonus on your first order"
+    },
+    "bonus_hint": {
+      "ru": "просто скажите менеджеру в WhatsApp",
+      "kz": "WhatsApp-та менеджерге айтыңыз",
+      "en": "just mention it on WhatsApp"
+    },
+    "bonus_title": {
+      "ru": "бонус на первый заказ",
+      "kz": "алғашқы тапсырысқа бонус",
+      "en": "first order bonus"
+    },
+    "bonus_body": {
+      "ru": "На первый заказ в attré действует бонус 2 000 ₸. Напишите менеджеру в WhatsApp, что заказываете впервые, — бонус учтут при оформлении.",
+      "kz": "attré-дегі алғашқы тапсырысқа 2 000 ₸ бонус беріледі. WhatsApp-та менеджерге алғаш рет тапсырыс беретініңізді жазыңыз — бонус рәсімдеу кезінде ескеріледі.",
+      "en": "Your first attré order comes with a 2,000 ₸ bonus. Tell our manager on WhatsApp that it’s your first order, and the bonus will be applied when the order is placed."
+    },
+    "bonus_terms": {
+      "ru": "Условия бонуса (минимальная сумма заказа, сочетание с другими акциями, срок действия) — [уточняется].",
+      "kz": "Бонус шарттары (тапсырыстың ең аз сомасы, басқа акциялармен бірге қолдану, қолданылу мерзімі) — [нақтыланады].",
+      "en": "Bonus terms (minimum order, combining with other offers, validity) — [to be confirmed]."
+    },
+    "price_request": {
+      "ru": "цена по запросу",
+      "kz": "бағасы сұрау бойынша",
+      "en": "price on request"
+    },
+    "menu": {
+      "ru": "Меню",
+      "kz": "Мәзір",
+      "en": "Menu"
+    },
+    "close": {
+      "ru": "закрыть",
+      "kz": "жабу",
+      "en": "close"
+    },
+    "all_items": {
+      "ru": "все товары",
+      "kz": "барлық тауарлар",
+      "en": "all items"
+    },
+    "p_type": {
+      "ru": "тип",
+      "kz": "түрі",
+      "en": "type"
+    },
+    "acc_details": {
+      "ru": "характеристики",
+      "kz": "сипаттамалары",
+      "en": "details"
+    },
+    "cta_look": {
+      "ru": "смотреть",
+      "kz": "қарау",
+      "en": "view"
     }
   }
 }

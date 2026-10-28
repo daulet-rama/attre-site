@@ -1,0 +1,45 @@
+{
+  "id": "011",
+  "published": true,
+  "order": 110,
+  "cat": "shopper",
+  "name": {
+    "ru": "Ibiza",
+    "kz": "Ibiza",
+    "en": "Ibiza"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "натуральный песочный, чёрный, коричневый",
+    "kz": "табиғи құм түсті, қара, қоңыр",
+    "en": "natural sand, black, brown"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/ibiza-1.jpg",
+    "media/products/ibiza-2.jpg",
+    "media/products/ibiza-3.jpg",
+    "media/products/ibiza-4.jpg"
+  ]
+}

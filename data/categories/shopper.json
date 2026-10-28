@@ -1,0 +1,9 @@
+{
+  "key": "shopper",
+  "order": 40,
+  "name": {
+    "ru": "шоперы",
+    "kz": "шоперлер",
+    "en": "shoppers"
+  }
+}

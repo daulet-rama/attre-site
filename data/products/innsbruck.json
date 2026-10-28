@@ -1,0 +1,43 @@
+{
+  "id": "022",
+  "published": true,
+  "order": 220,
+  "cat": "bags",
+  "name": {
+    "ru": "Innsbruck",
+    "kz": "Innsbruck",
+    "en": "Innsbruck"
+  },
+  "type": {
+    "ru": "хобо",
+    "kz": "хобо сөмке",
+    "en": "hobo bag"
+  },
+  "color": {
+    "ru": "бордовый, тёмно-коричневый",
+    "kz": "бордо, қою қоңыр",
+    "en": "burgundy, dark brown"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/innsbruck-1.jpg",
+    "media/products/innsbruck-2.jpg"
+  ]
+}

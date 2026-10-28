@@ -1,0 +1,45 @@
+{
+  "id": "004",
+  "published": true,
+  "order": 40,
+  "cat": "shopper",
+  "name": {
+    "ru": "Copenhagen",
+    "kz": "Copenhagen",
+    "en": "Copenhagen"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "хаки",
+    "kz": "хаки",
+    "en": "khaki"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/copenhagen-1.jpg",
+    "media/products/copenhagen-2.jpg",
+    "media/products/copenhagen-3.jpg",
+    "media/products/copenhagen-4.jpg"
+  ]
+}

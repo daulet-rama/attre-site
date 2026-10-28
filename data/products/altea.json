@@ -1,0 +1,46 @@
+{
+  "id": "001",
+  "published": true,
+  "order": 10,
+  "cat": "bags",
+  "name": {
+    "ru": "Altea",
+    "kz": "Altea",
+    "en": "Altea"
+  },
+  "type": {
+    "ru": "сумка-ведро",
+    "kz": "шелек сөмке",
+    "en": "bucket bag"
+  },
+  "color": {
+    "ru": "молочный, чёрный, красный",
+    "kz": "сүт түсті, қара, қызыл",
+    "en": "cream, black, red"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/altea-1.jpg",
+    "media/products/altea-2.jpg",
+    "media/products/altea-3.jpg",
+    "media/products/altea-4.jpg",
+    "media/products/altea-5.jpg"
+  ]
+}

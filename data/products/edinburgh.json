@@ -1,0 +1,43 @@
+{
+  "id": "020",
+  "published": true,
+  "order": 200,
+  "cat": "bags",
+  "name": {
+    "ru": "Edinburgh",
+    "kz": "Edinburgh",
+    "en": "Edinburgh"
+  },
+  "type": {
+    "ru": "багет",
+    "kz": "багет сөмке",
+    "en": "baguette bag"
+  },
+  "color": {
+    "ru": "серый",
+    "kz": "сұр",
+    "en": "grey"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/edinburgh-1.jpg",
+    "media/products/edinburgh-2.jpg"
+  ]
+}

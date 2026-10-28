@@ -1,0 +1,46 @@
+{
+  "id": "005",
+  "published": true,
+  "order": 50,
+  "cat": "bags",
+  "name": {
+    "ru": "Hamburg",
+    "kz": "Hamburg",
+    "en": "Hamburg"
+  },
+  "type": {
+    "ru": "кросс-боди",
+    "kz": "кросс-боди",
+    "en": "crossbody bag"
+  },
+  "color": {
+    "ru": "чёрный, оливковый",
+    "kz": "қара, зәйтүн түсті",
+    "en": "black, olive"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/hamburg-1.jpg",
+    "media/products/hamburg-2.jpg",
+    "media/products/hamburg-3.jpg",
+    "media/products/hamburg-4.jpg",
+    "media/products/hamburg-5.jpg"
+  ]
+}

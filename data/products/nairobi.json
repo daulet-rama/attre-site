@@ -1,0 +1,43 @@
+{
+  "id": "028",
+  "published": true,
+  "order": 280,
+  "cat": "bags",
+  "name": {
+    "ru": "Nairobi",
+    "kz": "Nairobi",
+    "en": "Nairobi"
+  },
+  "type": {
+    "ru": "багет",
+    "kz": "багет сөмке",
+    "en": "baguette bag"
+  },
+  "color": {
+    "ru": "леопардовый, коричнево-белый (коровий принт)",
+    "kz": "леопард принті, қоңыр-ақ (сиыр принті)",
+    "en": "leopard print, brown-and-white cow print"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/nairobi-1.jpg",
+    "media/products/nairobi-2.jpg"
+  ]
+}

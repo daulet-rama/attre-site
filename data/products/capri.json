@@ -1,0 +1,46 @@
+{
+  "id": "003",
+  "published": true,
+  "order": 30,
+  "cat": "bags",
+  "name": {
+    "ru": "Capri",
+    "kz": "Capri",
+    "en": "Capri"
+  },
+  "type": {
+    "ru": "сумка-ведро",
+    "kz": "шелек сөмке",
+    "en": "bucket bag"
+  },
+  "color": {
+    "ru": "песочный, чёрный, молочный",
+    "kz": "құм түсті, қара, сүт түсті",
+    "en": "sand, black, cream"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/capri-1.jpg",
+    "media/products/capri-2.jpg",
+    "media/products/capri-3.jpg",
+    "media/products/capri-4.jpg",
+    "media/products/capri-5.jpg"
+  ]
+}

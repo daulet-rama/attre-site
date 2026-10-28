@@ -1,0 +1,43 @@
+{
+  "id": "023",
+  "published": true,
+  "order": 230,
+  "cat": "bags",
+  "name": {
+    "ru": "London",
+    "kz": "London",
+    "en": "London"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "жёлтый, коричневый, чёрный",
+    "kz": "сары, қоңыр, қара",
+    "en": "yellow, brown, black"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/london-1.jpg",
+    "media/products/london-2.jpg"
+  ]
+}

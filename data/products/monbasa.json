@@ -1,0 +1,43 @@
+{
+  "id": "027",
+  "published": true,
+  "order": 270,
+  "cat": "bags",
+  "name": {
+    "ru": "Monbasa",
+    "kz": "Monbasa",
+    "en": "Monbasa"
+  },
+  "type": {
+    "ru": "боулер",
+    "kz": "боулер сөмке",
+    "en": "bowler bag"
+  },
+  "color": {
+    "ru": "чёрно-белый (далматин), молочный с коричневыми пятнами",
+    "kz": "қара-ақ (далматин), қоңыр дақты ақ",
+    "en": "black-and-white dalmatian print, cream with brown spots"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/monbasa-1.jpg",
+    "media/products/monbasa-2.jpg"
+  ]
+}

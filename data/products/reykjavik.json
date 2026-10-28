@@ -1,0 +1,43 @@
+{
+  "id": "031",
+  "published": true,
+  "order": 310,
+  "cat": "bags",
+  "name": {
+    "ru": "Reykjavik",
+    "kz": "Reykjavik",
+    "en": "Reykjavik"
+  },
+  "type": {
+    "ru": "боулер",
+    "kz": "боулер сөмке",
+    "en": "bowler bag"
+  },
+  "color": {
+    "ru": "бежево-коричневый, тёмно-коричневый",
+    "kz": "бежево-қоңыр, қою қоңыр",
+    "en": "camel beige, dark brown"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/reykjavik-1.jpg",
+    "media/products/reykjavik-2.jpg"
+  ]
+}

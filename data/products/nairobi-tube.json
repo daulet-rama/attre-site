@@ -1,0 +1,46 @@
+{
+  "id": "007",
+  "published": true,
+  "order": 70,
+  "cat": "bags",
+  "name": {
+    "ru": "Nairobi tube",
+    "kz": "Nairobi tube",
+    "en": "Nairobi tube"
+  },
+  "type": {
+    "ru": "тубус",
+    "kz": "тубус сөмке",
+    "en": "barrel bag"
+  },
+  "color": {
+    "ru": "леопардовый, коричнево-белый (коровий принт)",
+    "kz": "леопард принті, қоңыр-ақ (сиыр принті)",
+    "en": "leopard print, brown-and-white cow print"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/nairobi-tube-1.jpg",
+    "media/products/nairobi-tube-2.jpg",
+    "media/products/nairobi-tube-3.jpg",
+    "media/products/nairobi-tube-4.jpg",
+    "media/products/nairobi-tube-5.jpg"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "025",
+  "published": true,
+  "order": 250,
+  "cat": "bags",
+  "name": {
+    "ru": "Milan",
+    "kz": "Milan",
+    "en": "Milan"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "чёрный, бежевый, молочный",
+    "kz": "қара, бежевый, сүттей ақ",
+    "en": "black, beige, cream"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/milan-1.jpg",
+    "media/products/milan-2.jpg"
+  ]
+}

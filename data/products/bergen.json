@@ -1,0 +1,46 @@
+{
+  "id": "002",
+  "published": true,
+  "order": 20,
+  "cat": "bags",
+  "name": {
+    "ru": "Bergen",
+    "kz": "Bergen",
+    "en": "Bergen"
+  },
+  "type": {
+    "ru": "кросс-боди",
+    "kz": "кросс-боди",
+    "en": "crossbody bag"
+  },
+  "color": {
+    "ru": "молочный, чёрный",
+    "kz": "сүт түсті, қара",
+    "en": "cream, black"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/bergen-1.jpg",
+    "media/products/bergen-2.jpg",
+    "media/products/bergen-3.jpg",
+    "media/products/bergen-4.jpg",
+    "media/products/bergen-5.jpg"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "030",
+  "published": true,
+  "order": 300,
+  "cat": "bags",
+  "name": {
+    "ru": "Porto",
+    "kz": "Porto",
+    "en": "Porto"
+  },
+  "type": {
+    "ru": "боулер",
+    "kz": "боулер сөмке",
+    "en": "bowler bag"
+  },
+  "color": {
+    "ru": "коричневый",
+    "kz": "қоңыр",
+    "en": "brown"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/porto-1.jpg",
+    "media/products/porto-2.jpg"
+  ]
+}

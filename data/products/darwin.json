@@ -1,0 +1,43 @@
+{
+  "id": "019",
+  "published": true,
+  "order": 190,
+  "cat": "bags",
+  "name": {
+    "ru": "Darwin",
+    "kz": "Darwin",
+    "en": "Darwin"
+  },
+  "type": {
+    "ru": "сумка через плечо",
+    "kz": "иыққа асатын сөмке",
+    "en": "shoulder bag"
+  },
+  "color": {
+    "ru": "коричневый, молочный",
+    "kz": "қоңыр, сүт түсті",
+    "en": "brown, cream"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/darwin-1.jpg",
+    "media/products/darwin-2.jpg"
+  ]
+}

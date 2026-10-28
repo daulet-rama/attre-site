@@ -1,0 +1,45 @@
+{
+  "id": "012",
+  "published": true,
+  "order": 120,
+  "cat": "bags",
+  "name": {
+    "ru": "Nice",
+    "kz": "Nice",
+    "en": "Nice"
+  },
+  "type": {
+    "ru": "боулер",
+    "kz": "боулер сөмке",
+    "en": "bowler bag"
+  },
+  "color": {
+    "ru": "красный, хаки",
+    "kz": "қызыл, хаки",
+    "en": "red, khaki"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/nice-1.jpg",
+    "media/products/nice-2.jpg",
+    "media/products/nice-3.jpg",
+    "media/products/nice-4.jpg"
+  ]
+}

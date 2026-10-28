@@ -1,0 +1,44 @@
+{
+  "id": "013",
+  "published": true,
+  "order": 130,
+  "cat": "bags",
+  "name": {
+    "ru": "Ronda",
+    "kz": "Ronda",
+    "en": "Ronda"
+  },
+  "type": {
+    "ru": "багет",
+    "kz": "багет сөмке",
+    "en": "baguette bag"
+  },
+  "color": {
+    "ru": "красный, горчично-жёлтый, салатовый",
+    "kz": "қызыл, сары (қыша түсті), ашық жасыл",
+    "en": "red, mustard yellow, lime green"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/ronda-1.jpg",
+    "media/products/ronda-2.jpg",
+    "media/products/ronda-3.jpg"
+  ]
+}

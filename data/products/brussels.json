@@ -1,0 +1,43 @@
+{
+  "id": "016",
+  "published": true,
+  "order": 160,
+  "cat": "bags",
+  "name": {
+    "ru": "Brussels",
+    "kz": "Brussels",
+    "en": "Brussels"
+  },
+  "type": {
+    "ru": "саквояж",
+    "kz": "саквояж",
+    "en": "doctor bag"
+  },
+  "color": {
+    "ru": "бежевый, коричневый, тёмно-коричневый",
+    "kz": "бежевый, қоңыр, қою қоңыр",
+    "en": "beige, brown, dark brown"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/brussels-1.jpg",
+    "media/products/brussels-2.jpg"
+  ]
+}

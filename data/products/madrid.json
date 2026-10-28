@@ -1,0 +1,46 @@
+{
+  "id": "006",
+  "published": true,
+  "order": 60,
+  "cat": "bags",
+  "name": {
+    "ru": "Madrid",
+    "kz": "Madrid",
+    "en": "Madrid"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "чёрный",
+    "kz": "қара",
+    "en": "black"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/madrid-1.jpg",
+    "media/products/madrid-2.jpg",
+    "media/products/madrid-3.jpg",
+    "media/products/madrid-4.jpg",
+    "media/products/madrid-5.jpg"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "021",
+  "published": true,
+  "order": 210,
+  "cat": "bags",
+  "name": {
+    "ru": "Funchal",
+    "kz": "Funchal",
+    "en": "Funchal"
+  },
+  "type": {
+    "ru": "багет",
+    "kz": "багет сөмке",
+    "en": "baguette bag"
+  },
+  "color": {
+    "ru": "тёмно-коричневый, чёрный, жёлтый",
+    "kz": "қою қоңыр, қара, сары",
+    "en": "dark brown, black, yellow"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/funchal-1.jpg",
+    "media/products/funchal-2.jpg"
+  ]
+}

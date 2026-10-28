@@ -1,0 +1,43 @@
+{
+  "id": "029",
+  "published": true,
+  "order": 290,
+  "cat": "bags",
+  "name": {
+    "ru": "Oxford",
+    "kz": "Oxford",
+    "en": "Oxford"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "бежевый с чёрным",
+    "kz": "бежевый, қара",
+    "en": "beige and black"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/oxford-1.jpg",
+    "media/products/oxford-2.jpg"
+  ]
+}

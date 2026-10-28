@@ -1,0 +1,18 @@
+{
+  "cover": {
+    "image": "cover.jpg", "ratio": 0.5625, "focus": [0.5, 0.42],
+    "alt": {"ru": "Девушка с коричневой сумкой из фактурной кожи", "kz": "Текстуралы былғары қоңыр сөмкесі бар қыз", "en": "Woman with a brown textured-leather bag"}
+  },
+  "banners": [
+    {"image": "banner-1.jpg", "link": "c/bags/", "ratio": 0.6667, "focus": [0.55, 0.5],
+     "label": {"ru": "сумки", "kz": "сөмкелер", "en": "bags"},
+     "alt": {"ru": "Серая замшевая сумка на плече", "kz": "Иықтағы сұр замша сөмке", "en": "Grey suede bag on the shoulder"}},
+    {"image": "banner-2.jpg", "link": "catalog/", "ratio": 0.6667, "focus": [0.5, 0.5],
+     "label": {"ru": "все товары", "kz": "барлық тауарлар", "en": "all items"},
+     "alt": {"ru": "Коричневая замшевая сумка в руках", "kz": "Қолдағы қоңыр замша сөмке", "en": "Brown suede bag in hand"}},
+    {"image": "banner-3.jpg", "link": "c/shopper/", "ratio": 0.6667, "focus": [0.5, 0.5],
+     "label": {"ru": "шоперы", "kz": "шоперлер", "en": "shoppers"},
+     "alt": {"ru": "Песочная сумка из канваса", "kz": "Құм түсті канвас сөмке", "en": "Sand canvas bag"}}
+  ],
+  "featured": []
+}

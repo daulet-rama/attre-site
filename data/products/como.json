@@ -1,0 +1,43 @@
+{
+  "id": "017",
+  "published": true,
+  "order": 170,
+  "cat": "bags",
+  "name": {
+    "ru": "Como",
+    "kz": "Como",
+    "en": "Como"
+  },
+  "type": {
+    "ru": "хобо",
+    "kz": "хобо сөмке",
+    "en": "hobo bag"
+  },
+  "color": {
+    "ru": "молочный, розовый",
+    "kz": "сүт түсті, қызғылт",
+    "en": "cream, pink"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/como-1.jpg",
+    "media/products/como-2.jpg"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "008",
+  "published": true,
+  "order": 80,
+  "cat": "bags",
+  "name": {
+    "ru": "Paris bag",
+    "kz": "Paris bag",
+    "en": "Paris bag"
+  },
+  "type": {
+    "ru": "багет",
+    "kz": "багет сөмке",
+    "en": "baguette bag"
+  },
+  "color": {
+    "ru": "тёмно-коричневый",
+    "kz": "қою қоңыр",
+    "en": "dark brown"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/paris-bag-1.jpg",
+    "media/products/paris-bag-2.jpg",
+    "media/products/paris-bag-3.jpg",
+    "media/products/paris-bag-4.jpg",
+    "media/products/paris-bag-5.jpg"
+  ]
+}

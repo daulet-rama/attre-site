@@ -1,0 +1,43 @@
+{
+  "id": "032",
+  "published": true,
+  "order": 320,
+  "cat": "bags",
+  "name": {
+    "ru": "Savanna",
+    "kz": "Savanna",
+    "en": "Savanna"
+  },
+  "type": {
+    "ru": "сумка-ведро",
+    "kz": "шелек сөмке",
+    "en": "bucket bag"
+  },
+  "color": {
+    "ru": "чёрно-белый (зебра)",
+    "kz": "қара-ақ (зебра принті)",
+    "en": "black and white zebra print"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/savanna-1.jpg",
+    "media/products/savanna-2.jpg"
+  ]
+}

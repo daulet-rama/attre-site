@@ -1,0 +1,43 @@
+{
+  "id": "024",
+  "published": true,
+  "order": 240,
+  "cat": "shopper",
+  "name": {
+    "ru": "Lyon",
+    "kz": "Lyon",
+    "en": "Lyon"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "тёмно-синий, серо-коричневый (тауп)",
+    "kz": "қою көк, сұр-қоңыр (тауп)",
+    "en": "navy blue, taupe"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/lyon-1.jpg",
+    "media/products/lyon-2.jpg"
+  ]
+}

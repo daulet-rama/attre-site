@@ -1,0 +1,43 @@
+{
+  "id": "018",
+  "published": true,
+  "order": 180,
+  "cat": "bags",
+  "name": {
+    "ru": "Copenhagen mini",
+    "kz": "Copenhagen mini",
+    "en": "Copenhagen mini"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "песочный, графитово-серый",
+    "kz": "құм түсті, қою сұр",
+    "en": "sand, graphite grey"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/copenhagen-mini-1.jpg",
+    "media/products/copenhagen-mini-2.jpg"
+  ]
+}

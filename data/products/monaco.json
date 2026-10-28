@@ -1,0 +1,43 @@
+{
+  "id": "026",
+  "published": true,
+  "order": 260,
+  "cat": "bags",
+  "name": {
+    "ru": "Monaco",
+    "kz": "Monaco",
+    "en": "Monaco"
+  },
+  "type": {
+    "ru": "боулер",
+    "kz": "боулер сөмке",
+    "en": "bowler bag"
+  },
+  "color": {
+    "ru": "розовый в чёрный горошек, бежевый в тёмный горошек",
+    "kz": "қара нүктелі қызғылт, қою нүктелі бежевый",
+    "en": "pink with black polka dots, beige with dark polka dots"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/monaco-1.jpg",
+    "media/products/monaco-2.jpg"
+  ]
+}

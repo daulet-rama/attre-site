@@ -1,0 +1,44 @@
+{
+  "id": "010",
+  "published": true,
+  "order": 100,
+  "cat": "bags",
+  "name": {
+    "ru": "Granda",
+    "kz": "Granda",
+    "en": "Granda"
+  },
+  "type": {
+    "ru": "хобо",
+    "kz": "хобо сөмке",
+    "en": "hobo bag"
+  },
+  "color": {
+    "ru": "карамельно-коричневый, тёмно-коричневый",
+    "kz": "ашық қоңыр, қою қоңыр",
+    "en": "caramel brown, dark brown"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/granda-1.jpg",
+    "media/products/granda-2.jpg",
+    "media/products/granda-3.jpg"
+  ]
+}
