@@ -230,6 +230,14 @@
     c.__byFilter = false;   // выбор человека — фильтр его не переключает обратно
     cardColor(c, b.getAttribute('data-v'));
   });
+  if (fine.matches) {   // мышь: цвет меняется уже при наведении на кружочек (как в примере заказчицы) и так и остаётся
+    d.addEventListener('pointerover', function (ev) {
+      var b = ev.target && ev.target.closest && ev.target.closest('.vc__c'), c = b && b.closest('.vc');
+      if (!c || b.getAttribute('data-v') === c.getAttribute('data-v')) return;
+      c.__byFilter = false;
+      cardColor(c, b.getAttribute('data-v'));
+    }, { passive: true });
+  }
 
   // ——— Ленты: слайдер главной и фото товара (по одному, по кругу, полоски), подборки (страницами) ———
   each('[data-rail]', function (r) {

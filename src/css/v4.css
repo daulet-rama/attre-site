@@ -689,7 +689,8 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   .btn:hover { background: var(--ink); color: #fff; }
   .btn--ink:hover { opacity: .8; }
   .chip span:hover { border-color: var(--ink); }
-  .vc__c:hover .sw, .pcol__o:hover .sw { outline: 1px solid var(--mute); outline-offset: 2px; }
+  .vc__c:hover .sw { outline: 1px solid var(--mute); outline-offset: 2px; }
+  .pcol__o:hover .sw { outline: 1px solid var(--mute); outline-offset: 3px; }
   .vc__c[aria-pressed="true"]:hover .sw { outline-color: var(--ink); }
   .pcol__o:hover input:checked + .sw { outline-color: var(--ink); }
 }
