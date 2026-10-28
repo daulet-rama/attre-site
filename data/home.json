@@ -16,7 +16,6 @@
   "hero_wide": {"image": "hero-wide.jpg", "ratio": 1.5, "focus": [0.32, 0.5], "alt": {"ru": "Сумка из канваса с кожаной отделкой, кружка attré и мелочи на белой плитке", "kz": "Былғары жиекті канвас сөмке, attré кесесі және ақ плиткадағы ұсақ заттар", "en": "Canvas bag with leather trim, an attré mug and small things on white tiles"}},
   "video": {"file": "backstage.mp4", "image": "backstage.jpg", "ratio": 0.8, "focus": [0.5, 0.5], "alt": {"ru": "Съёмка attré: девушка в белой рубашке с чёрной сумкой и кружкой attré", "kz": "attré түсірілімі: ақ көйлекті қыз қара сөмкемен және attré кесесімен", "en": "attré shoot: woman in a white shirt with a black bag and an attré mug"}},
   "about": [
-    {"image": "about-paris.jpg", "ratio": 0.6667, "focus": [0.5, 0.5], "alt": {"ru": "Две девушки у Триумфальной арки в Париже", "kz": "Париждегі Триумф аркасының жанындағы екі қыз", "en": "Two women by the Arc de Triomphe in Paris"}},
     {"image": "about-etretat.jpg", "ratio": 0.6667, "focus": [0.5, 0.5], "alt": {"ru": "Две девушки на скалах Этрета у моря", "kz": "Этрета жартастарындағы теңіз жағасындағы екі қыз", "en": "Two women on the cliffs of Étretat by the sea"}}
   ],
   "wear": [
