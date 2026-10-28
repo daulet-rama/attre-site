@@ -533,7 +533,7 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 
 /* ——— О бренде ——— */
 .about { display: grid; gap: 28px; }
-.about__media { aspect-ratio: 3 / 4; overflow: hidden; background: var(--pad); }
+.about__media { aspect-ratio: 2 / 3; overflow: hidden; background: var(--pad); }   /* фото целиком, без обрезки */
 .about__media img { width: 100%; height: 100%; object-fit: cover; }
 .about__txt { max-width: 620px; padding: 0 var(--g); }
 .about__txt p { font-size: 13px; line-height: 1.7; }
