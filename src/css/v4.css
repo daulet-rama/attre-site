@@ -125,8 +125,9 @@ html.bar-red .promo { background: var(--red); }
 .hdr__r { grid-column: 3; justify-self: end; display: flex; }
 .hdr__fav, .hdr__cart { position: relative; }
 .hdr__fav[aria-current] .heart, .hdr__cart[aria-current] .bag { fill: currentColor; }
+.hdr__fav[aria-current] { color: var(--red); }
 .hdr__n {
-  position: absolute; top: 8px; right: 3px; min-width: 12px;
+  position: absolute; top: 8px; right: 3px; min-width: 12px; color: var(--ink);
   font-size: 9px; line-height: 1; font-weight: 400; letter-spacing: 0; text-align: left;
 }
 .hdr__n:empty { display: none; }
@@ -154,9 +155,38 @@ html.bar-red .promo { background: var(--red); }
 .vc__a { display: block; }
 .vc__a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .vc__media { position: relative; overflow: hidden; aspect-ratio: 3 / 4; background: var(--pad); }
-.vc__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.vc__img--b { opacity: 0; }
+.vc__ph { display: block; height: 100%; }
+/* Фото карточки — лента со свайпом: по одному фото за жест, без анимаций (двигается под пальцем) */
+.vc__track {
+  position: relative; display: flex; gap: 2px; height: 100%;
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+}
+.vc__track::-webkit-scrollbar { display: none; }
+.vc__img {
+  flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; background: var(--pad);
+  scroll-snap-align: start; scroll-snap-stop: always;
+}
 .vc--sold .vc__img { opacity: .55; }
+/* Полоски внизу фото: сколько фото и какое сейчас. Тёмные с белой каймой — видны и на светлом, и на тёмном кадре */
+.vc__bars {
+  position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 1;
+  display: flex; gap: 3px; pointer-events: none;
+}
+.vc__bars i { flex: 1; height: 2px; background: rgba(0, 0, 0, .16); box-shadow: 0 0 0 .5px rgba(255, 255, 255, .5); }
+.vc__bars i.is-on { background: rgba(0, 0, 0, .78); }
+/* Стрелки — только мышь, при наведении на карточку; у края ленты прячутся */
+.vc__arr {
+  position: absolute; top: 50%; z-index: 2;
+  display: none; align-items: center; justify-content: center;
+  width: 36px; height: 56px; margin-top: -28px; color: var(--ink);
+}
+.vc__arr .ico { width: 8px; height: 14px; filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff); }
+.vc__arr--prev { left: 0; }
+.vc__arr--prev .ico { rotate: 180deg; }
+.vc__arr--next { right: 0; }
+@media (hover: hover) and (pointer: fine) {
+  html.js .vc:hover .vc__arr { display: flex; }
+}
 .vc__cap { padding: 10px 12px 0; }
 .vc__name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-right: 4px; }
 .vc__meta { margin-top: 3px; color: var(--mute); }
@@ -166,13 +196,14 @@ html.bar-red .promo { background: var(--red); }
 .empty { padding: 32px var(--g); }
 .empty .ulink { margin-top: 4px; }
 
-/* Сердечко: белое с тонким контуром (видно на любом фото), в избранном — чёрное */
+/* Сердечко: белое с тонким контуром (видно на любом фото), в избранном — красное */
 .fav {
   position: absolute; top: 0; right: 0; z-index: 2;
   display: flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; color: var(--ink);
 }
 .fav .heart { fill: rgba(255, 255, 255, .9); }
+.fav[aria-pressed="true"] { color: var(--red); }
 .fav[aria-pressed="true"] .heart { fill: currentColor; }
 .fav:focus-visible { outline-offset: -8px; }
 .fav--box { position: static; z-index: auto; border: 1px solid var(--ink); background: #fff; }
@@ -230,13 +261,23 @@ html.bar-red .promo { background: var(--red); }
   height: calc(100vh - var(--promo) - var(--hdr) - 56px); height: calc(100svh - var(--promo) - var(--hdr) - 56px);
   min-height: 420px; background: var(--pad);
 }
-.hero__slide img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+.hero__slide img { width: 100%; height: 100%; object-fit: cover; object-position: 50% var(--fy, 40%); }
 .hero__cap {
   position: absolute; left: var(--g); bottom: 16px; z-index: 1;
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
   max-width: calc(100% - 2 * var(--g) - 64px);
 }
-.hero__slogan { white-space: normal; }
+/* Слоган — по центру фото, без плашки (просьба заказчицы), в две строки. Чёрный с лёгкой белой дымкой:
+   из трёх проб (белый с тенью, инверсия) только он читается на всех пяти кадрах.
+   Сквозь него листается слайдер (pointer-events: none) */
+.hero__slogan {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 var(--g); pointer-events: none;
+  color: var(--ink); text-align: center;
+  font-size: 16px; line-height: 1.55; font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(255, 255, 255, .75), 0 0 3px rgba(255, 255, 255, .6);
+}
 .hero__cta { min-height: 44px; padding: 0 16px; gap: 0; }
 .hero__cta:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
 .hero .rail__count { right: var(--g); }
@@ -246,8 +287,11 @@ html.bar-red .promo { background: var(--red); }
 .film { margin-top: 72px; }
 .film__media { position: relative; background: var(--pad); }
 .film__v { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--pad); }
-.film__tag { position: absolute; left: var(--g); top: 16px; pointer-events: none; }
+html.js .film__v { cursor: pointer; }
 .film__btn { position: absolute; right: var(--g); bottom: 16px; min-height: 44px; padding: 0 14px; }
+.film__btn:not(:focus-visible) {   /* надписей на видео нет (просьба заказчицы); кнопка — для клавиатуры и диктора */
+  width: 1px; height: 1px; min-height: 0; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
 .film__txt { max-width: 560px; padding: 24px var(--g) 0; }
 .film__t { margin-bottom: 10px; }
 
@@ -562,8 +606,8 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 .ftr__copy { font-size: 11px; color: var(--mute); }
 .ftr__legal { margin-top: 16px; font-size: 11px; line-height: 1.55; color: var(--mute); }
 .ftr__legal p + p { margin-top: 6px; }
-.ftr__logo { display: block; margin-top: 48px; }
-.ftr__logo img { width: 100%; max-width: 520px; height: auto; }
+.ftr__logo { display: block; width: fit-content; margin: 48px auto 0; }   /* по центру, небольшой */
+.ftr__logo img { width: 150px; height: auto; }
 .ftr__logo:focus-visible { outline-offset: 4px; }
 
 /* ——— Наведение (только мышь): второе фото карточки, побледнение ссылок ——— */
@@ -575,8 +619,6 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   .btn:hover { background: var(--ink); color: #fff; }
   .btn--ink:hover { opacity: .8; }
   .chip span:hover { border-color: var(--ink); }
-  .vc__a:hover .vc__img--b.is-ld { opacity: 1; }
-  .vc__img--b { transition: opacity .3s ease; }
 }
 
 /* ——— Движение — только у того, что открыл человек ——— */
@@ -604,24 +646,11 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   .vc--w .vc__media { aspect-ratio: 3 / 4; }
   .vc--w .vc__cap { padding: 10px 12px 0; }
   .vc--w .fav { right: 0; }
-  /* Крупная вещь — на два столбца и сразу двумя фото рядом (нужен JS: второе фото подгружается) */
-  html.js .vc--w { grid-column: span 2; }
-  html.js .vc--w.vc--r { grid-column: 3 / span 2; }
-  html.js .vc--w:not(.vc--one) .vc__media {
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px;
-    aspect-ratio: auto; background: none;
-  }
-  html.js .vc--w:not(.vc--one) .vc__img {
-    position: relative; inset: auto; height: auto; aspect-ratio: 3 / 4;
-    background: var(--pad); opacity: 1;
-  }
-  html.js .vc--w.vc--one .vc__media { aspect-ratio: 3 / 2; }   /* одно фото на два столбца — высота как у ряда 3:4 */
+  /* С планшета все карточки одинаковые — по одному фото (просьба заказчицы); «крупно + две рядом» — только телефон */
   .vit--even .vc--w, html.js .vit--even .vc--w { grid-column: auto; }
 
   .vc--row { flex-basis: calc(30% - 2px); }
   .wear__i { flex-basis: calc(30% - 2px); }
-  .hero__slide { flex-basis: calc(50% - 1px); }
-  .hero__track { gap: 2px; }
   .film { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; column-gap: 40px; padding: 0 var(--g); }
   .film__txt { padding: 0; }
 
@@ -639,14 +668,13 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   :root { --g: 32px; }
   .logo img { width: 57px; height: 22px; }
 
-  /* Главная: три портрета в ряд на высоту экрана, стрелки по краям */
+  /* Главная: одно фото на всю ширину и высоту экрана (по просьбе заказчицы, как у muliér), стрелки по краям */
   .hero__slide {
-    flex-basis: calc((100% - 4px) / 3);
     height: calc(100vh - var(--promo) - var(--hdr)); height: calc(100svh - var(--promo) - var(--hdr));
     min-height: 520px;
   }
-  .hero .rail__count { display: none; }
   .hero__cap { bottom: 24px; }
+  .hero__slogan { font-size: 20px; }
   .vc--row { flex-basis: calc(20% - 2px); }
   .wear__i { flex-basis: calc(20% - 2px); }
   .film { grid-template-columns: 440px minmax(0, 1fr); column-gap: 64px; margin-top: 96px; }
@@ -686,5 +714,5 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   .cartp__sum { position: sticky; top: calc(var(--hdr) + var(--bar) + 16px); padding: 16px 0 0; }
 
   .ftr__accs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .ftr__logo img { max-width: 640px; }
+  .ftr__logo img { width: 190px; }
 }

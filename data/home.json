@@ -7,11 +7,11 @@
   ],
   "featured": [],
   "hero": [
-    {"image": "hero-1.jpg", "ratio": 0.6667, "focus": [0.5, 0.5], "alt": {"ru": "Девушка в красной кепке с шопером attré", "kz": "Қызыл кепка киген қыз attré шоперімен", "en": "Woman in a red cap with an attré tote"}},
-    {"image": "hero-2.jpg", "ratio": 0.6667, "focus": [0.5, 0.5], "alt": {"ru": "Леопардовая сумка-тубус в руке", "kz": "Қолдағы леопард түсті тубус сөмке", "en": "Leopard barrel bag in hand"}},
+    {"image": "hero-1.jpg", "ratio": 0.6667, "focus": [0.5, 0.62], "alt": {"ru": "Девушка в красной кепке с шопером attré", "kz": "Қызыл кепка киген қыз attré шоперімен", "en": "Woman in a red cap with an attré tote"}},
+    {"image": "hero-2.jpg", "ratio": 0.6667, "focus": [0.5, 0.58], "alt": {"ru": "Леопардовая сумка-тубус в руке", "kz": "Қолдағы леопард түсті тубус сөмке", "en": "Leopard barrel bag in hand"}},
     {"image": "hero-bag.jpg", "ratio": 0.6667, "focus": [0.5, 0.5], "alt": {"ru": "Чёрная кожаная сумка, внутри книга и очки", "kz": "Қара былғары сөмке, ішінде кітап пен көзілдірік", "en": "Black leather bag with a book and glasses inside"}},
-    {"image": "hero-4.jpg", "ratio": 0.6667, "focus": [0.5, 0.5], "alt": {"ru": "Девушка в белой рубашке с чёрной кожаной сумкой", "kz": "Ақ көйлекті қыз қара былғары сөмкемен", "en": "Woman in a white shirt with a black leather bag"}},
-    {"image": "hero-5.jpg", "ratio": 0.6667, "focus": [0.5, 0.5], "alt": {"ru": "Оливковая сумка в руке", "kz": "Қолдағы зәйтүн түсті сөмке", "en": "Olive bag in hand"}}
+    {"image": "hero-4.jpg", "ratio": 0.6667, "focus": [0.5, 0.36], "alt": {"ru": "Девушка в белой рубашке с чёрной кожаной сумкой", "kz": "Ақ көйлекті қыз қара былғары сөмкемен", "en": "Woman in a white shirt with a black leather bag"}},
+    {"image": "hero-5.jpg", "ratio": 0.6667, "focus": [0.5, 0.34], "alt": {"ru": "Оливковая сумка в руке", "kz": "Қолдағы зәйтүн түсті сөмке", "en": "Olive bag in hand"}}
   ],
   "video": {"file": "backstage.mp4", "image": "backstage.jpg", "ratio": 0.8, "focus": [0.5, 0.5], "alt": {"ru": "Съёмка attré: девушка в белой рубашке с чёрной сумкой и кружкой attré", "kz": "attré түсірілімі: ақ көйлекті қыз қара сөмкемен және attré кесесімен", "en": "attré shoot: woman in a white shirt with a black bag and an attré mug"}},
   "about": {"image": "about.jpg", "ratio": 0.75, "focus": [0.5, 0.5], "alt": {"ru": "Чёрная сумка attré с вещами внутри", "kz": "Ішінде заттары бар қара attré сөмкесі", "en": "Black attré bag with everyday things inside"}},

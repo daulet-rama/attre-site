@@ -40,8 +40,6 @@ def tx(key, lang):
     return TEXTS[key][lang]
 
 
-# Прозрачный пиксель: второе фото карточки подставляет v4.js (по наведению мыши и у крупных карточек на компьютере)
-PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 # Логотип — вектор (src/img/brand/logo-black.svg, обводка исходника заказчицы: tools/logo_svg.py):
 # PNG в шапке высотой 17–19px мылился на компьютерах, особенно при масштабе Windows 125–150 %.
 # Свои значки (рисованы здесь): крестик, плюс, минус, шеврон, сердце, сумка корзины
@@ -87,11 +85,11 @@ def cat_rows(lang):
         (c, CATS[c][lang], url(f'{lang}/c/{c}/'), sum(1 for p in ps if in_cat(p, c))) for c in leaf_cats()]
 
 
-def slogan(lang):
+def slogan(lang, sep=' '):
     """Слоган английский на всех языках — помечаем, чтобы экранный диктор читал его по-английски."""
     s1, s2 = t('slogan_1', lang), t('slogan_2', lang)
     s_lang = ' lang="en"' if lang != 'en' and s1 == t('slogan_1', 'en') else ''
-    return f'<span{s_lang}>{e(s1)} {e(s2)}</span>'
+    return f'<span{s_lang}>{e(s1)}{sep}{e(s2)}</span>'
 
 
 def paras(text):
@@ -313,37 +311,45 @@ def fav_btn(p, lang, cls='fav'):
 
 
 SIZES = {   # те же значения повторяет v4.js при перестройке ритма после фильтра
-    'w1': '(min-width: 600px) 50vw, 100vw', 'w2': '(min-width: 600px) 25vw, 100vw',
+    'w1': '(min-width: 600px) 25vw, 100vw', 'w2': '(min-width: 600px) 25vw, 100vw',   # с планшета крупная = обычная
     'h': '(min-width: 600px) 25vw, 50vw', 'row': '(min-width: 960px) 20vw, (min-width: 600px) 30vw, 44vw',
 }
 
 
 def card(p, lang, kind, *, h='h2', load='lazy', hidden=False):
     """kind: 'w' — крупно на всю ширину, 'h' / 'h2' — половина ряда (h2 — правая), 'row' — карточка ленты;
-    ' r' в конце — на компьютере крупная карточка стоит справа (ряды идут «ёлочкой»)."""
+    ' r' в конце — на компьютере крупная карточка стоит справа (ряды идут «ёлочкой»).
+    Фото в карточке листаются вправо-влево (полоски внизу, у мыши — стрелки), нажатие на фото открывает товар.
+    В лентах главной не листаются: там вбок уже едет сама лента. У проданной вещи — одно фото."""
     imgs = p['images']
-    one = len(imgs) < 2 or sold(p)   # у проданной вещи второе фото не показываем
+    gal = len(imgs) > 1 and not sold(p) and kind != 'row'
     wide = kind.startswith('w')
-    sizes = SIZES['row'] if kind == 'row' else SIZES['w1' if one else 'w2'] if wide else SIZES['h']
-    attrs = {'lazy': 'loading="lazy"', 'eager': 'loading="eager"',
+    sizes = SIZES['row'] if kind == 'row' else SIZES['w2' if gal else 'w1'] if wide else SIZES['h']
+    first = {'lazy': 'loading="lazy"', 'eager': 'loading="eager"',
              'high': 'loading="eager" fetchpriority="high"'}[load]
-    a = imgs[0]
-    img_a = (f'<img class="vc__img" src="{asset(f"assets/img/p/{a}-600.webp")}" srcset="{img_srcset(a)}" '
-             f'sizes="{sizes}" width="600" height="800" alt="" {attrs} decoding="async">')
-    img_b = '' if one else (
-        f'<img class="vc__img vc__img--b" src="{PIXEL}" data-src="{asset(f"assets/img/p/{imgs[1]}-600.webp")}" '
-        f'data-srcset="{img_srcset(imgs[1])}" sizes="{sizes}" width="600" height="800" alt="" decoding="async">')
+    shots = imgs if gal else imgs[:1]
+    pics = ''.join(
+        f'<img class="vc__img" src="{asset(f"assets/img/p/{x}-600.webp")}" srcset="{img_srcset(x)}" sizes="{sizes}" '
+        f'width="600" height="800" alt="" {first if i == 0 else 'loading="lazy"'} decoding="async">'
+        for i, x in enumerate(shots))
+    url_p = item_url(p, lang)
+    extra = ''
+    if gal:   # полоски — сколько фото и какое сейчас; стрелки — только мышь (для клавиатуры есть страница товара)
+        bars = ''.join('<i class="is-on"></i>' if i == 0 else '<i></i>' for i in range(len(shots)))
+        extra = (f'<span class="vc__bars js-only" aria-hidden="true">{bars}</span>'
+                 f'<button class="vc__arr vc__arr--prev js-only" type="button" data-vstep="-1" tabindex="-1" aria-hidden="true" hidden>{CHEV}</button>'
+                 f'<button class="vc__arr vc__arr--next js-only" type="button" data-vstep="1" tabindex="-1" aria-hidden="true">{CHEV}</button>')
     cls = 'vc' + {'row': ' vc--row'}.get(kind, '') + (' vc--w' if wide else '') + (' vc--2' if kind == 'h2' else '')
-    cls += (' vc--r' if kind.endswith(' r') else '') + (' vc--one' if one else '') + (' vc--sold' if sold(p) else '')
+    cls += (' vc--r' if kind.endswith(' r') else '') + (' vc--gal' if gal else ' vc--one') + (' vc--sold' if sold(p) else '')
     data = (f' data-slug="{p["slug"]}" data-id="{e(p["id"])}" data-name="{e(p["name"][lang])}"'
             f' data-mat="{" ".join(p["materials"])}" data-col="{" ".join(p["colors"])}" data-price="{p["price"] or ""}"'
             + (' data-new' if p['is_new'] else '') + (' data-pop' if p['popular'] else '')
             + (' data-sold' if sold(p) else '') + (' hidden' if hidden else ''))
     meta = meta_line(p, lang)
-    return f'''<li class="{cls}"{data}><a class="vc__a" href="{item_url(p, lang)}">
-<div class="vc__media">{img_a}{img_b}</div>
-<div class="vc__cap">{tag(p, lang)}<{h} class="vc__name">{e(p['name'][lang])}</{h}>{f'<p class="vc__meta">{e(meta)}</p>' if meta and kind != 'row' else ''}<p class="vc__price tnum">{e(price_text(p, lang))}</p></div>
-</a>{fav_btn(p, lang)}</li>'''
+    return f'''<li class="{cls}"{data}>
+<div class="vc__media"><a class="vc__ph" href="{url_p}" tabindex="-1" aria-hidden="true"><span class="vc__track">{pics}</span></a>{extra}</div>
+<a class="vc__a" href="{url_p}"><div class="vc__cap">{tag(p, lang)}<{h} class="vc__name">{e(p['name'][lang])}</{h}>{f'<p class="vc__meta">{e(meta)}</p>' if meta and kind != 'row' else ''}<p class="vc__price tnum">{e(price_text(p, lang))}</p></div></a>
+{fav_btn(p, lang)}</li>'''
 
 
 def rhythm(n):
@@ -482,8 +488,7 @@ def product(p, lang):
         (t('p_material', lang), e(mats_text(p, lang)) if p['materials'] else todo),
         (t('p_size', lang), size),
         (t('p_strap', lang), e(p['strap'][lang]) if p['strap'] else todo),
-        (t('p_maker', lang), todo),
-        (t('p_origin', lang), todo),
+        (t('p_made', lang), e(t('made_in', lang))),   # по просьбе заказчицы — вместо «производитель» и «страна»
     ]
     spec = '<dl class="spec">' + ''.join(f'<div><dt>{e(k)}</dt><dd>{v}</dd></div>' for k, v in spec_rows) + '</dl>'
     wa_general = e(wa_link(t('wa_general', lang)))
@@ -552,11 +557,12 @@ def home(lang):
     cat_url = url(lang + '/catalog/')
     slides = HOME.get('hero') or [HOME['cover']]
     hero_slides = ''.join(
-        f'<figure class="hero__slide">{home_img(s, "(min-width: 960px) 34vw, (min-width: 600px) 50vw, 100vw", lang, load="high" if i == 0 else "eager" if i == 1 else "lazy")}</figure>'
+        f'<figure class="hero__slide" style="--fy:{round(s.get("focus", [.5, .4])[1] * 100)}%">{home_img(s, "100vw", lang, load="high" if i == 0 else "eager" if i == 1 else "lazy")}</figure>'
         for i, s in enumerate(slides))
     hero = f'''<section class="hero rail" data-rail="slides" aria-label="{e(tx('hero', lang))}">
 <div class="hero__track" data-track>{hero_slides}</div>
-<div class="hero__cap"><span class="ptag hero__slogan">{slogan(lang)}</span><a class="ptag hero__cta" href="{cat_url}">{e(t('catalog_btn', lang))}{ARROW}</a></div>
+<p class="hero__slogan">{slogan(lang, '<br>')}</p>
+<div class="hero__cap"><a class="ptag hero__cta" href="{cat_url}">{e(t('catalog_btn', lang))}{ARROW}</a></div>
 {rail_nav(lang, len(slides))}
 </section>'''
     ps = [p for p in DATA['products'] if not sold(p)]
@@ -574,7 +580,6 @@ def home(lang):
         film = f'''<section class="film" aria-labelledby="film-t">
 <div class="film__media">
 <video class="film__v" data-film muted loop playsinline controls preload="none" width="1080" height="1350" poster="{asset(f"assets/img/home/{v['_stem']}-{w}.webp")}" aria-label="{e(tri(v.get('alt'))[lang])}"><source src="{asset('assets/video/' + v['file'])}" type="video/mp4"></video>
-<span class="ptag film__tag">{e(t('film_title', lang))}</span>
 <button class="ptag film__btn js-only" type="button" data-film-btn>{e(t('film_play', lang))}</button>
 </div>
 <div class="film__txt">
@@ -733,7 +738,7 @@ def info(lang):
 </div>
 {toc_sheet}
 <div class="info">
-{sec('bonus', t('bonus_title', lang), f'<p>{e(t("bonus_body", lang))}</p><p class="note">{e(t("bonus_terms", lang))}</p>')}
+{sec('bonus', t('bonus_title', lang), f'<p>{e(t("bonus_body", lang))}</p>')}
 {sec('delivery', t('delivery_title', lang), f'<p>{e(t("delivery_body", lang))}</p><p>{e(t("payment_body", lang))}</p>')}
 {sec('returns', t('returns_title', lang), f'<p>{e(t("returns_body", lang))}</p>')}
 {sec('contacts', t('contacts_title', lang), f"""<p>{e(t('address', lang))}<br>{e(t('hours', lang))}</p>

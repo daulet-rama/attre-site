@@ -1,5 +1,6 @@
 // attré · Вариант 4 «Витрина». Меню и нижние листы (фокус внутри, Esc), строки details, ленты со свайпом
-// (слайдер главной, фото товара, подборки: стрелки для мыши, счётчик «1 / 5»), избранное и корзина (localStorage),
+// (слайдер главной, фото товара, подборки: стрелки для мыши, счётчик «1 / 5»; фото в карточках — с полосками),
+// избранное и корзина (localStorage),
 // фильтр и сортировка каталога, видео «за кадром». Анимаций при прокрутке нет: фото просто стоят на местах.
 // Без JS всё видно и листается пальцем; не работают только избранное, корзина, фильтр и сортировка.
 (function () {
@@ -11,7 +12,6 @@
   var mq = function (q) { return w.matchMedia ? w.matchMedia(q) : { matches: false }; };
   var still = mq('(prefers-reduced-motion: reduce)');
   var fine = mq('(hover: hover) and (pointer: fine)');   // мышь: второе фото — по наведению
-  var broad = mq('(min-width: 600px)');                    // крупная карточка — два фото рядом
   var each = function (sel, fn, ctx) { Array.prototype.forEach.call((ctx || d).querySelectorAll(sel), fn); };
   var fill = function (s, k, v) { return String(s).split('{' + k + '}').join(v); };
   var hasIO = 'IntersectionObserver' in w;
@@ -119,33 +119,71 @@
     });
   });
 
-  // ——— Второе фото карточки: по наведению мыши и рядом с первым у крупных карточек на компьютере ———
-  function hydrate(i) {
-    if (!i || !i.hasAttribute('data-src')) return;
-    i.addEventListener('load', function () { i.classList.add('is-ld'); }, { once: true });
-    var ss = i.getAttribute('data-srcset');
-    if (ss) i.srcset = ss;
-    i.src = i.getAttribute('data-src');
-    i.removeAttribute('data-src');
-    i.removeAttribute('data-srcset');
+  // ——— Фото в карточке листаются вправо-влево: полоски внизу, у мыши — стрелки ———
+  // Второе фото грузим, когда карточка подходит к экрану (свайп сразу попадёт на готовое фото),
+  // остальные — как только человек начал листать эту карточку.
+  function eager(i) { if (i && i.loading === 'lazy') i.loading = 'eager'; }
+  function cardGal(c) {
+    if (c.__gal !== undefined) return c.__gal;
+    var t = c.querySelector('.vc__track');
+    c.__gal = null;
+    if (!t || t.children.length < 2) return null;
+    var g = { t: t, imgs: t.children, bars: c.querySelectorAll('.vc__bars i'), all: false, aim: null, aimT: 0,
+              prev: c.querySelector('[data-vstep="-1"]'), next: c.querySelector('[data-vstep="1"]') };
+    g.step = function () { return g.imgs[1].offsetLeft - g.imgs[0].offsetLeft; };
+    g.update = function () {
+      var s = g.step();
+      if (!s) return;   // карточка скрыта (избранное, фильтр)
+      var x = t.scrollLeft, i = Math.round(x / s), seen = Math.max(1, Math.round((t.clientWidth + 2) / s));
+      for (var k = 0; k < g.bars.length; k++) g.bars[k].classList.toggle('is-on', k >= i && k < i + seen);
+      if (g.prev) g.prev.hidden = x <= 2;
+      if (g.next) g.next.hidden = x >= t.scrollWidth - t.clientWidth - 2;
+    };
+    g.loadAll = function () { if (!g.all) { g.all = true; Array.prototype.forEach.call(g.imgs, eager); } };
+    var raf = 0;
+    t.addEventListener('scroll', function () {
+      g.loadAll();
+      if (!raf) raf = requestAnimationFrame(function () { raf = 0; g.update(); });
+    }, { passive: true });
+    c.__gal = g;
+    g.update();
+    return g;
   }
-  var near = hasIO ? new IntersectionObserver(function (es) {
+  var gals = Array.prototype.slice.call(d.querySelectorAll('.vc--gal'));
+  gals.forEach(cardGal);
+  var soon = hasIO ? new IntersectionObserver(function (es) {
     es.forEach(function (en) {
       if (!en.isIntersecting) return;
-      en.target.__near = 1;
-      if (broad.matches && en.target.classList.contains('vc--w')) hydrate(en.target.querySelector('.vc__img--b'));
+      soon.unobserve(en.target);
+      var g = cardGal(en.target);
+      if (g) eager(g.imgs[1]);
     });
-  }, { rootMargin: '800px 0px' }) : null;
-  each('.vc', function (c) { if (near) near.observe(c); });
-  function pairs(box) {
-    if (!broad.matches) return;
-    each('.vc--w', function (c) { if (!near || c.__near) hydrate(c.querySelector('.vc__img--b')); }, box);
+  }, { rootMargin: '600px 0px' }) : null;
+  gals.forEach(function (c) { if (soon) soon.observe(c); else eager((cardGal(c) || { imgs: [] }).imgs[1]); });
+  function galsUpdate(box) {
+    each('.vc--gal', function (c) { var g = cardGal(c); if (g) g.update(); }, box);
   }
-  if (broad.addEventListener) broad.addEventListener('change', function () { pairs(d); });
-  if (fine.matches) {
+  var rsT = 0;
+  w.addEventListener('resize', function () { clearTimeout(rsT); rsT = setTimeout(function () { galsUpdate(d); }, 150); });
+  d.addEventListener('click', function (ev) {
+    var b = ev.target && ev.target.closest && ev.target.closest('[data-vstep]');
+    if (!b) return;
+    var c = b.closest('.vc'), g = c && cardGal(c);
+    if (!g) return;
+    ev.preventDefault();
+    g.loadAll();
+    var t = g.t, m = t.scrollWidth - t.clientWidth;
+    var from = g.aim !== null ? g.aim : t.scrollLeft;   // быстрые повторные нажатия — от цели, а не от середины пути
+    g.aim = Math.max(0, Math.min(m, from + Number(b.getAttribute('data-vstep')) * g.step()));
+    clearTimeout(g.aimT);
+    g.aimT = setTimeout(function () { g.aim = null; }, 700);
+    t.scrollTo({ left: g.aim, behavior: still.matches ? 'auto' : 'smooth' });
+  });
+  if (fine.matches) {   // мышь навелась — второе фото уже грузим
     d.addEventListener('pointerover', function (ev) {
-      var c = ev.target && ev.target.closest && ev.target.closest('.vc');
-      if (c) hydrate(c.querySelector('.vc__img--b'));
+      var c = ev.target && ev.target.closest && ev.target.closest('.vc--gal');
+      var g = c && cardGal(c);
+      if (g) eager(g.imgs[1]);
     }, { passive: true });
   }
 
@@ -379,7 +417,7 @@
   cartSync();
 
   // ——— Каталог: фильтр (материал, цвет, цена) и сортировка; ритм витрины перестраивается под найденное ———
-  var SIZES = { w1: '(min-width: 600px) 50vw, 100vw', w2: '(min-width: 600px) 25vw, 100vw', h: '(min-width: 600px) 25vw, 50vw' };
+  var SIZES = { w1: '(min-width: 600px) 25vw, 100vw', w2: '(min-width: 600px) 25vw, 100vw', h: '(min-width: 600px) 25vw, 50vw' };
   function rhythm(n) {   // как rhythm() в themes/v4.py
     var out = [];
     for (var i = 0; i < n; i++) {
@@ -394,13 +432,17 @@
     var ks = rhythm(list.length);
     list.forEach(function (c, i) {
       var k = ks[i], wide = k.k === 'w';
+      if (c.classList.contains('vc--w') !== wide) {   // карточка сменила размер — её фото снова с первого
+        var tr = c.querySelector('.vc__track');
+        if (tr) tr.scrollLeft = 0;
+      }
       c.classList.toggle('vc--w', wide);
       c.classList.toggle('vc--2', k.k === 'h2');
       c.classList.toggle('vc--r', k.r);
       var sz = wide ? (c.classList.contains('vc--one') ? SIZES.w1 : SIZES.w2) : SIZES.h;
       each('.vc__img', function (im) { if (im.getAttribute('sizes') !== sz) im.setAttribute('sizes', sz); }, c);
     });
-    pairs(grid);
+    requestAnimationFrame(function () { galsUpdate(grid); });
   }
   if (grid && form) {
     var words = function (el, a) { return (el.getAttribute(a) || '').split(' ').filter(Boolean); };
@@ -517,9 +559,11 @@
     var play = function () { var pr = v.play(); if (pr && pr.catch) pr.catch(label); };
     v.addEventListener('play', label);
     v.addEventListener('pause', label);
-    if (btn) btn.addEventListener('click', function () {
+    var toggle = function () {
       if (v.paused) { wish = 'play'; play(); } else { wish = 'pause'; v.pause(); }
-    });
+    };
+    if (btn) btn.addEventListener('click', toggle);
+    v.addEventListener('click', toggle);   // надписей на видео нет — пауза нажатием на само видео
     if (hasIO) {
       new IntersectionObserver(function (es) {
         if (es[0].isIntersecting) { if (wish === 'play' || (wish === null && auto)) play(); }

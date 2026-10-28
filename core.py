@@ -316,12 +316,14 @@ def render_images():
         top = min(max(fy * h - ch / 2, 0), h - ch)
         frame = im.crop((round(left), round(top), round(left + cw), round(top + ch)))
         stem = Path(item['image']).stem
-        for width in (750, 1125, 1600):
-            if width <= frame.width * 1.02:
-                frame.resize((width, round(width / ratio)), Image.LANCZOS).save(
-                    hout / f'{stem}-{width}.webp', 'WEBP', quality=86, method=6)
+        widths = [w_ for w_ in (750, 1125, 1600) if w_ <= frame.width * 1.02]
+        if frame.width > (widths[-1] if widths else 0) * 1.05:   # исходник крупнее ступени — отдаём и его размер
+            widths.append(frame.width)
+        for width in widths:
+            frame.resize((width, round(width / ratio)), Image.LANCZOS).save(
+                hout / f'{stem}-{width}.webp', 'WEBP', quality=86, method=6)
         item['_stem'] = stem
-        item['_widths'] = [w_ for w_ in (750, 1125, 1600) if (hout / f'{stem}-{w_}.webp').exists()]
+        item['_widths'] = widths
         item['_ratio'] = ratio
     if HOME.get('video'):   # видео уже сжато (H.264, 4:5, ~2,4 МБ) — кладём как есть
         vout = OUT_ROOT / 'assets' / 'video'
