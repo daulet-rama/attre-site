@@ -17,6 +17,9 @@
 | `/v1/ru/` | v1 | yourantihero.ru |
 | `/v2/ru/` | v2 | ushatava.ru |
 | `/v3/ru/` | v3 | massimodutti.com |
+| `/v4/ru/` | v4 — «Витрина» | Ushatava × Massimo, фото проявляются, Ken Burns на обложке |
+| `/v5/ru/` | v5 — «Лента» | Antihero × Instagram: сумка на экран, сетка как профиль |
+| `/v6/ru/` | v6 — «Музей» | экспозиция строчными, асимметрия, фото «оседают» |
 
 Список со ссылками: `/variants/`. Быстро пересобрать одну тему без нарезки фото:
 `ATTRE_BASE=/ ATTRE_ORIGIN=http://localhost:8000 python3 tools/theme_preview.py v1`.
@@ -35,7 +38,7 @@ media/products/         мастер-копии фото вещей (JPEG до 2
 media/home/             мастер-копии фото главной
 src/                    стили, скрипт, шрифт, логотипы
 core.py                 данные, нарезка фото, общие помощники
-themes/                 темы вёрстки (gallery, v1, v2, v3)
+themes/                 темы вёрстки (gallery, v1–v6)
 build.py                сборка всех тем → site/ (Python 3.12+ и Pillow)
 tools/                  подготовка шрифта и брендовых картинок
 ```
