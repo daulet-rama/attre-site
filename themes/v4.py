@@ -124,6 +124,16 @@ def delivery(lang):
             f'<h3 class="dlv__t">{e(t("dlv_world_title", lang))}</h3><p>{e(t("dlv_world", lang))}</p>')
 
 
+def seller_lines(lang):
+    """Сведения о продавце (закон о защите прав потребителей, правила электронной торговли): ИП/ТОО и ИИН/БИН
+    из data/settings.json → seller (заполняют в админке). Пока не заполнено — строки нет, только адрес магазина и тенге."""
+    sl = DATA.get('seller') or {}
+    name, bin_ = str(sl.get('name') or '').strip(), str(sl.get('bin') or '').strip()
+    rows = [t('f_seller_fmt', lang, name=name, bin=bin_)] if name and bin_ else []
+    rows += [t('f_store_fmt', lang, address=t('address', lang), hours=t('hours', lang)), t('f_prices', lang)]
+    return ''.join(f'<p>{e(x)}</p>' for x in rows)
+
+
 def paras(text):
     return ''.join(f'<p>{e(x.strip())}</p>' for x in text.split('\n\n') if x.strip())
 
@@ -240,9 +250,7 @@ def footer(lang, suffix):
 </div>
 <div class="ftr__row">{langs(lang, suffix, 'ftr__langs')}<p class="ftr__copy">© {datetime.date.today().year} attré</p></div>
 <div class="ftr__legal">
-<p>{e(t('f_seller', lang))}</p>
-<p>{e(t('f_prices', lang))}</p>
-<p>{e(t('f_consumer', lang))}</p>
+{seller_lines(lang)}
 {proto}
 </div>
 <a class="ftr__logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="300" height="116" loading="lazy" decoding="async"></a>
@@ -887,7 +895,7 @@ def info(lang):
 <li><a class="ulink" href="mailto:{e(DATA['email'])}">{e(DATA['email'])}</a></li>
 <li><a class="ulink" href="{e(DATA['map_url'])}" target="_blank" rel="noopener">{e(t('map', lang))}</a></li>
 </ul>""")}
-{sec('seller', t('seller_title', lang), f'<p>{e(t("f_seller", lang))}</p><p>{e(t("f_prices", lang))}</p><p>{e(t("f_consumer", lang))}</p>')}
+{sec('seller', t('seller_title', lang), seller_lines(lang))}
 </div>'''
     return layout(lang, title=f"{t('info_title', lang)} — attré", desc=t('site_desc', lang), body=body,
                   suffix='info/', og_image=abs_asset(f'assets/img/brand/og-{lang}.jpg'), page='p-info')

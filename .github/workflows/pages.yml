@@ -3,6 +3,7 @@ name: pages
 on:
   push:
     branches: [main]
+    paths-ignore: ['admin/**']   # правки кода админки сайт не пересобирают (сохранения товаров — пересобирают)
   workflow_dispatch:
 
 permissions:
@@ -24,6 +25,12 @@ jobs:
           python-version: '3.13'
       - name: Pillow для нарезки фото
         run: pip install pillow==12.1.1
+      - name: Кэш нарезанных фото (сборка после правки в админке — без перерезки всех фото)
+        uses: actions/cache@v4
+        with:
+          path: .cache/img
+          key: img-v1-${{ hashFiles('media/**') }}
+          restore-keys: img-v1-
       - name: Сборка
         env:
           ATTRE_ORIGIN: https://${{ github.repository_owner }}.github.io

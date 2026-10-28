@@ -843,6 +843,16 @@
       "ru": "оплата",
       "kz": "төлем",
       "en": "payment"
+    },
+    "f_seller_fmt": {
+      "ru": "Продавец: {name}, ИИН/БИН {bin}.",
+      "kz": "Сатушы: {name}, ЖСН/БСН {bin}.",
+      "en": "Seller: {name}, IIN/BIN {bin}."
+    },
+    "f_store_fmt": {
+      "ru": "Магазин: {address}. {hours}.",
+      "kz": "Дүкен: {address}. {hours}.",
+      "en": "Store: {address}. {hours}."
     }
   }
 }

@@ -342,6 +342,31 @@ def open_rgb(path):
     return im.convert('RGB')
 
 
+CACHE = ROOT / '.cache' / 'img'   # нарезанные фото между сборками (в git не идёт)
+
+
+def cache_key(src, *params):
+    """Ключ кэша: содержимое исходника + параметры нарезки (новое фото или другой кадр — новый ключ)."""
+    h = hashlib.sha1(Path(src).read_bytes()).hexdigest()
+    return hashlib.sha1('|'.join([h, *map(str, params)]).encode()).hexdigest()[:24]
+
+
+def from_cache(key, outs):
+    """outs: {суффикс: путь в site/}. Всё есть в кэше — копирует и возвращает True."""
+    hits = {sfx: CACHE / f'{key}{sfx}' for sfx in outs}
+    if not all(h.exists() for h in hits.values()):
+        return False
+    for sfx, dst in outs.items():
+        shutil.copyfile(hits[sfx], dst)
+    return True
+
+
+def to_cache(key, outs):
+    CACHE.mkdir(parents=True, exist_ok=True)
+    for sfx, dst in outs.items():
+        shutil.copyfile(dst, CACHE / f'{key}{sfx}')
+
+
 def render_images():
     from PIL import Image
     out = OUT_ROOT / 'assets' / 'img' / 'p'
@@ -350,17 +375,25 @@ def render_images():
         for vi, v in enumerate(p['variants'] or [{'id': None, 'srcs': p['srcs']}]):
             shots = []
             for i, src in enumerate(v['srcs']):
-                frame = fit_34(open_rgb(src), p['focus'] if vi == 0 and i == 0 else {})
+                focus = p['focus'] if vi == 0 and i == 0 else {}
                 stem = img_stem(p, v['id'], i)
-                for width in (600, 1200):
-                    frame.resize((width, round(width * 4 / 3)), Image.LANCZOS).save(
-                        out / f'{stem}-{width}.webp', 'WEBP', quality=86, method=6)
+                outs = {f'-{w}.webp': out / f'{stem}-{w}.webp' for w in (600, 1200)}
+                key = cache_key(src, 'p34', json.dumps(focus, sort_keys=True))
+                if not from_cache(key, outs):
+                    frame = fit_34(open_rgb(src), focus)
+                    for width in (600, 1200):
+                        frame.resize((width, round(width * 4 / 3)), Image.LANCZOS).save(
+                            outs[f'-{width}.webp'], 'WEBP', quality=86, method=6)
+                    to_cache(key, outs)
                 shots.append(stem)
-                if vi == 0 and i == 0:
-                    og = frame.resize((900, 1200), Image.LANCZOS)
-                    sq = Image.new('RGB', (1200, 1200), og.getpixel((2, 2)))
-                    sq.paste(og, (150, 0))
-                    sq.save(out / f"{p['slug']}-og.jpg", 'JPEG', quality=88, optimize=True, progressive=True)
+                if vi == 0 and i == 0:   # картинка для соцсетей: квадрат, вещь по центру
+                    og_out = {'-og.jpg': out / f"{p['slug']}-og.jpg"}
+                    if not from_cache(key, og_out):
+                        og = Image.open(outs['-1200.webp']).convert('RGB').resize((900, 1200), Image.LANCZOS)
+                        sq = Image.new('RGB', (1200, 1200), og.getpixel((2, 2)))
+                        sq.paste(og, (150, 0))
+                        sq.save(og_out['-og.jpg'], 'JPEG', quality=88, optimize=True, progressive=True)
+                        to_cache(key, og_out)
             v['images'] = shots
             if vi == 0:
                 p['images'] = shots
@@ -384,9 +417,13 @@ def render_images():
         widths = [w_ for w_ in (750, 1125, 1600) if w_ <= frame.width * 1.02]
         if frame.width > (widths[-1] if widths else 0) * 1.05:   # исходник крупнее ступени — отдаём и его размер
             widths.append(frame.width)
-        for width in widths:
-            frame.resize((width, round(width / ratio)), Image.LANCZOS).save(
-                hout / f'{stem}-{width}.webp', 'WEBP', quality=86, method=6)
+        outs = {f'-{width}.webp': hout / f'{stem}-{width}.webp' for width in widths}
+        key = cache_key(src, 'home', ratio, fx, fy, *widths)
+        if not from_cache(key, outs):
+            for width in widths:
+                frame.resize((width, round(width / ratio)), Image.LANCZOS).save(
+                    outs[f'-{width}.webp'], 'WEBP', quality=86, method=6)
+            to_cache(key, outs)
         item['_stem'] = stem
         item['_widths'] = widths
         item['_ratio'] = ratio

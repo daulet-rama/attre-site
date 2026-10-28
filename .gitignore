@@ -2,3 +2,4 @@ site/
 tools/photos-src/
 __pycache__/
 .venv/
+.cache/
