@@ -41,6 +41,15 @@ def t(key, lang, **kw):
     return s
 
 
+def slogan(lang):
+    """Слоган из двух частей: вторая — красная (span)."""
+    return f"{e(t('slogan_1', lang))} <span>{e(t('slogan_2', lang))}</span>"
+
+
+def og_brand(lang):
+    return abs_url(f'assets/img/brand/og-{lang}.jpg')
+
+
 def url(path=''):
     return BASE + path
 
@@ -160,7 +169,7 @@ def footer(lang):
     return f'''<footer class="ftr">
 <div class="ftr__brand">
 <a class="ftr__logo" href="{url(lang + '/')}" aria-label="{e(t('home', lang))}"><img src="{url('assets/img/brand/logo-red.png')}" alt="attré" width="93" height="36" loading="lazy"></a>
-<p class="ftr__slogan" lang="en">not mass. <span>not repeated.</span></p>
+<p class="ftr__slogan">{slogan(lang)}</p>
 </div>
 <div>
 <h2>{e(t('f_contacts', lang))}</h2>
@@ -228,7 +237,7 @@ def catalog_page(lang, cat=None):
     body = f'''<main id="main">
 <h1 class="sr-only">{e(heading)}</h1>
 <section class="intro">
-<p class="intro__slogan" lang="en">not mass. <span>not repeated.</span></p>
+<p class="intro__slogan">{slogan(lang)}</p>
 <p class="intro__sub">{e(t('intro_sub', lang))}</p>
 </section>
 <div class="tabs">
@@ -249,7 +258,7 @@ def catalog_page(lang, cat=None):
 </main>'''
     title = f"{CATS[cat][lang]} — attré" if cat else f"{t('dock_catalog', lang)} — attré"
     return layout(lang, title=title, desc=t('site_desc', lang), body=body, suffix=suffix,
-                  og_image=abs_url('assets/img/brand/og.jpg'))
+                  og_image=og_brand(lang))
 
 
 # ——— Товар ———
@@ -291,13 +300,13 @@ def product_page(p, lang):
     passport = ''.join(f'<div><dt>{e(k)}</dt><dd>{v}</dd></div>' for k, v in rows)
     if sold(p):
         msg = t('wa_sold', lang, name=name, id=p['id'], url=page_url)
-        bar = (f'<div class="buybar__info"><p class="buybar__sold">{e(t("sold_word", lang))} <span lang="en">not repeated.</span></p></div>'
+        bar = (f'<div class="buybar__info"><p class="buybar__sold">{e(t("sold_word", lang))} <span>{e(t("slogan_2", lang))}</span></p></div>'
                f'<a class="btn btn--ghost" href="{e(wa_link(msg))}" target="_blank" rel="noopener">{WA_ICON}{e(t("wa_btn_sold", lang))}</a>')
     else:
         msg = t('wa_product', lang, name=name, id=p['id'], price=price(p['price'], lang), url=page_url)
         bar = (f'<div class="buybar__info"><p class="buybar__name">{e(name)}</p><p class="buybar__price num">{price(p["price"], lang)}</p></div>'
                f'<a class="btn" href="{e(wa_link(msg))}" target="_blank" rel="noopener">{WA_ICON}{e(t("wa_btn", lang))}</a>')
-    sold_line = (f'<p class="pdp__status pdp__sold">{e(t("sold_word", lang))} <span lang="en">not repeated.</span></p>'
+    sold_line = (f'<p class="pdp__status pdp__sold">{e(t("sold_word", lang))} <span>{e(t("slogan_2", lang))}</span></p>'
                  if sold(p) else '')
     cat_name = CATS[p['cat']][lang]
     sim = '\n'.join(card(q, lang) for q in similar(p))
@@ -372,7 +381,7 @@ def home_page(lang):
         f'<p class="edit__no">№ {e(p["id"])}</p><h3 class="edit__name">{e(item_name(p, lang))}</h3>'
         f'<p class="edit__price num">{price(p["price"], lang)}</p></a></li>'
         for p in items)
-    run = 'not mass. not repeated. — ' * 6
+    run = f"{t('slogan_1', lang)} {t('slogan_2', lang)} — " * 6
     body = f'''<div class="curtain" aria-hidden="true"><img src="{logo}" alt="" width="1200" height="459"></div>
 {BAG_SYMBOL}
 <main id="main">
@@ -381,13 +390,13 @@ def home_page(lang):
 <div class="hero__top">{lang_nav(lang, '')}<a class="icon-btn" href="{wa}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a></div>
 <h1 class="hero__mark"><img src="{logo}" alt="attré" width="1200" height="459"></h1>
 <div class="hero__card">
-<p class="hero__slogan" lang="en">not mass. <span>not repeated.</span></p>
+<p class="hero__slogan">{slogan(lang)}</p>
 <p class="hero__sub">{e(t('intro_sub', lang))}</p>
 <div class="hero__cta"><a class="btn" href="{cat}">{e(t('cta_catalog', lang))}</a><a class="btn btn--ghost btn--sq" href="{wa}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a></div>
 </div>
 </section>
 <section class="story" data-story aria-labelledby="story-t">
-<h2 class="story__title" id="story-t" lang="en"><span class="story__mass">not mass.</span> <span class="story__rep">not repeated.</span></h2>
+<h2 class="story__title" id="story-t"><span class="story__mass">{e(t('slogan_1', lang))}</span> <span class="story__rep">{e(t('slogan_2', lang))}</span></h2>
 <div class="story__stage">
 <div class="story__grid" aria-hidden="true">{sils}</div>
 <a class="story__card" href="{item_url(story_p, lang)}" tabindex="-1" aria-hidden="true"><img src="{url('assets/img/p/' + story_p['images'][0] + '-450.webp')}" srcset="{img_srcset(story_p['images'][0])}" sizes="230px" width="450" height="563" alt="" loading="lazy" decoding="async"></a>
@@ -424,7 +433,7 @@ def home_page(lang):
             'd.classList.add("no-curtain");sessionStorage.setItem("attre-curtain","1")}catch(e){}'
             'setTimeout(function(){if(!window.__home)d.classList.remove("js")},6000)})(document.documentElement)</script>')
     return layout(lang, title=t('site_title', lang), desc=t('site_desc', lang), body=body, suffix='',
-                  og_image=abs_url('assets/img/brand/og.jpg'), body_class='home', extra_head=head, header=False,
+                  og_image=og_brand(lang), body_class='home', extra_head=head, header=False,
                   extra_js=f'<script src="{url("assets/js/home.js")}?v={HVER}" defer onerror="document.documentElement.classList.remove(\'js\')"></script>')
 
 
@@ -454,7 +463,7 @@ def info_page(lang):
 <ul>{credits}</ul>
 </main>'''
     return layout(lang, title=f"{t('info_title', lang)} — attré", desc=t('site_desc', lang), body=body,
-                  suffix='info/', og_image=abs_url('assets/img/brand/og.jpg'))
+                  suffix='info/', og_image=og_brand(lang))
 
 
 def root_redirect():

@@ -497,6 +497,16 @@
       "ru": "найдите свою вещь",
       "kz": "өзіңізге жарасатын затты табыңыз",
       "en": "find your piece"
+    },
+    "slogan_1": {
+      "ru": "not mass.",
+      "kz": "not mass.",
+      "en": "not mass."
+    },
+    "slogan_2": {
+      "ru": "not repeated.",
+      "kz": "not repeated.",
+      "en": "not repeated."
     }
   }
 }

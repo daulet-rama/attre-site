@@ -4,7 +4,7 @@
   <slug>-1-{450,900}.webp — основной кадр 4:5 (обрезка по точке focus)
   <slug>-2-{450,900}.webp — крупный план фактуры (обрезка по точке detail)
   <slug>-og.jpg          — 1200×1200 для превью ссылки в WhatsApp/Telegram
-Плюс бренд: og.jpg, favicon.png, apple-touch-icon.png.
+Плюс бренд: og-{ru,kz,en}.jpg, favicon.png, apple-touch-icon.png.
 
 Исходники качаются с images.unsplash.com в tools/photos-src/ (в git не попадают).
 Запуск: python tools/prepare_images.py
@@ -63,19 +63,22 @@ def brand_assets():
     font_path = ROOT / 'tools' / 'fonts-src' / 'Onest[wght].ttf'
     logo = Image.open(BRAND / 'logo-black.png').convert('RGBA')
 
-    og = Image.new('RGB', (1200, 630), (255, 255, 255))
-    lw = 420
-    lg = logo.resize((lw, round(logo.height * lw / logo.width)), Image.LANCZOS)
-    og.paste(lg, ((1200 - lw) // 2, 170), lg)
+    # Превью ссылки на главную/каталог: логотип и слоган на языке страницы.
+    i18n = json.loads((ROOT / 'data' / 'i18n.json').read_text('utf-8'))
     font = ImageFont.truetype(str(font_path), 44)
     font.set_variation_by_axes([500])
-    d = ImageDraw.Draw(og)
-    a, b = 'not mass. ', 'not repeated.'
-    wa, wb = d.textlength(a, font=font), d.textlength(b, font=font)
-    x = (1200 - wa - wb) / 2
-    d.text((x, 400), a, font=font, fill=(17, 17, 17))
-    d.text((x + wa, 400), b, font=font, fill=RED)
-    og.save(BRAND / 'og.jpg', 'JPEG', quality=88, optimize=True)
+    lw = 420
+    lg = logo.resize((lw, round(logo.height * lw / logo.width)), Image.LANCZOS)
+    for lang in (l['code'] for l in i18n['langs']):
+        og = Image.new('RGB', (1200, 630), (255, 255, 255))
+        og.paste(lg, ((1200 - lw) // 2, 170), lg)
+        d = ImageDraw.Draw(og)
+        a, b = i18n['t']['slogan_1'][lang] + ' ', i18n['t']['slogan_2'][lang]
+        wa, wb = d.textlength(a, font=font), d.textlength(b, font=font)
+        x = (1200 - wa - wb) / 2
+        d.text((x, 400), a, font=font, fill=(17, 17, 17))
+        d.text((x + wa, 400), b, font=font, fill=RED)
+        og.save(BRAND / f'og-{lang}.jpg', 'JPEG', quality=88, optimize=True)
 
     # Иконка: белая «a» из логотипа на красном квадрате.
     white = Image.open(BRAND / 'logo-white.png').convert('RGBA')
@@ -109,4 +112,7 @@ def main(only=None):
 
 
 if __name__ == '__main__':
-    main(set(sys.argv[1:]) or None)
+    if sys.argv[1:] == ['--brand']:
+        brand_assets()
+    else:
+        main(set(sys.argv[1:]) or None)
