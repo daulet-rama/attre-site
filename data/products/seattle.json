@@ -1,0 +1,43 @@
+{
+  "id": "039",
+  "published": true,
+  "order": 390,
+  "cat": "bags",
+  "name": {
+    "ru": "Seattle",
+    "kz": "Seattle",
+    "en": "Seattle"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "чёрный",
+    "kz": "қара",
+    "en": "black"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/seattle-1.jpg",
+    "media/products/seattle-2.jpg"
+  ]
+}

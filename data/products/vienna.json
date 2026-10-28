@@ -1,0 +1,43 @@
+{
+  "id": "043",
+  "published": true,
+  "order": 430,
+  "cat": "clutch",
+  "name": {
+    "ru": "Vienna",
+    "kz": "Vienna",
+    "en": "Vienna"
+  },
+  "type": {
+    "ru": "клатч",
+    "kz": "клатч",
+    "en": "clutch"
+  },
+  "color": {
+    "ru": "чёрный, молочный (айвори)",
+    "kz": "қара, сүт түсті",
+    "en": "black, ivory"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/vienna-1.jpg",
+    "media/products/vienna-2.jpg"
+  ]
+}

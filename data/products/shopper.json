@@ -1,0 +1,43 @@
+{
+  "id": "048",
+  "published": true,
+  "order": 480,
+  "cat": "shopper",
+  "name": {
+    "ru": "Шопер",
+    "kz": "Шопер",
+    "en": "Shopper"
+  },
+  "type": {
+    "ru": "шопер",
+    "kz": "шопер",
+    "en": "shopper"
+  },
+  "color": {
+    "ru": "молочный с красным цветочным принтом",
+    "kz": "сүт түсті, қызыл гүл принтімен",
+    "en": "cream with red floral print"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/shopper-1.jpg",
+    "media/products/shopper-2.jpg"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "019",
+  "published": true,
+  "order": 190,
+  "cat": "bags",
+  "name": {
+    "ru": "Verona",
+    "kz": "Verona",
+    "en": "Verona"
+  },
+  "type": {
+    "ru": "сумка-ведро",
+    "kz": "шелек сөмке",
+    "en": "bucket bag"
+  },
+  "color": {
+    "ru": "красный",
+    "kz": "қызыл",
+    "en": "red"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/verona-1.jpg",
+    "media/products/verona-2.jpg",
+    "media/products/verona-3.jpg"
+  ]
+}

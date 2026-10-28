@@ -1,0 +1,43 @@
+{
+  "id": "040",
+  "published": true,
+  "order": 400,
+  "cat": "bags",
+  "name": {
+    "ru": "Siena",
+    "kz": "Siena",
+    "en": "Siena"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "чёрный, коричневый, рыжий (кэмел)",
+    "kz": "қара, қоңыр, ашық қоңыр (кэмел)",
+    "en": "black, brown, camel"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/siena-1.jpg",
+    "media/products/siena-2.jpg"
+  ]
+}

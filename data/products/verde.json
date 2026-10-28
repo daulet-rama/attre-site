@@ -1,0 +1,44 @@
+{
+  "id": "018",
+  "published": true,
+  "order": 180,
+  "cat": "bags",
+  "name": {
+    "ru": "Verde",
+    "kz": "Verde",
+    "en": "Verde"
+  },
+  "type": {
+    "ru": "сумка-ведро",
+    "kz": "шелек сөмке",
+    "en": "bucket bag"
+  },
+  "color": {
+    "ru": "чёрный, коричневый, красный",
+    "kz": "қара, қоңыр, қызыл",
+    "en": "black, brown, red"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/verde-1.jpg",
+    "media/products/verde-2.jpg",
+    "media/products/verde-3.jpg"
+  ]
+}

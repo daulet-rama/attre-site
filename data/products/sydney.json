@@ -1,0 +1,43 @@
+{
+  "id": "041",
+  "published": true,
+  "order": 410,
+  "cat": "bags",
+  "name": {
+    "ru": "Sydney",
+    "kz": "Sydney",
+    "en": "Sydney"
+  },
+  "type": {
+    "ru": "тубус",
+    "kz": "тубус сөмке",
+    "en": "barrel bag"
+  },
+  "color": {
+    "ru": "чёрный с принтом зебра, молочный с синим",
+    "kz": "қара (зебра принт), сүт түсті және көк",
+    "en": "black with zebra print, cream with blue"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/sydney-1.jpg",
+    "media/products/sydney-2.jpg"
+  ]
+}

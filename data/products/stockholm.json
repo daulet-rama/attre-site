@@ -1,0 +1,44 @@
+{
+  "id": "017",
+  "published": true,
+  "order": 170,
+  "cat": "bags",
+  "name": {
+    "ru": "Stockholm",
+    "kz": "Stockholm",
+    "en": "Stockholm"
+  },
+  "type": {
+    "ru": "боулер",
+    "kz": "боулер сөмке",
+    "en": "bowler bag"
+  },
+  "color": {
+    "ru": "чёрный, тёмно-коричневый",
+    "kz": "қара, қою қоңыр",
+    "en": "black, dark brown"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/stockholm-1.jpg",
+    "media/products/stockholm-2.jpg",
+    "media/products/stockholm-3.jpg"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "044",
+  "published": true,
+  "order": 440,
+  "cat": "bags",
+  "name": {
+    "ru": "Visby",
+    "kz": "Visby",
+    "en": "Visby"
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "color": {
+    "ru": "серо-бежевый (хаки), чёрный",
+    "kz": "сұр-бежевый (хаки), қара",
+    "en": "greige/khaki with black trim"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/visby-1.jpg",
+    "media/products/visby-2.jpg"
+  ]
+}

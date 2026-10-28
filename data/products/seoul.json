@@ -1,0 +1,45 @@
+{
+  "id": "016",
+  "published": true,
+  "order": 160,
+  "cat": "bags",
+  "name": {
+    "ru": "Seoul",
+    "kz": "Seoul",
+    "en": "Seoul"
+  },
+  "type": {
+    "ru": "хобо",
+    "kz": "хобо сөмке",
+    "en": "hobo bag"
+  },
+  "color": {
+    "ru": "чёрный, тёмно-коричневый",
+    "kz": "қара, қою қоңыр",
+    "en": "black, dark brown"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/seoul-1.jpg",
+    "media/products/seoul-2.jpg",
+    "media/products/seoul-3.jpg",
+    "media/products/seoul-4.jpg"
+  ]
+}

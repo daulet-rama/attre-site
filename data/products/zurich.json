@@ -1,0 +1,43 @@
+{
+  "id": "045",
+  "published": true,
+  "order": 450,
+  "cat": "bags",
+  "name": {
+    "ru": "Zurich",
+    "kz": "Zurich",
+    "en": "Zurich"
+  },
+  "type": {
+    "ru": "хобо",
+    "kz": "хобо сөмке",
+    "en": "hobo bag"
+  },
+  "color": {
+    "ru": "молочно-бежевый, чёрный",
+    "kz": "сүт түсті-бежевый, қара",
+    "en": "cream, black"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/zurich-1.jpg",
+    "media/products/zurich-2.jpg"
+  ]
+}

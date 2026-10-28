@@ -1,0 +1,46 @@
+{
+  "id": "010",
+  "published": true,
+  "order": 100,
+  "cat": "bags",
+  "name": {
+    "ru": "Soho",
+    "kz": "Soho",
+    "en": "Soho"
+  },
+  "type": {
+    "ru": "багет",
+    "kz": "багет сөмке",
+    "en": "baguette bag"
+  },
+  "color": {
+    "ru": "тёмно-коричневый, оливковый (хаки)",
+    "kz": "қою қоңыр, зәйтүн жасыл (хаки)",
+    "en": "dark brown, olive"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/soho-1.jpg",
+    "media/products/soho-2.jpg",
+    "media/products/soho-3.jpg",
+    "media/products/soho-4.jpg",
+    "media/products/soho-5.jpg"
+  ]
+}

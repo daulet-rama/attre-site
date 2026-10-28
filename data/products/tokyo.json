@@ -1,0 +1,46 @@
+{
+  "id": "011",
+  "published": true,
+  "order": 110,
+  "cat": "bags",
+  "name": {
+    "ru": "Tokyo",
+    "kz": "Tokyo",
+    "en": "Tokyo"
+  },
+  "type": {
+    "ru": "хобо",
+    "kz": "хобо сөмке",
+    "en": "hobo bag"
+  },
+  "color": {
+    "ru": "розовый, жёлтый, красный",
+    "kz": "қызғылт, сары, қызыл",
+    "en": "pink, yellow, red"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/tokyo-1.jpg",
+    "media/products/tokyo-2.jpg",
+    "media/products/tokyo-3.jpg",
+    "media/products/tokyo-4.jpg",
+    "media/products/tokyo-5.jpg"
+  ]
+}

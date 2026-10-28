@@ -1,0 +1,43 @@
+{
+  "id": "042",
+  "published": true,
+  "order": 420,
+  "cat": "bags",
+  "name": {
+    "ru": "Sylt",
+    "kz": "Sylt",
+    "en": "Sylt"
+  },
+  "type": {
+    "ru": "бокс-бэг",
+    "kz": "бокс сөмке",
+    "en": "box bag"
+  },
+  "color": {
+    "ru": "бежевый (замша), чёрный",
+    "kz": "бежевый (замша), қара",
+    "en": "beige (suede), black"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/sylt-1.jpg",
+    "media/products/sylt-2.jpg"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "046",
+  "published": true,
+  "order": 460,
+  "cat": "acc",
+  "name": {
+    "ru": "Брелоки",
+    "kz": "Брелоктар",
+    "en": "Bag charms"
+  },
+  "type": {
+    "ru": "брелок",
+    "kz": "брелок",
+    "en": "bag charm"
+  },
+  "color": {
+    "ru": "разноцветный (чёрно-белый, зелёный, розовый",
+    "kz": "түрлі-түсті",
+    "en": "multicolor"
+  },
+  "material": null,
+  "desc": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": null,
+    "h": null,
+    "d": null
+  },
+  "price": null,
+  "stock": null,
+  "images": [
+    "media/products/charms-1.jpg"
+  ]
+}
