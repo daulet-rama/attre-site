@@ -1,6 +1,7 @@
 // attré — главная: запуск истории «not mass.», часы Алматы, плавающая панель.
 // Шторка и герой — чистый CSS; здесь только то, что зависит от прокрутки и времени.
 (function () {
+  window.__home = 1;
   var root = document.documentElement;
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hasIO = 'IntersectionObserver' in window;
@@ -22,19 +23,20 @@
   var hero = document.querySelector('.hero');
   var fin = document.querySelector('.fin');
   if (dock && hero && hasIO) {
-    var heroGone = false, finIn = false;
-    var sync = function () { dock.classList.toggle('is-on', heroGone && !finIn); };
+    var heroGone = false, finIn = false, ftrIn = false;
+    var sync = function () { dock.classList.toggle('is-on', heroGone && !finIn && !ftrIn); };
     new IntersectionObserver(function (es) { heroGone = !es[0].isIntersecting; sync(); }, { threshold: 0.15 }).observe(hero);
     if (fin) new IntersectionObserver(function (es) { finIn = es[0].isIntersecting; sync(); }).observe(fin);
+    var ftr = document.querySelector('.ftr');
+    if (ftr) new IntersectionObserver(function (es) { ftrIn = es[0].isIntersecting; sync(); }).observe(ftr);
   } else if (dock) dock.classList.add('is-on');
 
-  // Часы Алматы.
+  // Часы Алматы: Казахстан с 01.03.2024 живёт на едином UTC+5 без летнего времени.
+  // Фиксированное смещение надёжнее старых баз часовых поясов на телефонах.
   var clock = document.querySelector('[data-clock]');
   if (clock) {
-    var fmt;
-    try { fmt = new Intl.DateTimeFormat('ru-RU', { timeZone: 'Asia/Almaty', hour: '2-digit', minute: '2-digit' }); }
-    catch (e) { fmt = null; }
-    var tick = function () { if (fmt) clock.textContent = fmt.format(new Date()); };
-    if (fmt) { tick(); setInterval(tick, 15000); } else clock.hidden = true;
+    var p2 = function (n) { return (n < 10 ? '0' : '') + n; };
+    var tick = function () { var d = new Date(Date.now() + 5 * 36e5); clock.textContent = p2(d.getUTCHours()) + ':' + p2(d.getUTCMinutes()); };
+    tick(); setInterval(tick, 15000);
   }
 })();

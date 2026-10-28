@@ -426,7 +426,7 @@
     "cta_catalog": {
       "ru": "смотреть каталог",
       "kz": "каталогты қарау",
-      "en": "view the catalogue"
+      "en": "browse the catalogue"
     },
     "dock_catalog": {
       "ru": "каталог",
@@ -441,12 +441,12 @@
     "hero_alt": {
       "ru": "Чёрная кожаная сумка-ведро на широком ремне",
       "kz": "Кең бауы бар қара былғары шелек сөмке",
-      "en": "Black leather bucket bag on a wide strap"
+      "en": "Black leather bucket bag with a wide strap"
     },
     "story_text": {
-      "ru": "Здесь нет вещей «как у всех». Каждую мы выбираем сами — по материалу и форме.",
-      "kz": "Мұнда «бәрінде бар» заттар жоқ. Әрқайсысын өзіміз таңдаймыз — материалы мен пішініне қарап.",
-      "en": "Nothing here is “like everyone else’s”. We pick every piece ourselves — for its material and form."
+      "ru": "Мы не берём в магазин вещи «как у всех». Каждую выбираем сами — по материалу и форме.",
+      "kz": "Біз «бәрінде бар» заттарды алмаймыз. Әрқайсысын өзіміз таңдаймыз — материалы мен пішініне қарап.",
+      "en": "We don’t stock what everyone else has. We pick every piece ourselves — for its material and shape."
     },
     "story_link": {
       "ru": "посмотреть эту сумку",
@@ -470,8 +470,8 @@
     },
     "mat_textile_line": {
       "ru": "плотный и лёгкий — на каждый день",
-      "kz": "тығыз әрі жеңіл — күнделікті",
-      "en": "dense and light — for every day"
+      "kz": "тығыз әрі жеңіл — күнделікті қолдануға",
+      "en": "tightly woven and light — for everyday use"
     },
     "instock_title": {
       "ru": "сейчас в наличии",
@@ -489,13 +489,13 @@
       "en": "almaty, now"
     },
     "delivery_world": {
-      "ru": "доставка по всему миру",
-      "kz": "бүкіл әлемге жеткізу",
+      "ru": "доставка по миру",
+      "kz": "әлемге жеткізу",
       "en": "worldwide delivery"
     },
     "fin_title": {
       "ru": "найдите свою вещь",
-      "kz": "өз затыңызды табыңыз",
+      "kz": "өзіңізге жарасатын затты табыңыз",
       "en": "find your piece"
     }
   }

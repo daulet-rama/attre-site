@@ -353,7 +353,7 @@ def home_img(name, widths, sizes, alt, extra=''):
 def home_page(lang):
     wa = e(wa_link(t('wa_general', lang)))
     cat = url(f'{lang}/catalog/')
-    logo_w = url('assets/img/brand/logo-white-xl.png')
+    logo = url('assets/img/brand/logo-red-xl.png')  # один файл: в герое красный, на шторке — белый фильтром
     story_p = next(p for p in DATA['products'] if p['slug'] == STORY_ITEM)
     # Волна от центра: задержка растёт с расстоянием до центральной клетки 5×5
     sils = ''.join(
@@ -373,13 +373,13 @@ def home_page(lang):
         f'<p class="edit__price num">{price(p["price"], lang)}</p></a></li>'
         for p in items)
     run = 'not mass. not repeated. — ' * 6
-    body = f'''<div class="curtain" aria-hidden="true"><img src="{logo_w}" alt="" width="1200" height="459"></div>
+    body = f'''<div class="curtain" aria-hidden="true"><img src="{logo}" alt="" width="1200" height="459"></div>
 {BAG_SYMBOL}
 <main id="main">
 <section class="hero">
 {home_img('hero', (480, 828, 1170), '(min-width: 960px) 50vw, 100vw', t('hero_alt', lang), ' fetchpriority="high"').replace('<img ', '<img class="hero__img" ', 1)}
 <div class="hero__top">{lang_nav(lang, '')}<a class="icon-btn" href="{wa}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a></div>
-<h1 class="hero__mark"><img src="{url('assets/img/brand/logo-red-xl.png')}" alt="attré" width="1200" height="459"></h1>
+<h1 class="hero__mark"><img src="{logo}" alt="attré" width="1200" height="459"></h1>
 <div class="hero__card">
 <p class="hero__slogan" lang="en">not mass. <span>not repeated.</span></p>
 <p class="hero__sub">{e(t('intro_sub', lang))}</p>
@@ -387,7 +387,7 @@ def home_page(lang):
 </div>
 </section>
 <section class="story" data-story aria-labelledby="story-t">
-<h2 class="story__title" id="story-t" lang="en"><span class="story__mass">not mass.</span><span class="story__rep">not repeated.</span></h2>
+<h2 class="story__title" id="story-t" lang="en"><span class="story__mass">not mass.</span> <span class="story__rep">not repeated.</span></h2>
 <div class="story__stage">
 <div class="story__grid" aria-hidden="true">{sils}</div>
 <a class="story__card" href="{item_url(story_p, lang)}" tabindex="-1" aria-hidden="true"><img src="{url('assets/img/p/' + story_p['images'][0] + '-450.webp')}" srcset="{img_srcset(story_p['images'][0])}" sizes="230px" width="450" height="563" alt="" loading="lazy" decoding="async"></a>
@@ -405,7 +405,7 @@ def home_page(lang):
 <p class="now__label">{e(t('now_label', lang))}</p>
 <p class="now__time num" data-clock></p>
 <p>{e(t('address', lang))}</p>
-<p>{e(t('hours', lang))}</p>
+{'' if '[' in t('hours', lang) else f'<p>{e(t("hours", lang))}</p>'}
 <p>{e(t('delivery_world', lang))}</p>
 <a class="link" href="{e(DATA['map_url'])}" target="_blank" rel="noopener">{e(t('map', lang))}</a>
 </section>
@@ -417,13 +417,15 @@ def home_page(lang):
 </section>
 </main>
 <nav class="dock" aria-label="{e(t('dock_label', lang))}"><a href="{cat}">{e(t('dock_catalog', lang))}</a><a href="{wa}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a></nav>'''
-    head = (f'<link rel="preload" href="{logo_w}" as="image">'
-            f'<link rel="stylesheet" href="{url("assets/css/home.css")}?v={HVER}">'
+    # html.js включает «скрыто до анимации»; если home.js не загрузился за 6 с или упал — снимаем,
+    # чтобы финальные состояния остались видны.
+    head = (f'<link rel="stylesheet" href="{url("assets/css/home.css")}?v={HVER}">'
             '<script>(function(d){d.classList.add("js");try{if(sessionStorage.getItem("attre-curtain"))'
-            'd.classList.add("no-curtain");sessionStorage.setItem("attre-curtain","1")}catch(e){}})(document.documentElement)</script>')
+            'd.classList.add("no-curtain");sessionStorage.setItem("attre-curtain","1")}catch(e){}'
+            'setTimeout(function(){if(!window.__home)d.classList.remove("js")},6000)})(document.documentElement)</script>')
     return layout(lang, title=t('site_title', lang), desc=t('site_desc', lang), body=body, suffix='',
                   og_image=abs_url('assets/img/brand/og.jpg'), body_class='home', extra_head=head, header=False,
-                  extra_js=f'<script src="{url("assets/js/home.js")}?v={HVER}" defer></script>')
+                  extra_js=f'<script src="{url("assets/js/home.js")}?v={HVER}" defer onerror="document.documentElement.classList.remove(\'js\')"></script>')
 
 
 # ——— Покупателям ———
