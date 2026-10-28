@@ -422,6 +422,81 @@
       "ru": "в каталог",
       "kz": "каталогқа",
       "en": "back to the catalogue"
+    },
+    "cta_catalog": {
+      "ru": "смотреть каталог",
+      "kz": "каталогты қарау",
+      "en": "view the catalogue"
+    },
+    "dock_catalog": {
+      "ru": "каталог",
+      "kz": "каталог",
+      "en": "catalogue"
+    },
+    "dock_label": {
+      "ru": "Быстрые ссылки",
+      "kz": "Жылдам сілтемелер",
+      "en": "Quick links"
+    },
+    "hero_alt": {
+      "ru": "Чёрная кожаная сумка-ведро на широком ремне",
+      "kz": "Кең бауы бар қара былғары шелек сөмке",
+      "en": "Black leather bucket bag on a wide strap"
+    },
+    "story_text": {
+      "ru": "Здесь нет вещей «как у всех». Каждую мы выбираем сами — по материалу и форме.",
+      "kz": "Мұнда «бәрінде бар» заттар жоқ. Әрқайсысын өзіміз таңдаймыз — материалы мен пішініне қарап.",
+      "en": "Nothing here is “like everyone else’s”. We pick every piece ourselves — for its material and form."
+    },
+    "story_link": {
+      "ru": "посмотреть эту сумку",
+      "kz": "осы сөмкені көру",
+      "en": "see this bag"
+    },
+    "mats_title": {
+      "ru": "Материалы",
+      "kz": "Материалдар",
+      "en": "Materials"
+    },
+    "mat_leather_line": {
+      "ru": "плетёная, гладкая, зернистая",
+      "kz": "өрілген, тегіс, бүртікті",
+      "en": "woven, smooth, grained"
+    },
+    "mat_suede_line": {
+      "ru": "мягкая и бархатистая",
+      "kz": "жұмсақ әрі барқыттай",
+      "en": "soft and velvety"
+    },
+    "mat_textile_line": {
+      "ru": "плотный и лёгкий — на каждый день",
+      "kz": "тығыз әрі жеңіл — күнделікті",
+      "en": "dense and light — for every day"
+    },
+    "instock_title": {
+      "ru": "сейчас в наличии",
+      "kz": "қазір қолда бар",
+      "en": "in stock now"
+    },
+    "all_catalog": {
+      "ru": "весь каталог",
+      "kz": "толық каталог",
+      "en": "full catalogue"
+    },
+    "now_label": {
+      "ru": "алматы, сейчас",
+      "kz": "алматы, қазір",
+      "en": "almaty, now"
+    },
+    "delivery_world": {
+      "ru": "доставка по всему миру",
+      "kz": "бүкіл әлемге жеткізу",
+      "en": "worldwide delivery"
+    },
+    "fin_title": {
+      "ru": "найдите свою вещь",
+      "kz": "өз затыңызды табыңыз",
+      "en": "find your piece"
     }
   }
 }

@@ -66,6 +66,7 @@ def asset_version(*paths):
 
 
 VER = asset_version('src/css/site.css', 'src/js/site.js')
+HVER = asset_version('src/css/home.css', 'src/js/home.js')
 
 WA_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" '
            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
@@ -95,18 +96,28 @@ def sold(p):
 
 # ——— Общий каркас страницы ———
 
-def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', body_class='', extra_head=''):
+def lang_nav(lang, suffix):
+    links = ''.join(
+        f'<a href="{e(url(l["code"] + "/" + suffix))}" hreflang="{l["html"]}" lang="{l["html"]}"'
+        f'{" aria-current=\"true\"" if l["code"] == lang else ""}>'
+        f'<span aria-hidden="true">{e(l["label"])}</span><span class="sr-only">{e(l["name"])}</span></a>'
+        for l in LANGS)
+    return f'<nav class="lang" aria-label="{e(t("nav_lang", lang))}">{links}</nav>'
+
+
+def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', body_class='', extra_head='',
+           header=True, extra_js=''):
     lang_cfg = next(l for l in LANGS if l['code'] == lang)
     alternates = ''.join(
         f'<link rel="alternate" hreflang="{l["html"]}" href="{e(abs_url(l["code"] + "/" + suffix))}">'
         for l in LANGS)
     alternates += f'<link rel="alternate" hreflang="x-default" href="{e(abs_url(I18N["default"] + "/" + suffix))}">'
     robots = '<meta name="robots" content="noindex, nofollow">' if PROTOTYPE else ''
-    lang_links = ''.join(
-        f'<a href="{e(url(l["code"] + "/" + suffix))}" hreflang="{l["html"]}" lang="{l["html"]}"'
-        f'{" aria-current=\"true\"" if l["code"] == lang else ""}>'
-        f'<span aria-hidden="true">{e(l["label"])}</span><span class="sr-only">{e(l["name"])}</span></a>'
-        for l in LANGS)
+    header_html = f'''<header class="hdr">
+<a class="hdr__logo" href="{url(lang + '/')}" aria-label="{e(t('home', lang))}"><img src="{url('assets/img/brand/logo-black.png')}" alt="attré" width="52" height="20"></a>
+{lang_nav(lang, suffix)}
+<a class="icon-btn" href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a>
+</header>''' if header else ''
     return f'''<!doctype html>
 <html lang="{lang_cfg['html']}">
 <head>
@@ -135,15 +146,12 @@ def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', body
 </head>
 <body class="{body_class}">
 <div class="wrap">
-<header class="hdr">
-<a class="hdr__logo" href="{url(lang + '/')}" aria-label="{e(t('home', lang))}"><img src="{url('assets/img/brand/logo-black.png')}" alt="attré" width="52" height="20"></a>
-<nav class="lang" aria-label="{e(t('nav_lang', lang))}">{lang_links}</nav>
-<a class="icon-btn" href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a>
-</header>
+{header_html}
 {body}
 {footer(lang)}
 </div>
 <script src="{url('assets/js/site.js')}?v={VER}" defer></script>
+{extra_js}
 </body>
 </html>
 '''
@@ -211,14 +219,14 @@ def ordered(items):
 def catalog_page(lang, cat=None):
     present = [c for c in CATS if any(p['cat'] == c for p in DATA['products'])]
     items = ordered([p for p in DATA['products'] if cat is None or p['cat'] == cat])
-    tabs = [(None, t('all', lang), url(lang + '/'))] + [
+    tabs = [(None, t('all', lang), url(lang + '/catalog/'))] + [
         (c, CATS[c][lang], url(f'{lang}/c/{c}/')) for c in present]
     tabs_html = ''.join(
         f'<a class="tab" href="{href}" data-keep-instock{" aria-current=\"page\"" if c == cat else ""}>{e(label)}</a>'
         for c, label, href in tabs)
     cards = '\n'.join(card(p, lang, eager=i < 4, h='h2') for i, p in enumerate(items))
     heading = CATS[cat][lang] if cat else t('site_title', lang)
-    suffix = f'c/{cat}/' if cat else ''
+    suffix = f'c/{cat}/' if cat else 'catalog/'
     body = f'''<main id="main">
 <h1 class="sr-only">{e(heading)}</h1>
 <section class="intro">
@@ -241,7 +249,7 @@ def catalog_page(lang, cat=None):
 <a class="link" href="{e(DATA['map_url'])}" target="_blank" rel="noopener">{e(t('map', lang))}</a>
 </section>
 </main>'''
-    title = f"{CATS[cat][lang]} — attré" if cat else t('site_title', lang)
+    title = f"{CATS[cat][lang]} — attré" if cat else f"{t('dock_catalog', lang)} — attré"
     return layout(lang, title=title, desc=t('site_desc', lang), body=body, suffix=suffix,
                   og_image=abs_url('assets/img/brand/og.jpg'))
 
@@ -324,6 +332,100 @@ def product_page(p, lang):
     desc = f"{MATS[p['material']][lang]} · {p['color'][lang]} · {price(p['price'], lang)}"
     return layout(lang, title=f'{name} — attré', desc=desc, body=body, suffix=f"p/{p['slug']}/",
                   og_image=abs_url(f"assets/img/p/{p['slug']}-og.jpg"), og_type='product', body_class='has-buybar')
+
+
+# ——— Главная ———
+
+BAG_SYMBOL = ('<svg width="0" height="0" style="position:absolute" aria-hidden="true">'
+              '<symbol id="bag" viewBox="0 0 40 48">'
+              '<path d="M13.5 17v-4a6.5 6.5 0 0 1 13 0v4" fill="none" stroke="currentColor" stroke-width="2.4"/>'
+              '<path d="M6 17h28l3 29H3z" fill="currentColor"/></symbol></svg>')
+HOME_MATS = [('leather', 'mat-leather', 'mat_leather_line'),
+             ('suede', 'mat-suede', 'mat_suede_line'),
+             ('textile', 'mat-textile', 'mat_textile_line')]
+STORY_ITEM = 'suede-shoulder-red'
+
+
+def home_img(name, widths, sizes, alt, extra=''):
+    srcset = ', '.join(f"{url(f'assets/img/home/{name}-{w}.webp')} {w}w" for w in widths)
+    return (f'<img src="{url(f"assets/img/home/{name}-828.webp")}" srcset="{srcset}" sizes="{sizes}" '
+            f'width="828" height="1656" alt="{e(alt)}" decoding="async"{extra}>')
+
+
+def home_page(lang):
+    wa = e(wa_link(t('wa_general', lang)))
+    cat = url(f'{lang}/catalog/')
+    logo_w = url('assets/img/brand/logo-white-xl.png')
+    story_p = next(p for p in DATA['products'] if p['slug'] == STORY_ITEM)
+    # Волна от центра: задержка растёт с расстоянием до центральной клетки 5×5
+    sils = ''.join(
+        f'<svg class="sil" viewBox="0 0 40 48" style="--d:{round(((i // 5 - 2) ** 2 + (i % 5 - 2) ** 2) ** .5 * 2)}" '
+        f'aria-hidden="true"><use href="#bag"/></svg>' for i in range(25))
+    mats = ''.join(
+        f'<article class="mat">{home_img(img, (480, 828), "(min-width: 960px) 33vw, 100vw", "", " loading=\"lazy\"")}'
+        f'<div class="mat__body"><p class="mat__n">0{i + 1} / 0{len(HOME_MATS)}</p>'
+        f'<h2 class="mat__name">{e(MATS[m][lang])}</h2><p class="mat__line">{e(t(line, lang))}</p></div></article>'
+        for i, (m, img, line) in enumerate(HOME_MATS))
+    items = [p for p in DATA['products'] if not sold(p)][:6]
+    edit = ''.join(
+        f'<li class="edit__item"><a href="{item_url(p, lang)}"><div class="edit__media">'
+        f'<img src="{url("assets/img/p/" + p["images"][0] + "-450.webp")}" srcset="{img_srcset(p["images"][0])}" '
+        f'sizes="(min-width: 960px) 23vw, 68vw" width="450" height="563" alt="" loading="lazy" decoding="async"></div>'
+        f'<p class="edit__no">№ {e(p["id"])}</p><h3 class="edit__name">{e(item_name(p, lang))}</h3>'
+        f'<p class="edit__price num">{price(p["price"], lang)}</p></a></li>'
+        for p in items)
+    run = 'not mass. not repeated. — ' * 6
+    body = f'''<div class="curtain" aria-hidden="true"><img src="{logo_w}" alt="" width="1200" height="459"></div>
+{BAG_SYMBOL}
+<main id="main">
+<section class="hero">
+{home_img('hero', (480, 828, 1170), '(min-width: 960px) 50vw, 100vw', t('hero_alt', lang), ' fetchpriority="high"').replace('<img ', '<img class="hero__img" ', 1)}
+<div class="hero__top">{lang_nav(lang, '')}<a class="icon-btn" href="{wa}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a></div>
+<h1 class="hero__mark"><img src="{url('assets/img/brand/logo-red-xl.png')}" alt="attré" width="1200" height="459"></h1>
+<div class="hero__card">
+<p class="hero__slogan" lang="en">not mass. <span>not repeated.</span></p>
+<p class="hero__sub">{e(t('intro_sub', lang))}</p>
+<div class="hero__cta"><a class="btn" href="{cat}">{e(t('cta_catalog', lang))}</a><a class="btn btn--ghost btn--sq" href="{wa}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a></div>
+</div>
+</section>
+<section class="story" data-story aria-labelledby="story-t">
+<h2 class="story__title" id="story-t" lang="en"><span class="story__mass">not mass.</span><span class="story__rep">not repeated.</span></h2>
+<div class="story__stage">
+<div class="story__grid" aria-hidden="true">{sils}</div>
+<a class="story__card" href="{item_url(story_p, lang)}" tabindex="-1" aria-hidden="true"><img src="{url('assets/img/p/' + story_p['images'][0] + '-450.webp')}" srcset="{img_srcset(story_p['images'][0])}" sizes="230px" width="450" height="563" alt="" loading="lazy" decoding="async"></a>
+</div>
+<p class="story__text">{e(t('story_text', lang))}</p>
+<a class="link story__link" href="{item_url(story_p, lang)}">{e(t('story_link', lang))} →</a>
+</section>
+<section class="mats" aria-label="{e(t('mats_title', lang))}">{mats}</section>
+<section class="edit" aria-labelledby="edit-t">
+<div class="edit__head"><h2 id="edit-t">{e(t('instock_title', lang))}</h2><a class="link" href="{cat}">{e(t('all_catalog', lang))} →</a></div>
+<ul class="edit__track">{edit}<li class="edit__item edit__all"><a href="{cat}">{e(t('all_catalog', lang))}<span aria-hidden="true">→</span></a></li></ul>
+</section>
+<div class="marquee" aria-hidden="true"><div class="marquee__track"><span>{run}</span><span>{run}</span></div></div>
+<section class="now" aria-label="{e(t('now_label', lang))}">
+<p class="now__label">{e(t('now_label', lang))}</p>
+<p class="now__time num" data-clock></p>
+<p>{e(t('address', lang))}</p>
+<p>{e(t('hours', lang))}</p>
+<p>{e(t('delivery_world', lang))}</p>
+<a class="link" href="{e(DATA['map_url'])}" target="_blank" rel="noopener">{e(t('map', lang))}</a>
+</section>
+<section class="fin">
+<h2 class="fin__title">{e(t('fin_title', lang))}</h2>
+<a class="btn btn--wide" href="{cat}">{e(t('cta_catalog', lang))} →</a>
+<a class="btn btn--ghost btn--wide" href="{wa}" target="_blank" rel="noopener">{WA_ICON}{e(t('wa_btn', lang))}</a>
+<a class="link" href="https://www.instagram.com/{DATA['instagram']}/" target="_blank" rel="noopener">Instagram @{e(DATA['instagram'])}</a>
+</section>
+</main>
+<nav class="dock" aria-label="{e(t('dock_label', lang))}"><a href="{cat}">{e(t('dock_catalog', lang))}</a><a href="{wa}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a></nav>'''
+    head = (f'<link rel="preload" href="{logo_w}" as="image">'
+            f'<link rel="stylesheet" href="{url("assets/css/home.css")}?v={HVER}">'
+            '<script>(function(d){d.classList.add("js");try{if(sessionStorage.getItem("attre-curtain"))'
+            'd.classList.add("no-curtain");sessionStorage.setItem("attre-curtain","1")}catch(e){}})(document.documentElement)</script>')
+    return layout(lang, title=t('site_title', lang), desc=t('site_desc', lang), body=body, suffix='',
+                  og_image=abs_url('assets/img/brand/og.jpg'), body_class='home', extra_head=head, header=False,
+                  extra_js=f'<script src="{url("assets/js/home.js")}?v={HVER}" defer></script>')
 
 
 # ——— Покупателям ———
@@ -424,7 +526,8 @@ def main():
     pages = 3
     for l in LANGS:
         lang = l['code']
-        write(f'{lang}/index.html', catalog_page(lang))
+        write(f'{lang}/index.html', home_page(lang))
+        write(f'{lang}/catalog/index.html', catalog_page(lang)); pages += 1
         for c in CATS:
             if any(p['cat'] == c for p in DATA['products']):
                 write(f'{lang}/c/{c}/index.html', catalog_page(lang, c)); pages += 1

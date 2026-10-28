@@ -1,0 +1,237 @@
+/* attré — главная. Всё движение: только transform/opacity (+ один clip-path на логотипе),
+   под prefers-reduced-motion: no-preference. Без JS страница показывает финальные
+   состояния — «прячем до анимации» только при html.js. */
+
+.home { background: #fff; }
+.home .wrap { max-width: none; }
+
+/* ——— Шторка: красный экран с логотипом, уезжает вверх (один раз за сессию) ——— */
+.curtain {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--red);
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+.curtain img { width: min(62vw, 420px); height: auto; }
+
+/* ——— Герой ——— */
+.hero {
+  --intro: 1.05s;
+  position: relative;
+  height: calc(100vh - 24px);
+  height: calc(100svh - 24px);
+  min-height: 540px;
+  overflow: hidden;
+  background: #b9b4b5;
+}
+html.no-curtain .hero { --intro: .1s; }
+.hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 42% 40%; }
+
+.hero__top {
+  position: absolute; left: 0; right: 0; top: 0; z-index: 2;
+  display: flex; align-items: center;
+  height: var(--hdr-h);
+  padding: 0 calc(var(--gutter) - 10px) 0 calc(var(--gutter) - 4px);
+  color: var(--ink);
+}
+.hero__top .lang { margin-right: auto; }
+/* Подложки под языки и WhatsApp: читаются поверх любого места кадра (ремень, пряжка) */
+.hero__top .lang, .hero__top .icon-btn {
+  background: rgba(255, 255, 255, .72);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.hero__top .lang { height: 36px; padding: 0 2px; }
+.hero__top .lang a { height: 36px; }
+.hero__top .icon-btn { width: 40px; height: 40px; }
+.hero__top .lang a { color: rgba(17, 17, 17, .72); }
+.hero__top .lang a[aria-current='true'] { color: var(--ink); }
+
+/* Логотип во всю ширину, фирменный красный: продолжение красной шторки */
+.hero__mark {
+  position: absolute; z-index: 2;
+  left: var(--gutter); right: var(--gutter); top: calc(var(--hdr-h) + 2px);
+  margin: 0;
+}
+.hero__mark img { width: 100%; height: auto; }
+
+.hero__card {
+  position: absolute; z-index: 3;
+  left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom));
+  padding: 14px 14px 14px 16px;
+  background: rgba(255, 255, 255, .93);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.2);
+}
+.hero__slogan { margin: 0; font-size: 21px; line-height: 1.2; font-weight: 500; letter-spacing: -0.01em; }
+.hero__slogan span { color: var(--red); }
+.hero__sub { margin: 4px 0 12px; font-size: 13px; color: var(--ink-2); }
+.hero__cta { display: flex; gap: 8px; }
+.hero__cta .btn { flex: 1; }
+.hero__cta .btn--sq { flex: none; }
+.btn--sq { flex: none; width: 48px; padding: 0; }
+.btn--sq svg { width: 22px; height: 22px; }
+
+/* ——— «not mass. → not repeated.» ——— */
+.story { padding: 64px var(--gutter) 56px; text-align: center; }
+.story__title { margin: 0 0 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.05; font-size: 40px; }
+.story__mass, .story__rep { display: block; }
+.story__mass { position: relative; display: inline-block; color: #9a9893; }
+.story__mass::after {
+  content: ''; position: absolute; left: -4px; right: -4px; top: 54%;
+  height: 3px; background: var(--ink); transform-origin: 0 50%;
+}
+.story__rep { color: var(--red); }
+
+.story__stage { position: relative; width: min(100%, 340px); margin: 0 auto; }
+.story__grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px 6px; color: #cfccc6; }
+.sil { display: block; width: 100%; height: auto; aspect-ratio: 40 / 48; opacity: .13; }
+.story__card {
+  position: absolute; left: 50%; top: 50%;
+  width: 66%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .45);
+}
+.story__card img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.story__text { max-width: 30ch; margin: 30px auto 4px; font-size: 16px; line-height: 1.5; }
+
+/* ——— Материалы: стопка экранов на position: sticky ——— */
+.mats { position: relative; }
+.mat {
+  position: sticky; top: 0;
+  height: 100vh; height: 100svh;
+  overflow: hidden;
+  background: #222;
+}
+.mat img { width: 100%; height: 100%; object-fit: cover; }
+.mat::after {
+  content: ''; position: absolute; inset: 45% 0 0 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, .62), rgba(0, 0, 0, 0));
+  pointer-events: none;
+}
+.mat__body {
+  position: absolute; z-index: 1; left: var(--gutter); right: var(--gutter);
+  bottom: calc(84px + env(safe-area-inset-bottom)); /* над плавающей панелью */
+  color: #fff;
+}
+.mat__n { margin: 0; font-size: 13px; opacity: .85; }
+.mat__name { margin: 2px 0 4px; font-size: 64px; line-height: 1; font-weight: 500; letter-spacing: -0.03em; }
+.mat__line { margin: 0; font-size: 15px; opacity: .92; }
+
+/* ——— Сейчас в наличии: лента со свайпом ——— */
+.edit { padding: 56px 0 8px; }
+.edit__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 var(--gutter) 14px; }
+.edit__head h2 { margin: 0; font-size: 24px; font-weight: 500; letter-spacing: -0.01em; }
+.edit__head .link { min-height: 44px; font-size: 13.5px; }
+.edit__track {
+  display: flex; gap: 10px;
+  margin: 0; padding: 0 var(--gutter) 6px; list-style: none;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter);
+  overscroll-behavior-x: contain; scrollbar-width: none;
+}
+.edit__track::-webkit-scrollbar { display: none; }
+.edit__item { flex: 0 0 68%; scroll-snap-align: start; min-width: 0; }
+.edit__item a { display: block; }
+.edit__media { aspect-ratio: 4 / 5; background: var(--pad); overflow: hidden; }
+.edit__media img { width: 100%; height: 100%; object-fit: cover; }
+.edit__no { margin: 10px 0 0; font-size: 12px; color: var(--ink-2); }
+.edit__name { margin: 2px 0 0; font-size: 15px; font-weight: 500; }
+.edit__price { margin: 2px 0 0; font-size: 15px; }
+.edit__all a {
+  height: 100%; min-height: 240px; aspect-ratio: 4 / 5;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 6px;
+  padding: 18px; background: var(--ink); color: #fff;
+  font-size: 22px; font-weight: 500; line-height: 1.15;
+}
+.edit__all span { font-size: 28px; }
+
+/* ——— Бегущая строка ——— */
+.marquee { margin-top: 48px; overflow: hidden; background: var(--red); color: #fff; }
+.marquee__track { display: flex; width: max-content; }
+.marquee__track span { flex: none; padding: 14px 0; font-size: 22px; font-weight: 500; white-space: pre; letter-spacing: -0.01em; }
+
+/* ——— Алматы, сейчас ——— */
+.now { padding: 48px var(--gutter) 8px; }
+.now__label { margin: 0; font-size: 13px; color: var(--ink-2); }
+.now__time { margin: 0; font-size: 76px; line-height: 1; font-weight: 500; letter-spacing: -0.04em; }
+html:not(.js) .now__time { display: none; }
+.now p:not(.now__label):not(.now__time) { margin: 10px 0 0; font-size: 15px; }
+
+/* ——— Финал ——— */
+.fin { padding: 48px var(--gutter) 8px; display: grid; gap: 10px; }
+.fin__title { margin: 0 0 8px; font-size: 32px; line-height: 1.1; font-weight: 500; letter-spacing: -0.02em; }
+.btn--wide { width: 100%; height: 56px; font-size: 15.5px; }
+.fin .link { justify-self: start; }
+
+/* ——— Плавающая панель: каталог + WhatsApp, после героя ——— */
+.dock {
+  position: fixed; z-index: 40; left: 50%;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  display: flex; align-items: stretch;
+  background: var(--ink); color: #fff;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .5);
+  transform: translate(-50%, 0);
+  transition: transform .35s cubic-bezier(.2, .7, 0, 1);
+}
+html.js .dock { transform: translate(-50%, calc(100% + 24px + env(safe-area-inset-bottom))); }
+html.js .dock.is-on { transform: translate(-50%, 0); }
+.dock a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 20px; font-size: 14.5px; font-weight: 500; }
+.dock a + a { border-left: 1px solid rgba(255, 255, 255, .22); padding: 0 16px; }
+.dock svg { width: 21px; height: 21px; }
+
+/* ——— Движение ——— */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.no-curtain) .curtain { animation: curtain 1s cubic-bezier(.76, 0, .24, 1) .35s both; }
+  html:not(.no-curtain) .curtain img { animation: curtainMark 1s cubic-bezier(.76, 0, .24, 1) .35s both; }
+  .hero__img { animation: heroZoom 1.9s cubic-bezier(.2, .7, 0, 1) var(--intro) both; }
+  .hero__mark img { animation: markReveal 1.1s cubic-bezier(.7, 0, .2, 1) calc(var(--intro) + .15s) both; }
+  .hero__card { animation: rise .8s cubic-bezier(.2, .7, 0, 1) calc(var(--intro) + .45s) both; }
+  .hero__top { animation: fade .6s ease calc(var(--intro) + .6s) both; }
+
+  html.js .story .sil { opacity: 1; transition: opacity .55s ease calc(var(--d) * 75ms); }
+  html.js .story.is-play .sil { opacity: .13; }
+  html.js .story .story__card { opacity: 0; transform: translate(-50%, -50%) scale(.2); transition: transform 1s cubic-bezier(.2, .7, 0, 1) .55s, opacity .35s ease .55s; }
+  html.js .story.is-play .story__card { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  html.js .story .story__mass { color: var(--ink); transition: color .5s ease 1s; }
+  html.js .story.is-play .story__mass { color: #9a9893; }
+  html.js .story .story__mass::after { transform: scaleX(0); transition: transform .5s cubic-bezier(.7, 0, .2, 1) 1s; }
+  html.js .story.is-play .story__mass::after { transform: scaleX(1); }
+  html.js .story .story__rep { opacity: 0; transform: translateY(14px); transition: opacity .6s ease 1.35s, transform .8s cubic-bezier(.2, .7, 0, 1) 1.35s; }
+  html.js .story.is-play .story__rep { opacity: 1; transform: none; }
+  html.js .story .story__text, html.js .story .story__link { opacity: 0; transition: opacity .6s ease 1.7s; }
+  html.js .story.is-play .story__text, html.js .story.is-play .story__link { opacity: 1; }
+
+  .marquee__track { animation: marquee 26s linear infinite; }
+
+  /* Где браузер умеет анимацию от прокрутки (Chrome Android, iOS 26+): фактура «наезжает» */
+  @supports (animation-timeline: view()) {
+    .mat img { animation: matZoom linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  }
+}
+
+@keyframes curtain { from { transform: translateY(0); } to { transform: translateY(-100%); } }
+@keyframes curtainMark { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-40px); opacity: 0; } }
+@keyframes heroZoom { from { transform: scale(1.12); } to { transform: scale(1); } }
+@keyframes markReveal { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes matZoom { from { transform: scale(1.18); } to { transform: scale(1); } }
+
+/* ——— Компьютер: герой делится на текст и фото, материалы — в ряд ——— */
+@media (min-width: 960px) {
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); height: 100vh; height: 100svh; background: #fff; }
+  .hero__img { position: relative; inset: auto; grid-column: 2; grid-row: 1; height: 100%; min-height: 0; }
+  .hero__top { right: 50%; }
+  .hero__mark { right: calc(50% + var(--gutter)); top: 120px; }
+  .hero__card { left: var(--gutter); right: calc(50% + var(--gutter)); bottom: 48px; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; }
+  .hero__slogan { font-size: 34px; }
+  .story__title { font-size: 64px; }
+  .mats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .mat { position: relative; height: 82vh; }
+  .mat__body { bottom: 32px; }
+  .edit__item { flex-basis: 23%; }
+  .marquee__track span { font-size: 30px; }
+  .fin { max-width: 560px; }
+  .dock { display: none; }
+}
