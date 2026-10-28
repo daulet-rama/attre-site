@@ -119,7 +119,7 @@ def menu(lang, suffix, cur):
     return f'''<div class="menu" id="menu" data-panel aria-label="{e(t('menu', lang))}">
 <div class="menu__bar">
 <button class="ibtn menu__x" type="button" data-close aria-label="{e(t('close', lang))}">{X_ICON}</button>
-<a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="44" height="17"></a>
+<a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="52" height="20"></a>
 <a class="ibtn menu__wa" href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a>
 </div>
 <nav class="menu__nav" aria-label="{e(t('menu', lang))}">
@@ -263,7 +263,7 @@ def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', page
 <a class="promo" href="{url(lang + '/info/')}#bonus">{e(t('promo', lang))}</a>
 <header class="hdr">
 <button class="ibtn hdr__menu js-only" type="button" aria-controls="menu" aria-expanded="false" aria-haspopup="dialog" data-open="menu"><span class="burger" aria-hidden="true"></span><span class="sr-only">{e(t('menu', lang))}</span></button>
-<a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="44" height="17"></a>
+<a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="52" height="20"></a>
 <div class="hdr__r">
 <a class="ibtn hdr__fav" href="{url(lang + '/fav/')}"{CUR if key == 'fav' else ''}>{HEART}<span class="hdr__n tnum" data-fav-n aria-hidden="true"></span><span class="sr-only">{e(t('fav_title', lang))}</span></a>
 <a class="ibtn hdr__wa" href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a>

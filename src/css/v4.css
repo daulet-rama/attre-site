@@ -105,6 +105,7 @@ a:active, button:active, summary:active { opacity: .6; }
   display: flex; align-items: center; justify-content: center;
   min-height: var(--promo); padding: 6px var(--g);
   background: var(--ink); color: #fff; text-align: center;
+  line-height: 16px;   /* целые пиксели: шапка под полосой не встаёт на полпикселя, даже если текст в две строки */
 }
 html.bar-red .promo { background: var(--red); }
 .promo:focus-visible { outline: 1px solid #fff; outline-offset: -5px; }
@@ -130,7 +131,7 @@ html.bar-red .promo { background: var(--red); }
 }
 .hdr__n:empty { display: none; }
 .logo { display: flex; align-items: center; justify-content: center; height: 44px; padding: 0 8px; }
-.logo img { width: auto; height: 17px; }
+.logo img { width: 52px; height: 20px; }   /* вектор; высота чётная — логотип стоит ровно на пикселях (44 − 20 = 2 × 12) */
 .burger { display: block; width: 18px; height: 7px; border-top: 1px solid; border-bottom: 1px solid; }
 .hdr :focus-visible, .menu__bar :focus-visible { outline-offset: -4px; }
 
@@ -602,7 +603,7 @@ html.js .acc:not(.is-open) .plus::after { rotate: 90deg; }
 /* ——— Компьютер ——— */
 @media (min-width: 960px) {
   :root { --g: 32px; }
-  .logo img { height: 19px; }
+  .logo img { width: 57px; height: 22px; }
 
   /* Главная: три портрета в ряд на высоту экрана, стрелки по краям */
   .hero__slide {

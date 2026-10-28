@@ -50,7 +50,7 @@ for curve in plist:
             d.append('C' + pt(seg.c1) + ' ' + pt(seg.c2) + ' ' + pt(seg.end_point))
     d.append('Z')
 vb = f'0 0 300 {f(H * k)}'
-svg = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{vb}" fill="#111">'
+svg = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{vb}" fill="#000">'
        f'<path fill-rule="evenodd" d="{"".join(d)}"/></svg>\n')
 open(out, 'w').write(svg)
 print('curves', len(plist), 'viewBox', vb, 'bytes', len(svg))
