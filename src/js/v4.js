@@ -1,7 +1,7 @@
 // attré · Вариант 4 «Витрина». Меню и нижние листы (фокус внутри, Esc), строки details, ленты со свайпом
-// (слайдер главной, фото товара, подборки: стрелки для мыши, счётчик «1 / 5»), избранное (localStorage),
+// (слайдер главной, фото товара, подборки: стрелки для мыши, счётчик «1 / 5»), избранное и корзина (localStorage),
 // фильтр и сортировка каталога, видео «за кадром». Анимаций при прокрутке нет: фото просто стоят на местах.
-// Без JS всё видно и листается пальцем; не работают только избранное, фильтр и сортировка.
+// Без JS всё видно и листается пальцем; не работают только избранное, корзина, фильтр и сортировка.
 (function () {
   'use strict';
   var d = document, root = d.documentElement, w = window;
@@ -19,6 +19,8 @@
   var thrifty = !!(conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || '')));
   var T = {};
   try { T = JSON.parse(d.getElementById('v4-t').textContent); } catch (e) { /* без текстов остаются подписи из разметки */ }
+  // Цена как в core.money(): 24 900 ₸ (по-английски 24,900 ₸) — фильтр каталога и корзина
+  var money = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, T.sep || ' ') + ' ₸'; };
 
   // ——— Меню и нижние листы: открыт один, подложка общая ———
   var scrim = d.createElement('div');
@@ -270,6 +272,112 @@
   w.addEventListener('pageshow', function (ev) { if (ev.persisted) { close(false); sync(); } });   // «назад» из кэша
   sync();
 
+  // ——— Корзина: [{slug, qty}] в localStorage, как избранное. Заказ — готовое сообщение в WhatsApp: сервера нет,
+  // личных данных человек на сайте не вводит, сообщение отправляет сам ———
+  var CART = 'attre-cart', QMAX = 5, cartMem = [];
+  function cartRead() {
+    var v = null, seen = {};
+    try { v = JSON.parse(w.localStorage.getItem(CART) || '[]'); } catch (e) { /* см. read() */ }
+    if (!Array.isArray(v)) v = cartMem;
+    return v.filter(function (x) {
+      if (!x || typeof x.slug !== 'string' || seen[x.slug]) return false;
+      return (seen[x.slug] = true);
+    }).map(function (x) { return { slug: x.slug, qty: Math.max(1, Math.min(QMAX, Math.floor(Number(x.qty)) || 1)) }; });
+  }
+  function cartWrite(list) {
+    cartMem = list.map(function (x) { return { slug: x.slug, qty: x.qty }; });
+    try { w.localStorage.setItem(CART, JSON.stringify(cartMem)); } catch (e) { /* см. read() */ }
+  }
+  function cartFind(list, s) {
+    for (var i = 0; i < list.length; i++) if (list[i].slug === s) return list[i];
+    return null;
+  }
+  var cartBox = d.querySelector('[data-cart-list]');
+  function cartPage(list) {
+    var rows = {}, lost = false;
+    each('[data-slug]', function (li) { rows[li.getAttribute('data-slug')] = li; }, cartBox);
+    // вещь сняли с сайта — убираем; количество — не больше предела строки (у штучной вещи — остаток)
+    var fixed = list.filter(function (x) { return rows[x.slug]; }).map(function (x) {
+      return { slug: x.slug, qty: Math.min(x.qty, Number(rows[x.slug].getAttribute('data-max')) || QMAX) };
+    });
+    if (JSON.stringify(fixed) !== JSON.stringify(list)) { cartWrite(fixed); list = fixed; }
+    var shown = list.map(function (x) { return rows[x.slug]; }).reverse();   // недавние — первыми
+    each('[data-slug]', function (li) {
+      var on = shown.indexOf(li) >= 0;
+      if (!on && !li.hidden && li.contains(d.activeElement)) lost = true;
+      li.hidden = !on;
+    }, cartBox);
+    // Переставляем строки, только если порядок другой: перенос в DOM снимает фокус с нажатой кнопки «+»
+    var now = Array.prototype.filter.call(cartBox.children, function (li) { return shown.indexOf(li) >= 0; });
+    if (now.some(function (li, i) { return li !== shown[i]; })) shown.forEach(function (li) { cartBox.appendChild(li); });
+    var sum = 0, priced = true, lines = [];
+    shown.forEach(function (li) {
+      var x = cartFind(list, li.getAttribute('data-slug'));
+      var max = Number(li.getAttribute('data-max')) || QMAX, price = Number(li.getAttribute('data-price')) || 0;
+      var q = li.querySelector('[data-cart-qty]'), out = li.querySelector('[data-cart-sum]');
+      if (q) q.textContent = String(x.qty);
+      each('[data-cart-step]', function (b) {   // aria-disabled, а не disabled: нажатая кнопка не теряет фокус
+        var up = b.getAttribute('data-cart-step') === '1';
+        b.setAttribute('aria-disabled', (up ? x.qty >= max : x.qty <= 1) ? 'true' : 'false');
+      }, li);
+      if (out && price) out.textContent = money(price * x.qty);
+      if (li.hasAttribute('data-off')) return;   // продано или «скоро в наличии» — в заказ не идёт
+      if (price) sum += price * x.qty; else priced = false;
+      var a = li.querySelector('a[href]'), item = { n: lines.length + 1, name: li.getAttribute('data-name'),
+        id: li.getAttribute('data-id'), qty: x.qty, url: a ? a.href : '' };
+      lines.push(Object.keys(item).reduce(function (s, k) { return fill(s, k, item[k]); }, T.waCartItem || ''));
+    });
+    var empty = d.querySelector('[data-cart-empty]'), send = d.querySelector('[data-cart-send]');
+    var total = d.querySelector('[data-cart-total]'), dlv = d.querySelector('[data-cart-dlv]'), wa = d.querySelector('[data-cart-wa]');
+    cartBox.hidden = !shown.length;
+    if (empty) empty.hidden = shown.length > 0;
+    if (send) send.hidden = !lines.length;
+    if (total && T.cartAsk) total.textContent = priced ? money(sum) : T.cartAsk;   // у всех вещей есть цена — сумма
+    if (dlv) dlv.hidden = !priced;
+    if (wa && lines.length && T.wa) {
+      var msg = [T.waCart].concat(lines, '', priced ? fill(T.waCartTotal, 'sum', money(sum)) : T.waCartAsk, T.waCartBonus);
+      wa.href = 'https://wa.me/' + T.wa + '?text=' + encodeURIComponent(msg.join('\n'));
+    }
+    if (lost) { var m = d.getElementById('main'); if (m) m.focus({ preventScroll: true }); }
+    return list;
+  }
+  function cartSync() {
+    var list = cartRead();
+    if (cartBox) list = cartPage(list);
+    var n = list.reduce(function (s, x) { return s + x.qty; }, 0);   // в шапке — число вещей с учётом количества
+    each('[data-cart-n]', function (el) { el.textContent = n ? String(n) : ''; });
+    each('[data-cart-add]', function (b) {   // товар: «в корзину» ↔ «перейти в корзину»
+      var s = b.getAttribute('data-cart-add'), on = !!cartFind(list, s);
+      b.hidden = on;
+      each('[data-cart-go="' + s + '"]', function (a) { a.hidden = !on; });
+    });
+  }
+  d.addEventListener('click', function (ev) {
+    var b = ev.target && ev.target.closest && ev.target.closest('[data-cart-add], [data-cart-step], [data-cart-del]');
+    if (!b) return;
+    ev.preventDefault();
+    if (b.getAttribute('aria-disabled') === 'true') return;
+    var list = cartRead(), s = b.getAttribute('data-cart-add');
+    if (s) {
+      if (!cartFind(list, s)) list.push({ slug: s, qty: 1 });
+      cartWrite(list);
+      cartSync();
+      var go = d.querySelector('[data-cart-go="' + s + '"]'), live = d.querySelector('[data-cart-live]');
+      if (go) go.focus({ preventScroll: true });   // кнопка скрылась — фокус на ссылку, что встала на её место
+      if (live && T.cartAdded) live.textContent = T.cartAdded;
+      return;
+    }
+    var li = b.closest('[data-slug]'), x = li && cartFind(list, li.getAttribute('data-slug'));
+    if (!x) return;
+    if (b.hasAttribute('data-cart-del')) list.splice(list.indexOf(x), 1);
+    else x.qty = Math.max(1, Math.min(Number(li.getAttribute('data-max')) || QMAX, x.qty + Number(b.getAttribute('data-cart-step'))));
+    cartWrite(list);
+    cartSync();
+  });
+  w.addEventListener('storage', function (ev) { if (ev.key === CART) cartSync(); });
+  w.addEventListener('pageshow', function (ev) { if (ev.persisted) cartSync(); });
+  cartSync();
+
   // ——— Каталог: фильтр (материал, цвет, цена) и сортировка; ритм витрины перестраивается под найденное ———
   var SIZES = { w1: '(min-width: 600px) 50vw, 100vw', w2: '(min-width: 600px) 25vw, 100vw', h: '(min-width: 600px) 25vw, 50vw' };
   function rhythm(n) {   // как rhythm() в themes/v4.py
@@ -306,7 +414,6 @@
     var bar = form.querySelector('[data-fill]');
     var none = d.querySelector('[data-none]'), nOut = d.querySelector('[data-n]'), fc = d.querySelector('[data-fcount]');
     var show = form.querySelector('[data-f-show]');
-    var money = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, T.sep || ' ') + ' ₸'; };
     var live = !!(rMin && rMax && !rMin.disabled);
     var picked = function (name) {
       return Array.prototype.filter.call(form.querySelectorAll('input[name="' + name + '"]'), function (x) { return x.checked; })

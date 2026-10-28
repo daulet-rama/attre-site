@@ -1,11 +1,12 @@
 """Тема «Вариант 4 — Витрина»: структура Ushatava × лёгкая типографика Massimo Dutti × крупные фото Antihero.
 
 Сайт как тихая витрина, без анимаций при прокрутке: фото просто стоят на местах. Сверху полоса «дарим 2 000 ₸»
-(чёрная; красная — по ссылке ?bar=red, для сравнения), шапка 44px: бургер · логотип по центру · избранное · WhatsApp.
-Главная: слайдер из пяти фото с кнопкой «каталог» → новинки → популярное → видео «за кадром» с текстом о бренде →
-«нас носят» → магазин. Каталог — ритм «одна вещь крупно → две рядом», категории строкой, фильтр в нижнем листе
-(сортировка, материал, цвет, цена). Товар — фото листаются вправо-влево, липкая панель с WhatsApp и сердечком.
-Избранное хранится в браузере (localStorage), список можно отправить в WhatsApp.
+(чёрная; красная — по ссылке ?bar=red, для сравнения), шапка 44px: бургер · логотип по центру · избранное · корзина ·
+WhatsApp. Главная: слайдер из пяти фото с кнопкой «каталог» → новинки → популярное → видео «за кадром» с текстом
+о бренде → «нас носят» → магазин. Каталог — ритм «одна вещь крупно → две рядом», категории строкой, фильтр в нижнем
+листе (сортировка, материал, цвет, цена). Товар — фото листаются вправо-влево, липкая панель: «в корзину», WhatsApp
+и сердечко. Избранное и корзина хранятся в браузере (localStorage); список избранного отправляется в WhatsApp,
+корзина оформляется готовым сообщением в WhatsApp — без сервера и без полей с личными данными.
 Поведение: src/js/v4.js. Без JS всё видно: ленты листаются пальцем, фото товара — свайпом, листы — блоками на странице.
 """
 import datetime
@@ -43,14 +44,18 @@ def tx(key, lang):
 PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 # Логотип — вектор (src/img/brand/logo-black.svg, обводка исходника заказчицы: tools/logo_svg.py):
 # PNG в шапке высотой 17–19px мылился на компьютерах, особенно при масштабе Windows 125–150 %.
-# Свои значки (рисованы здесь): крестик, плюс, шеврон, сердце
+# Свои значки (рисованы здесь): крестик, плюс, минус, шеврон, сердце, сумка корзины
 X_ICON = ('<svg class="ico" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
           '<path d="M1.5 1.5l11 11M12.5 1.5l-11 11"/></svg>')
 PLUS = '<span class="plus" aria-hidden="true"></span>'
+MINUS = '<span class="plus plus--minus" aria-hidden="true"></span>'
 CHEV = ('<svg class="ico" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
         '<path d="M1 1l6 6-6 6"/></svg>')
 HEART = ('<svg class="heart" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" aria-hidden="true">'
          '<path d="M12 20.3c-.3 0-7.6-4.5-9.3-9-1.2-3.2.8-6.8 4.3-6.8 2.1 0 3.8 1.3 5 3.1 1.2-1.8 2.9-3.1 5-3.1 3.5 0 5.5 3.6 4.3 6.8-1.7 4.5-9 9-9.3 9z"/></svg>')
+# Сумка: линии на полупикселях сетки 16px — чёткие и при масштабе 100 %; на странице корзины тело сумки залито
+BAG = ('<svg class="bag" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
+       '<path d="M2.5 5.5h11v9h-11z"/><path fill="none" d="M5.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5"/></svg>')
 ARROW = '<span class="arr" aria-hidden="true">→</span>'
 CUR = ' aria-current="page"'
 
@@ -126,6 +131,7 @@ def menu(lang, suffix, cur):
 <ul class="menu__main">{cats}</ul>
 <ul class="menu__sub">
 <li><a href="{url(lang + '/fav/')}"{CUR if key == 'fav' else ''}>{e(t('fav_title', lang))}<span class="cnt" data-fav-n aria-hidden="true"></span></a></li>
+<li><a href="{url(lang + '/cart/')}"{CUR if key == 'cart' else ''}>{e(t('cart_title', lang))}<span class="cnt" data-cart-n aria-hidden="true"></span></a></li>
 <li><a href="{url(lang + '/about/')}"{CUR if key == 'about' else ''}>{e(t('about_title', lang))}</a></li>
 <li><a href="{info}#bonus">{e(t('bonus_short', lang))}</a></li>
 <li><a href="{info}#delivery">{e(t('f_delivery', lang))}</a></li>
@@ -180,6 +186,7 @@ def footer(lang, suffix):
 {acc(t('dock_catalog', lang), f'<ul class="flist">{cats}</ul>', ' acc--f')}
 {acc(t('f_buyers', lang), f"""<ul class="flist">
 <li><a href="{url(lang + '/fav/')}">{e(t('fav_title', lang))}</a></li>
+<li><a href="{url(lang + '/cart/')}">{e(t('cart_title', lang))}</a></li>
 <li><a href="{url(lang + '/about/')}">{e(t('about_title', lang))}</a></li>
 <li><a href="{info}#bonus">{e(t('bonus_short', lang))}</a></li>
 <li><a href="{info}#delivery">{e(t('f_delivery', lang))}</a></li>
@@ -209,11 +216,14 @@ def footer(lang, suffix):
 
 
 def js_texts(lang):
-    """Тексты для v4.js: подписи кнопок, письмо со списком избранного, формат цены."""
+    """Тексты для v4.js: подписи кнопок, письма со списком избранного и с заказом из корзины, формат цены."""
     return json.dumps({
         'favAdd': t('fav_add', lang), 'favDel': t('fav_del', lang), 'waFav': t('wa_fav', lang),
         'waItem': tx('wa_item', lang), 'wa': str(DATA['whatsapp']), 'show': t('f_show', lang),
         'play': t('film_play', lang), 'pause': t('film_pause', lang), 'sep': ',' if lang == 'en' else NBSP,
+        'cartAdded': t('cart_added', lang), 'cartAsk': t('cart_ask', lang), 'waCart': t('wa_cart', lang),
+        'waCartItem': t('wa_cart_item', lang), 'waCartTotal': t('wa_cart_total', lang),
+        'waCartAsk': t('wa_cart_ask', lang), 'waCartBonus': t('wa_cart_bonus', lang),
     }, ensure_ascii=False).replace('</', '<\\/')
 
 
@@ -266,6 +276,7 @@ def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', page
 <a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="52" height="20"></a>
 <div class="hdr__r">
 <a class="ibtn hdr__fav" href="{url(lang + '/fav/')}"{CUR if key == 'fav' else ''}>{HEART}<span class="hdr__n tnum" data-fav-n aria-hidden="true"></span><span class="sr-only">{e(t('fav_title', lang))}</span></a>
+<a class="ibtn hdr__cart" href="{url(lang + '/cart/')}"{CUR if key == 'cart' else ''}>{BAG}<span class="hdr__n tnum" data-cart-n aria-hidden="true"></span><span class="sr-only">{e(t('cart_title', lang))}</span></a>
 <a class="ibtn hdr__wa" href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a>
 </div>
 </header>
@@ -492,6 +503,12 @@ def product(p, lang):
         msg, label = t('wa_soon', lang, name=name, id=p['id'], url=page_url), t('wa_btn_soon', lang)
     else:
         msg, label = t('wa_product', lang, name=name, id=p['id'], price=price_text(p, lang), url=page_url), t('wa_btn', lang)
+    # «В корзину» — только у вещей в наличии. Вещь уже в корзине — вместо кнопки ссылка «перейти в корзину» (v4.js).
+    # Без JS корзины нет: кнопки скрыты, WhatsApp остаётся кнопкой с подписью; с JS он сжимается до значка 44×44.
+    buy = not sold(p) and not p['soon']
+    to_cart = (f'<button class="btn btn--ink js-only" type="button" data-cart-add="{p["slug"]}">{e(t("cart_add", lang))}</button>'
+               f'<a class="btn js-only" href="{url(lang + "/cart/")}" data-cart-go="{p["slug"]}" hidden>{e(t("cart_go", lang))}</a>'
+               f'<span class="sr-only" role="status" data-cart-live></span>') if buy else ''
     typ, color = p['type'][lang], p['color'][lang]
     desc = f'<p class="pp__desc">{e(p["desc"][lang])}</p>' if p['desc'][lang] else ''
     sim = similar(p)
@@ -508,7 +525,7 @@ def product(p, lang):
 <div class="pp__side">
 <div class="pp__bar">
 <div class="pp__head"><h1 class="pp__name">{e(name)}</h1><p class="pp__price tnum">{e(price_text(p, lang))}</p></div>
-<div class="pp__acts"><a class="btn" href="{e(wa_link(msg))}" target="_blank" rel="noopener">{WA_ICON}<span>{e(label)}</span></a>{fav_btn(p, lang, 'fav fav--box')}</div>
+<div class="pp__acts{' pp__acts--cart' if buy else ''}">{to_cart}<a class="btn btn--wa" href="{e(wa_link(msg))}" target="_blank" rel="noopener">{WA_ICON}<span class="btn__l">{e(label)}</span></a>{fav_btn(p, lang, 'fav fav--box')}</div>
 </div>
 <div class="pp__info">
 {tag(p, lang)}
@@ -632,7 +649,68 @@ def fav(lang):
                   og_image=abs_asset(f'assets/img/brand/og-{lang}.jpg'), page='p-fav', cur=('fav', True))
 
 
-PAGES = {'about/': about, 'fav/': fav}
+# ——— Корзина: как избранное — строки всех вещей на странице скрыты, v4.js показывает позиции из localStorage ———
+# Заказ уходит готовым сообщением в WhatsApp: сервера нет, полей с личными данными нет (по закону РК их нельзя
+# хранить вне Казахстана; заявку в Telegram сделаем позже на сервере в РК).
+
+CART_MAX = 5   # одной вещи — не больше пяти; у штучной — не больше остатка
+
+
+def cart_max(p):
+    return min(CART_MAX, p['stock']) if p['stock'] else CART_MAX
+
+
+def cart_row(p, lang):
+    """Строка корзины. Проданная или «скоро в наличии» (статус сменился, пока вещь лежала в корзине) остаётся
+    с пометкой «не войдёт в заказ» — её можно только удалить."""
+    name = p['name'][lang]
+    href = item_url(p, lang)
+    off = sold(p) or p['soon']
+    meta = meta_line(p, lang)
+    remove = (f'<button class="ci__del" type="button" data-cart-del>{e(t("cart_del", lang))}'
+              f'<span class="sr-only"> {e(name)}</span></button>')
+    if off:
+        state = (f'<p class="ci__off">{e(t("sold" if sold(p) else "soon", lang))} · {e(t("cart_off", lang))}</p>'
+                 f'<div class="ci__row">{remove}</div>')
+    else:
+        state = f'''<p class="ci__price tnum" data-cart-sum>{e(price_text(p, lang))}</p>
+<div class="ci__row"><div class="qty" role="group" aria-label="{e(t('cart_qty', lang))}: {e(name)}">
+<button class="qty__b" type="button" data-cart-step="-1" aria-label="{e(t('cart_less', lang))}">{MINUS}</button>
+<output class="qty__n tnum" data-cart-qty>1</output>
+<button class="qty__b" type="button" data-cart-step="1" aria-label="{e(t('cart_more', lang))}">{PLUS}</button>
+</div>{remove}</div>'''
+    data = (f' data-slug="{p["slug"]}" data-id="{e(p["id"])}" data-name="{e(name)}" data-price="{p["price"] or ""}"'
+            f' data-max="{cart_max(p)}"' + (' data-off' if off else ''))
+    return f'''<li class="ci{' ci--off' if off else ''}"{data} hidden>
+<a class="ci__img" href="{href}" tabindex="-1" aria-hidden="true"><img src="{asset(f"assets/img/p/{p['images'][0]}-600.webp")}" width="600" height="800" alt="" loading="lazy" decoding="async"></a>
+<div class="ci__txt">
+<h2 class="ci__name"><a href="{href}">{e(name)}</a></h2>
+{f'<p class="ci__meta">{e(meta)}</p>' if meta else ''}
+{state}
+</div>
+</li>'''
+
+
+def cart(lang):
+    rows = ''.join(cart_row(p, lang) for p in ordered(DATA['products']))
+    body = f'''<div class="pb"><h1 class="pb__t">{e(t('cart_title', lang))}<sup class="pb__n tnum" data-cart-n aria-hidden="true"></sup></h1></div>
+<noscript><p class="empty">{e(t('cart_nojs', lang))}</p></noscript>
+<div class="cartp js-only">
+<div class="empty" data-cart-empty hidden><p>{e(t('cart_empty', lang))}</p><a class="ulink" href="{url(lang + '/catalog/')}">{e(t('all_catalog', lang))}{ARROW}</a></div>
+<ul class="cart" data-cart-list hidden>{rows}</ul>
+<div class="cartp__sum" data-cart-send hidden>
+<p class="cartp__total"><span class="cartp__lbl">{e(t('cart_total', lang))}</span><span class="tnum" data-cart-total>{e(t('cart_ask', lang))}</span></p>
+<p class="cartp__dlv" data-cart-dlv hidden>{e(t('cart_dlv', lang))}</p>
+<a class="cartp__bonus" href="{url(lang + '/info/')}#bonus"><span class="u">{e(t('bonus_short', lang))}</span> — {e(t('cart_bonus', lang))}</a>
+<a class="btn btn--ink" href="{e(wa_link(t('wa_cart', lang)))}" target="_blank" rel="noopener" data-cart-wa>{WA_ICON}<span>{e(t('cart_send', lang))}</span></a>
+<p class="cartp__note">{e(t('cart_note', lang))}</p>
+</div>
+</div>'''
+    return layout(lang, title=f"{t('cart_title', lang)} — attré", desc=t('site_desc', lang), body=body, suffix='cart/',
+                  og_image=abs_asset(f'assets/img/brand/og-{lang}.jpg'), page='p-cart', cur=('cart', True))
+
+
+PAGES = {'about/': about, 'fav/': fav, 'cart/': cart}
 
 
 # ——— Покупателям ———

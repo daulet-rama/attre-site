@@ -688,6 +688,116 @@
       "ru": "цена до",
       "kz": "бағасы, дейін",
       "en": "maximum price"
+    },
+    "cart_title": {
+      "ru": "корзина",
+      "kz": "себет",
+      "en": "cart"
+    },
+    "cart_add": {
+      "ru": "в корзину",
+      "kz": "себетке қосу",
+      "en": "add to cart"
+    },
+    "cart_go": {
+      "ru": "перейти в корзину",
+      "kz": "себетке өту",
+      "en": "view cart"
+    },
+    "cart_added": {
+      "ru": "Добавлено в корзину",
+      "kz": "Себетке қосылды",
+      "en": "Added to cart"
+    },
+    "cart_empty": {
+      "ru": "В корзине пока пусто.",
+      "kz": "Себет әзірге бос.",
+      "en": "Your cart is empty."
+    },
+    "cart_nojs": {
+      "ru": "Корзина работает при включённом JavaScript.",
+      "kz": "Себет JavaScript қосулы болғанда жұмыс істейді.",
+      "en": "The cart needs JavaScript turned on."
+    },
+    "cart_qty": {
+      "ru": "количество",
+      "kz": "саны",
+      "en": "quantity"
+    },
+    "cart_less": {
+      "ru": "уменьшить количество",
+      "kz": "санын азайту",
+      "en": "decrease quantity"
+    },
+    "cart_more": {
+      "ru": "увеличить количество",
+      "kz": "санын көбейту",
+      "en": "increase quantity"
+    },
+    "cart_del": {
+      "ru": "удалить",
+      "kz": "жою",
+      "en": "remove"
+    },
+    "cart_off": {
+      "ru": "не войдёт в заказ",
+      "kz": "тапсырысқа кірмейді",
+      "en": "not included in the order"
+    },
+    "cart_total": {
+      "ru": "итого",
+      "kz": "барлығы",
+      "en": "total"
+    },
+    "cart_ask": {
+      "ru": "цена по запросу — уточним в WhatsApp",
+      "kz": "бағасы сұрау бойынша — WhatsApp-та нақтылаймыз",
+      "en": "price on request — we’ll confirm on WhatsApp"
+    },
+    "cart_dlv": {
+      "ru": "без учёта доставки",
+      "kz": "жеткізу құнынсыз",
+      "en": "excluding delivery"
+    },
+    "cart_bonus": {
+      "ru": "уже указан в сообщении",
+      "kz": "хабарламада көрсетілген",
+      "en": "already noted in your message"
+    },
+    "cart_send": {
+      "ru": "оформить в WhatsApp",
+      "kz": "WhatsApp-та рәсімдеу",
+      "en": "order on WhatsApp"
+    },
+    "cart_note": {
+      "ru": "Откроется WhatsApp с готовым сообщением — отправьте его, и менеджер подтвердит наличие, оплату и доставку. Корзина хранится только в этом браузере.",
+      "kz": "WhatsApp дайын хабарламамен ашылады — оны жіберсеңіз, менеджер тауардың бар-жоғын, төлем мен жеткізуді растайды. Себет тек осы браузерде сақталады.",
+      "en": "WhatsApp will open with your order ready to send. Our manager will confirm availability, payment and delivery. Your cart is saved only in this browser."
+    },
+    "wa_cart": {
+      "ru": "Здравствуйте! Хочу оформить заказ:",
+      "kz": "Сәлеметсіз бе! Тапсырыс бергім келеді:",
+      "en": "Hello! I’d like to place an order:"
+    },
+    "wa_cart_item": {
+      "ru": "{n}. «{name}» (№ {id}) — {qty} шт. {url}",
+      "kz": "{n}. «{name}» (№ {id}) — {qty} дана {url}",
+      "en": "{n}. “{name}” (No. {id}) × {qty} {url}"
+    },
+    "wa_cart_total": {
+      "ru": "Итого: {sum}",
+      "kz": "Барлығы: {sum}",
+      "en": "Total: {sum}"
+    },
+    "wa_cart_ask": {
+      "ru": "Итого: цена по запросу — подскажите, пожалуйста.",
+      "kz": "Барлығы: бағасы сұрау бойынша — айтып жіберіңізші.",
+      "en": "Total: price on request — please let me know."
+    },
+    "wa_cart_bonus": {
+      "ru": "Если это мой первый заказ — прошу учесть бонус 2 000 ₸.",
+      "kz": "Егер бұл алғашқы тапсырысым болса, 2 000 ₸ бонусты ескеріңізші.",
+      "en": "If this is my first order, please apply the 2,000 ₸ bonus."
     }
   }
 }
