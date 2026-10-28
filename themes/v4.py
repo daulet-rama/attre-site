@@ -85,13 +85,6 @@ def cat_rows(lang):
         (c, CATS[c][lang], url(f'{lang}/c/{c}/'), sum(1 for p in ps if in_cat(p, c))) for c in leaf_cats()]
 
 
-def slogan(lang, sep=' '):
-    """Слоган английский на всех языках — помечаем, чтобы экранный диктор читал его по-английски."""
-    s1, s2 = t('slogan_1', lang), t('slogan_2', lang)
-    s_lang = ' lang="en"' if lang != 'en' and s1 == t('slogan_1', 'en') else ''
-    return f'<span{s_lang}>{e(s1)}{sep}{e(s2)}</span>'
-
-
 def paras(text):
     return ''.join(f'<p>{e(x.strip())}</p>' for x in text.split('\n\n') if x.strip())
 
@@ -561,7 +554,6 @@ def home(lang):
         for i, s in enumerate(slides))
     hero = f'''<section class="hero rail" data-rail="slides" aria-label="{e(tx('hero', lang))}">
 <div class="hero__track" data-track>{hero_slides}</div>
-<p class="hero__slogan">{slogan(lang, '<br>')}</p>
 <div class="hero__cap"><a class="ptag hero__cta" href="{cat_url}">{e(t('catalog_btn', lang))}{ARROW}</a></div>
 {rail_nav(lang, len(slides))}
 </section>'''

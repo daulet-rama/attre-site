@@ -267,17 +267,6 @@ html.bar-red .promo { background: var(--red); }
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
   max-width: calc(100% - 2 * var(--g) - 64px);
 }
-/* Слоган — по центру фото, без плашки (просьба заказчицы), в две строки. Чёрный с лёгкой белой дымкой:
-   из трёх проб (белый с тенью, инверсия) только он читается на всех пяти кадрах.
-   Сквозь него листается слайдер (pointer-events: none) */
-.hero__slogan {
-  position: absolute; inset: 0; z-index: 1;
-  display: flex; align-items: center; justify-content: center;
-  padding: 0 var(--g); pointer-events: none;
-  color: var(--ink); text-align: center;
-  font-size: 16px; line-height: 1.55; font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
-  text-shadow: 0 0 12px rgba(255, 255, 255, .75), 0 0 3px rgba(255, 255, 255, .6);
-}
 .hero__cta { min-height: 44px; padding: 0 16px; gap: 0; }
 .hero__cta:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
 .hero .rail__count { right: var(--g); }
@@ -674,7 +663,6 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
     min-height: 520px;
   }
   .hero__cap { bottom: 24px; }
-  .hero__slogan { font-size: 20px; }
   .vc--row { flex-basis: calc(20% - 2px); }
   .wear__i { flex-basis: calc(20% - 2px); }
   .film { grid-template-columns: 440px minmax(0, 1fr); column-gap: 64px; margin-top: 96px; }
