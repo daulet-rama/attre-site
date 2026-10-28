@@ -1,0 +1,400 @@
+"""Ядро сборки attré: данные, картинки, общие помощники. Темы — themes/*.py, запуск — build.py.
+
+Сборка сайта attré: data/ + media/ + src/ → site/.
+
+Данные:
+  data/products/*.json    одна вещь = один файл (имя файла = адрес страницы /p/<имя>/)
+  data/categories/*.json  категории; data/materials/*.json — материалы
+  data/settings.json      контакты; data/home.json — фото и подписи главной
+  data/i18n.json          тексты интерфейса на рус/қаз/eng
+  media/products/, media/home/  мастер-копии фото (до 2400px); размеры для сайта режутся здесь
+Нужны Python 3.12+ и Pillow. Запуск:
+    python build.py                                                   # для GitHub Pages
+    ATTRE_BASE=/ ATTRE_ORIGIN=http://localhost:8000 python build.py   # локальный просмотр
+Ошибки в данных не роняют сборку: вещь пропускается, причина печатается как «ВНИМАНИЕ».
+"""
+import hashlib
+import html
+import json
+import os
+import re
+import shutil
+import sys
+from pathlib import Path
+from urllib.parse import quote
+
+ROOT = Path(__file__).resolve().parent
+ORIGIN = os.environ.get('ATTRE_ORIGIN', 'https://daulet-rama.github.io').rstrip('/')
+ROOT_BASE = os.environ.get('ATTRE_BASE', '/attre-site/')  # корень сайта: общие фото, шрифты, стили
+OUT_ROOT = ROOT / 'site'
+CTX = {'base': ROOT_BASE, 'out': OUT_ROOT, 'theme': 'gallery'}  # текущая тема: адрес и папка её страниц
+PROTOTYPE = True  # noindex + пометка в подвале; снять перед боевым запуском
+MEDIA = ROOT / 'media' / 'products'
+HOME_MEDIA = ROOT / 'media' / 'home'
+NBSP = ' '
+WARNINGS = []
+
+
+def warn(msg):
+    WARNINGS.append(msg)
+    print('ВНИМАНИЕ:', msg, file=sys.stderr)
+
+
+def load_dir(name):
+    items = []
+    for f in sorted((ROOT / 'data' / name).glob('*.json')):
+        try:
+            d = json.loads(f.read_text('utf-8'))
+        except json.JSONDecodeError as ex:
+            warn(f'{name}/{f.name}: файл не читается ({ex}) — пропущен')
+            continue
+        d['_file'] = f.stem
+        items.append(d)
+    return items
+
+
+I18N = json.loads((ROOT / 'data' / 'i18n.json').read_text('utf-8'))
+LANGS = I18N['langs']
+T = I18N['t']
+CODES = [l['code'] for l in LANGS]
+
+
+def tri(v):
+    """Поле на трёх языках; пустой казахский или английский берёт русский."""
+    v = v if isinstance(v, dict) else {}
+    ru = str(v.get('ru') or '').strip()
+    return {c: (str(v.get(c) or '').strip() or ru) for c in CODES}
+
+
+def dict_by_key(items):
+    out = {}
+    for d in sorted(items, key=lambda d: (d.get('order') or 999, str(d.get('key') or d['_file']))):
+        key = str(d.get('key') or d['_file']).strip()
+        names = tri(d.get('name'))
+        out[key] = {c: names[c] or key for c in CODES}
+    return out
+
+
+CATS = dict_by_key(load_dir('categories'))
+MATS = dict_by_key(load_dir('materials'))
+SETTINGS = json.loads((ROOT / 'data' / 'settings.json').read_text('utf-8'))
+HOME = json.loads((ROOT / 'data' / 'home.json').read_text('utf-8'))
+
+
+def num(v):
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return None
+    return f if f >= 0 else None
+
+
+def clean_product(d):
+    f = d['_file']
+    if d.get('published') is False:
+        return None
+    if not re.fullmatch(r'[a-z0-9][a-z0-9_-]*', f):
+        warn(f'products/{f}.json: имя файла должно быть латиницей, цифрами и дефисами — пропущен')
+        return None
+    name = tri(d.get('name'))
+    if not name['ru']:
+        warn(f'products/{f}.json: нет названия — пропущен')
+        return None
+    if d.get('cat') not in CATS:
+        warn(f'products/{f}.json: нет категории «{d.get("cat")}» — пропущен')
+        return None
+    mat = d.get('material') or None
+    if mat and mat not in MATS:
+        warn(f'products/{f}.json: нет материала «{mat}» — поле скрыто')
+        mat = None
+    srcs = []
+    for x in d.get('images') or []:
+        x = x.get('image') if isinstance(x, dict) else x
+        if not x:
+            continue
+        path = MEDIA / Path(str(x)).name
+        if path.exists():
+            srcs.append(path)
+        else:
+            warn(f'products/{f}.json: нет файла фото {x}')
+    if not srcs:
+        warn(f'products/{f}.json: нет ни одного фото — пропущен')
+        return None
+    size = d.get('size') if isinstance(d.get('size'), dict) else {}
+    dims = [num(size.get(k)) for k in ('w', 'h', 'd')]
+    strap = tri(d.get('strap'))
+    price_v = num(d.get('price'))
+    stock = num(d.get('stock'))
+    return {
+        'slug': f, 'id': str(d.get('id') or f), 'order': num(d.get('order')) or 9999,
+        'cat': d['cat'], 'material': mat,
+        'name': name, 'type': tri(d.get('type')), 'color': tri(d.get('color')), 'desc': tri(d.get('desc')),
+        'strap': strap if strap['ru'] else None,
+        'size': [f'{v:g}' for v in dims] if all(dims) else None,
+        'price': int(price_v) if price_v else None,          # нет цены — «цена по запросу»
+        'stock': int(stock) if stock is not None else None,  # нет остатка — просто «в наличии»
+        'srcs': srcs, 'focus': d.get('focus') or {},
+    }
+
+
+PRODUCTS = sorted(filter(None, (clean_product(d) for d in load_dir('products'))), key=lambda p: (p['order'], p['id']))
+DATA = {'products': PRODUCTS, **SETTINGS}
+
+
+def e(s):
+    return html.escape(str(s), quote=True)
+
+
+def t(key, lang, **kw):
+    s = T[key][lang]
+    for k, v in kw.items():
+        s = s.replace('{' + k + '}', str(v))
+    return s
+
+
+def url(path=''):
+    """Адрес страницы текущей темы."""
+    return CTX['base'] + path
+
+
+def abs_url(path=''):
+    return ORIGIN + CTX['base'] + path
+
+
+def asset(path):
+    """Общие файлы (фото, шрифт, стили, скрипты) лежат в корне сайта и общие для всех тем."""
+    return ROOT_BASE + path
+
+
+def abs_asset(path):
+    return ORIGIN + ROOT_BASE + path
+
+
+def set_theme(name, sub):
+    CTX.update(theme=name, base=ROOT_BASE + sub, out=OUT_ROOT / sub if sub else OUT_ROOT)
+
+
+def money(n, lang):
+    s = f'{n:,}' if lang == 'en' else f'{n:,}'.replace(',', NBSP)
+    return s + NBSP + '₸'
+
+
+def price_text(p, lang):
+    return money(p['price'], lang) if p['price'] else t('price_request', lang)
+
+
+def wa_link(text):
+    return f"https://wa.me/{DATA['whatsapp']}?text={quote(text)}"
+
+
+def asset_version(*paths):
+    h = hashlib.sha1()
+    for p in paths:
+        h.update((ROOT / p).read_bytes())
+    return h.hexdigest()[:8]
+
+
+
+# Значок WhatsApp — Simple Icons (CC0), https://simpleicons.org/?q=whatsapp
+WA_ICON = ('<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
+           '<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>')
+ARROW_LEFT = ('<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">'
+              '<path d="M7.5 2L3.5 6l4 4"/></svg>')
+CROSS = ('<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">'
+         '<path d="M1 1l12 12M13 1L1 13"/></svg>')
+
+
+def sold(p):
+    return p['stock'] == 0
+
+
+def meta_line(p, lang):
+    return ' · '.join(x for x in (p['type'][lang], p['color'][lang]) if x)
+
+
+def item_url(p, lang):
+    return url(f"{lang}/p/{p['slug']}/")
+
+
+def img_srcset(stem):
+    return f"{asset(f'assets/img/p/{stem}-600.webp')} 600w, {asset(f'assets/img/p/{stem}-1200.webp')} 1200w"
+
+
+# ——— Картинки: режутся из мастер-копий при каждой сборке, сжатие один раз ———
+
+def fit_34(im, focus):
+    """Кадр 3:4. Фото на однотонном студийном фоне не обрезаем, а продлеваем фон краёв,
+    чтобы вещь осталась целиком; остальные кадры обрезаем по точке фокуса."""
+    from PIL import Image, ImageFilter, ImageStat
+    w, h = im.size
+    target = 3 / 4
+    strip = max(4, round(min(w, h) * 0.02))
+    edges = [im.crop((0, 0, w, strip)), im.crop((0, h - strip, w, h)), im.crop((0, 0, strip, h)), im.crop((w - strip, 0, w, h))]
+    uniform = all(max(ImageStat.Stat(x).stddev) < 9 for x in edges)
+    if uniform and abs(w / h - target) > 0.01:
+        if w / h > target:   # шире — добавляем фон сверху и снизу
+            nh = round(w / target)
+            top = (nh - h) // 2
+            out = Image.new('RGB', (w, nh))
+            if top > 0:
+                out.paste(im.crop((0, 0, w, 2)).resize((w, top)).filter(ImageFilter.GaussianBlur(6)), (0, 0))
+            if nh - h - top > 0:
+                out.paste(im.crop((0, h - 2, w, h)).resize((w, nh - h - top)).filter(ImageFilter.GaussianBlur(6)), (0, top + h))
+            out.paste(im, (0, top))
+            return out
+        nw = round(h * target)   # уже — добавляем фон слева и справа
+        left = (nw - w) // 2
+        out = Image.new('RGB', (nw, h))
+        if left > 0:
+            out.paste(im.crop((0, 0, 2, h)).resize((left, h)).filter(ImageFilter.GaussianBlur(6)), (0, 0))
+        if nw - w - left > 0:
+            out.paste(im.crop((w - 2, 0, w, h)).resize((nw - w - left, h)).filter(ImageFilter.GaussianBlur(6)), (left + w, 0))
+        out.paste(im, (left, 0))
+        return out
+    fx, fy = float(focus.get('x', .5)), float(focus.get('y', .45))
+    cw = min(w, h * target)
+    ch = cw / target
+    left = min(max(fx * w - cw / 2, 0), w - cw)
+    top = min(max(fy * h - ch / 2, 0), h - ch)
+    return im.crop((round(left), round(top), round(left + cw), round(top + ch)))
+
+
+def open_rgb(path):
+    from PIL import Image, ImageOps
+    im = ImageOps.exif_transpose(Image.open(path))
+    if im.mode in ('RGBA', 'LA', 'P'):
+        im = im.convert('RGBA')
+        bg = Image.new('RGB', im.size, (255, 255, 255))
+        bg.paste(im, mask=im.split()[-1])
+        return bg
+    return im.convert('RGB')
+
+
+def render_images():
+    from PIL import Image
+    out = OUT_ROOT / 'assets' / 'img' / 'p'
+    out.mkdir(parents=True, exist_ok=True)
+    for p in DATA['products']:
+        shots = []
+        for i, src in enumerate(p['srcs']):
+            frame = fit_34(open_rgb(src), p['focus'] if i == 0 else {})
+            stem = f"{p['slug']}-{i + 1}"
+            for width in (600, 1200):
+                frame.resize((width, round(width * 4 / 3)), Image.LANCZOS).save(
+                    out / f'{stem}-{width}.webp', 'WEBP', quality=86, method=6)
+            shots.append(stem)
+            if i == 0:
+                og = frame.resize((900, 1200), Image.LANCZOS)
+                sq = Image.new('RGB', (1200, 1200), og.getpixel((2, 2)))
+                sq.paste(og, (150, 0))
+                sq.save(out / f"{p['slug']}-og.jpg", 'JPEG', quality=88, optimize=True, progressive=True)
+        p['images'] = shots
+
+    hout = OUT_ROOT / 'assets' / 'img' / 'home'
+    hout.mkdir(parents=True, exist_ok=True)
+    for item in [HOME['cover'], *HOME['banners']]:
+        src = HOME_MEDIA / item['image']
+        im = open_rgb(src)
+        w, h = im.size
+        ratio = item.get('ratio', 2 / 3)
+        fx, fy = item.get('focus', [0.5, 0.4])
+        cw = min(w, h * ratio)
+        ch = cw / ratio
+        left = min(max(fx * w - cw / 2, 0), w - cw)
+        top = min(max(fy * h - ch / 2, 0), h - ch)
+        frame = im.crop((round(left), round(top), round(left + cw), round(top + ch)))
+        stem = Path(item['image']).stem
+        for width in (750, 1125, 1600):
+            if width <= frame.width * 1.02:
+                frame.resize((width, round(width / ratio)), Image.LANCZOS).save(
+                    hout / f'{stem}-{width}.webp', 'WEBP', quality=86, method=6)
+        item['_stem'] = stem
+        item['_widths'] = [w_ for w_ in (750, 1125, 1600) if (hout / f'{stem}-{w_}.webp').exists()]
+        item['_ratio'] = ratio
+
+
+def home_srcset(item):
+    return ', '.join(f"{asset(f'assets/img/home/{item['_stem']}-{w}.webp')} {w}w" for w in item['_widths'])
+
+
+def lang_row(lang, suffix):
+    return '<div class="lang-row">' + ''.join(
+        f'<a href="{e(url(l["code"] + "/" + suffix))}" hreflang="{l["html"]}" lang="{l["html"]}"'
+        f'{" aria-current=\"true\"" if l["code"] == lang else ""}>'
+        f'<span aria-hidden="true">{e(l["label"])}</span><span class="sr-only">{e(l["name"])}</span></a>'
+        for l in LANGS) + '</div>'
+
+
+def present_cats():
+    return [c for c in CATS if any(p['cat'] == c for p in DATA['products'])]
+
+
+def ordered(items):
+    # Проданные в конце, но не удаляются: старые ссылки из Instagram и WhatsApp живут
+    return sorted(items, key=lambda p: sold(p))
+
+
+def similar(p):
+    others = [q for q in DATA['products'] if q['slug'] != p['slug'] and not sold(q)]
+    others.sort(key=lambda q: (q['cat'] != p['cat'], q['order']))
+    return others[:4]
+
+
+def root_redirect():
+    target = url(I18N['default'] + '/')
+    return f'''<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>attré</title>
+<script>
+(function () {{
+  var ls = navigator.languages || [navigator.language || ''];
+  var map = {{ru: 'ru', kk: 'kz', en: 'en'}};
+  var t = 'ru';
+  for (var i = 0; i < ls.length; i++) {{
+    var c = map[String(ls[i]).toLowerCase().slice(0, 2)];
+    if (c) {{ t = c; break; }}
+  }}
+  location.replace('{ROOT_BASE}' + t + '/' + location.search + location.hash);
+}})();
+</script>
+<noscript><meta http-equiv="refresh" content="0; url={target}"></noscript>
+</head>
+<body><p><a href="{ROOT_BASE}ru/">Русский</a> · <a href="{ROOT_BASE}kz/">Қазақша</a> · <a href="{ROOT_BASE}en/">English</a></p></body>
+</html>
+'''
+
+
+def not_found():
+    rows = ''.join(
+        f'<p lang="{l["html"]}">{e(t("nf_title", l["code"]))} <a class="link" href="{ROOT_BASE}{l["code"]}/">{e(t("nf_link", l["code"]))}</a></p>'
+        for l in LANGS)
+    return f'''<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>404 — attré</title>
+<link rel="stylesheet" href="{ROOT_BASE}assets/css/site.css">
+</head>
+<body>
+<main class="nf">
+<img src="{ROOT_BASE}assets/img/brand/logo-black.png" alt="attré" width="62" height="24" style="margin:0 auto 32px">
+<h1>404</h1>
+{rows}
+</main>
+</body>
+</html>
+'''
+
+
+def write(path, text):
+    f = CTX['out'] / path
+    f.parent.mkdir(parents=True, exist_ok=True)
+    f.write_text(text, 'utf-8')
+
+
