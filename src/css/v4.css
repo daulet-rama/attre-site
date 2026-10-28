@@ -77,7 +77,7 @@ a:active, button:active, summary:active { opacity: .6; }
 /* Подписи: 11px капсом с разрядкой */
 .promo, .sec-h__t, .sec-h__a, .pb__t, .pb__btn, .vc__name, .ptag, .menu__main a, .menu__sub a,
 .lng, .acc summary, .btn, .sheet__t, .slist a, .pp__name, .store__t, .isec h2, .tag, .skip,
-.tabs a, .fset__t, .opt span, .chip span, .flt__reset, .film__t, .about__t, .ci__name, .ci__del, .cartp__lbl {
+.tabs a, .fset__t, .opt span, .chip span, .flt__reset, .ci__name, .ci__del, .cartp__lbl {
   font-size: 11px; line-height: 1.35; font-weight: 400; letter-spacing: .16em; text-transform: uppercase;
 }
 .arr { display: inline-block; margin-left: .5em; letter-spacing: 0; }
@@ -282,7 +282,6 @@ html.js .film__v { cursor: pointer; }
   width: 1px; height: 1px; min-height: 0; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 .film__txt { max-width: 560px; padding: 24px var(--g) 0; }
-.film__t { margin-bottom: 10px; }
 
 /* «Нас носят»: лента фото 2:3 */
 .wear__i { flex: 0 0 62%; scroll-snap-align: start; aspect-ratio: 2 / 3; overflow: hidden; background: var(--pad); }
@@ -538,7 +537,6 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 .about__media img { width: 100%; height: 100%; object-fit: cover; }
 .about__txt { max-width: 620px; padding: 0 var(--g); }
 .about__txt p { font-size: 13px; line-height: 1.7; }
-.about__t { margin-bottom: 14px; }
 .about__txt p + p { margin-top: 12px; }
 .about__cta { margin-top: 28px !important; }
 .about__cta .btn { width: auto; display: inline-flex; padding: 0 28px; }
@@ -705,11 +703,14 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   .vit { gap: 48px 2px; }
   .vc__cap, .vc--w .vc__cap { padding: 12px 16px 0; }
 
-  /* Товар: фото листаются по два слева, сведения справа и липнут под шапкой */
-  .pp { display: grid; grid-template-columns: minmax(0, 1fr) 440px; align-items: start; }
+  /* Товар: сведения справа и липнут под шапкой */
+  /* Фото — по одному (просьба заказчицы), целиком в первом экране; сведения справа; пара — по центру страницы */
+  .pp {
+    display: grid; align-items: start; justify-content: center;
+    grid-template-columns: min(calc((100vh - var(--promo) - var(--hdr)) * .75), calc(100% - 440px)) 440px;
+    grid-template-columns: min(calc((100svh - var(--promo) - var(--hdr)) * .75), calc(100% - 440px)) 440px;
+  }
   .pg { grid-column: 1; grid-row: 1; }
-  .pg__slide { flex-basis: calc(50% - 1px); }
-  .pg .rail__count { display: none; }
   .pp__side {
     display: flex; flex-direction: column;
     grid-column: 2; grid-row: 1;

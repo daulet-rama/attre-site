@@ -492,7 +492,7 @@ def product(p, lang):
         # первые два — сразу (второе увидят первым свайпом), остальные v4.js догрузит после загрузки страницы
         load = 'loading="eager" fetchpriority="high"' if i == 0 else 'loading="eager"' if i == 1 else 'loading="lazy"'
         slides.append(f'<figure class="pg__slide"><img src="{asset(f"assets/img/p/{stem}-1200.webp")}" '
-                      f'srcset="{img_srcset(stem)}" sizes="(min-width: 960px) 30vw, 100vw" width="1200" height="1600" '
+                      f'srcset="{img_srcset(stem)}" sizes="(min-width: 960px) 45vw, 100vw" width="1200" height="1600" '
                       f'alt="{alt}" {load} decoding="async"></figure>')
 
     todo = f'<span class="todo">{e(t("todo", lang))}</span>'
@@ -606,7 +606,7 @@ def home(lang):
 <button class="ptag film__btn js-only" type="button" data-film-btn>{e(t('film_play', lang))}</button>
 </div>
 <div class="film__txt">
-<h2 class="film__t" id="film-t">ATTRE STUDIO</h2>
+<h2 class="sr-only" id="film-t">{e(t('about_title', lang))}</h2>
 <p>{e(lead)}</p>
 <p><a class="ulink" href="{url(lang + '/about/')}">{e(t('about_title', lang))}{ARROW}</a></p>
 </div>
@@ -650,7 +650,6 @@ def about(lang):
 <div class="about">
 {media}
 <div class="about__txt">
-<h2 class="about__t">ATTRE STUDIO</h2>
 {paras(t('about_body', lang))}
 <p class="about__cta"><a class="btn" href="{url(lang + '/catalog/')}"><span>{e(t('catalog_btn', lang))}</span></a></p>
 </div>
