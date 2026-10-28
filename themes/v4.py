@@ -41,6 +41,8 @@ def tx(key, lang):
 
 # Прозрачный пиксель: второе фото карточки подставляет v4.js (по наведению мыши и у крупных карточек на компьютере)
 PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+# Логотип — вектор (src/img/brand/logo-black.svg, обводка исходника заказчицы: tools/logo_svg.py):
+# PNG в шапке высотой 17–19px мылился на компьютерах, особенно при масштабе Windows 125–150 %.
 # Свои значки (рисованы здесь): крестик, плюс, шеврон, сердце
 X_ICON = ('<svg class="ico" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
           '<path d="M1.5 1.5l11 11M12.5 1.5l-11 11"/></svg>')
@@ -117,7 +119,7 @@ def menu(lang, suffix, cur):
     return f'''<div class="menu" id="menu" data-panel aria-label="{e(t('menu', lang))}">
 <div class="menu__bar">
 <button class="ibtn menu__x" type="button" data-close aria-label="{e(t('close', lang))}">{X_ICON}</button>
-<a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.png')}" alt="{e(t('home', lang))}" width="46" height="18"></a>
+<a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="44" height="17"></a>
 <a class="ibtn menu__wa" href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a>
 </div>
 <nav class="menu__nav" aria-label="{e(t('menu', lang))}">
@@ -202,7 +204,7 @@ def footer(lang, suffix):
 <p>{e(t('f_consumer', lang))}</p>
 {proto}
 </div>
-<a class="ftr__logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black-xl.png')}" alt="{e(t('home', lang))}" width="1200" height="459" loading="lazy" decoding="async"></a>
+<a class="ftr__logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="300" height="116" loading="lazy" decoding="async"></a>
 </footer>'''
 
 
@@ -261,7 +263,7 @@ def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', page
 <a class="promo" href="{url(lang + '/info/')}#bonus">{e(t('promo', lang))}</a>
 <header class="hdr">
 <button class="ibtn hdr__menu js-only" type="button" aria-controls="menu" aria-expanded="false" aria-haspopup="dialog" data-open="menu"><span class="burger" aria-hidden="true"></span><span class="sr-only">{e(t('menu', lang))}</span></button>
-<a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.png')}" alt="{e(t('home', lang))}" width="46" height="18"></a>
+<a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="44" height="17"></a>
 <div class="hdr__r">
 <a class="ibtn hdr__fav" href="{url(lang + '/fav/')}"{CUR if key == 'fav' else ''}>{HEART}<span class="hdr__n tnum" data-fav-n aria-hidden="true"></span><span class="sr-only">{e(t('fav_title', lang))}</span></a>
 <a class="ibtn hdr__wa" href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_ICON}</a>
