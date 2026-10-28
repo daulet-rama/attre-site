@@ -304,7 +304,7 @@ html.js .film__v { cursor: pointer; }
 .store { margin: 64px var(--g) 0; padding-top: 40px; border-top: 1px solid var(--line); text-align: center; }
 .store__t { margin-bottom: 12px; }
 .store p + p { margin-top: 2px; }
-/* Instagram и Pinterest под «открыть в 2ГИС»: значок 20px, зона нажатия 44×44, рамка фокуса вокруг значка */
+/* WhatsApp, Instagram и Pinterest под «открыть в 2ГИС»: значок 20px, зона нажатия 44×44, рамка фокуса вокруг значка */
 .soc { display: flex; justify-content: center; }
 .soc a { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
 .soc a:focus-visible { outline-offset: -6px; }

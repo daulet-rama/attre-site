@@ -42,7 +42,7 @@ def tx(key, lang):
 
 # Логотип — вектор (src/img/brand/logo-black.svg, обводка исходника заказчицы: tools/logo_svg.py):
 # PNG в шапке высотой 17–19px мылился на компьютерах, особенно при масштабе Windows 125–150 %.
-# Свои значки (рисованы здесь): крестик, плюс, минус, шеврон, сердце, сумка корзины, Instagram и Pinterest
+# Свои значки (рисованы здесь): крестик, плюс, минус, шеврон, сердце, сумка корзины, WhatsApp, Instagram и Pinterest
 X_ICON = ('<svg class="ico" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
           '<path d="M1.5 1.5l11 11M12.5 1.5l-11 11"/></svg>')
 PLUS = '<span class="plus" aria-hidden="true"></span>'
@@ -62,6 +62,11 @@ PIN_ICON = ('<svg class="soc__i" viewBox="0 0 20 20" fill="none" stroke="current
             'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
             '<circle cx="10" cy="10" r="7.9"/><path d="M6.5 17 10 9.1"/>'
             '<path d="M8.86 11.76c.38 1.1 1.26 1.75 2.24 1.75 1.82 0 3.29-1.36 3.29-3.51a4.39 4.39 0 1 0-8.51 1.49"/></svg>')
+# WhatsApp в той же манере: пузырь 1px, как круг Pinterest; трубка — из фирменного WA_ICON, уменьшена до 0.72
+WA_LINE_ICON = ('<svg class="soc__i" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1" '
+                'stroke-linejoin="round" aria-hidden="true">'
+                '<path d="M6.05 16.84A7.9 7.9 0 1 0 3.16 13.95L2.2 17.8z"/>'
+                '<path fill="currentColor" stroke="none" transform="matrix(.72 0 0 .72 1.33 1.36)" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>')
 ARROW = '<span class="arr" aria-hidden="true">→</span>'
 CUR = ' aria-current="page"'
 
@@ -660,6 +665,7 @@ def home(lang):
 <p class="mute">{e(t('delivery_world', lang))}</p>
 <p><a class="ulink" href="{e(DATA['map_url'])}" target="_blank" rel="noopener">{e(t('map', lang))}</a></p>
 <ul class="soc">
+<li><a href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener" aria-label="{e(t('wa_label', lang))}">{WA_LINE_ICON}</a></li>
 <li><a href="{ig_url()}" target="_blank" rel="noopener" aria-label="Instagram">{IG_ICON}</a></li>
 <li><a href="{pin_url()}" target="_blank" rel="noopener" aria-label="Pinterest">{PIN_ICON}</a></li>
 </ul>
