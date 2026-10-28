@@ -261,7 +261,7 @@ html.bar-red .promo { background: var(--red); }
   height: calc(100vh - var(--promo) - var(--hdr) - 56px); height: calc(100svh - var(--promo) - var(--hdr) - 56px);
   min-height: 420px; background: var(--pad);
 }
-.hero__slide img { width: 100%; height: 100%; object-fit: cover; object-position: 50% var(--fy, 40%); }
+.hero__slide img { width: 100%; height: 100%; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 40%); }
 .hero__cap {
   position: absolute; left: var(--g); bottom: 16px; z-index: 1;
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px;

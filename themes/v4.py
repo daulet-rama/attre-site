@@ -572,16 +572,18 @@ def product(p, lang):
 
 def home(lang):
     cat_url = url(lang + '/catalog/')
-    slides = HOME.get('hero') or [HOME['cover']]
     wide = HOME.get('hero_wide')
     wide = wide if wide and wide.get('_widths') else None
+    # Горизонтальное фото (просьба заказчицы): на ноутбуке — одно на весь экран (как у muliér), на телефоне —
+    # первый слайд, за ним вертикальные. На узком экране оно обрезается по бокам: кадр — по точке фокуса (кружка, сумка)
+    slides = ([wide] if wide else []) + (HOME.get('hero') or [HOME['cover']])
 
     def hero_slide(i, s):
-        img = home_img(s, "100vw", lang, load="high" if i == 0 else "lazy")
-        if i == 0 and wide:   # ноутбук: горизонтальное фото на весь экран (как у muliér — просьба заказчицы)
-            img = img.replace('<img ', f'<img data-alt-wide="{e(tri(wide.get("alt"))[lang])}" ', 1)
-            img = f'<picture><source media="(min-width: 960px)" srcset="{home_srcset(wide)}" sizes="100vw">{img}</picture>'
-        return f'<figure class="hero__slide" style="--fy:{round(s.get("focus", [.5, .4])[1] * 100)}%">{img}</figure>'
+        # горизонтальное в высоком слайде телефона растягивается по высоте: шириной оно ~2,7 экрана
+        sizes = '(min-width: 960px) 100vw, 270vw' if s is wide else '100vw'
+        fx, fy = s.get('focus', [.5, .4])
+        return (f'<figure class="hero__slide" style="--fx:{round(fx * 100)}%;--fy:{round(fy * 100)}%">'
+                f'{home_img(s, sizes, lang, load="high" if i == 0 else "lazy")}</figure>')
 
     hero_slides = ''.join(hero_slide(i, s) for i, s in enumerate(slides))
     hero = f'''<section class="hero{' hero--wide' if wide else ''} rail" data-rail="slides" aria-label="{e(tx('hero', lang))}">

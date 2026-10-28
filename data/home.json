@@ -13,7 +13,7 @@
     {"image": "hero-4.jpg", "ratio": 0.6667, "focus": [0.5, 0.36], "alt": {"ru": "Девушка в белой рубашке с чёрной кожаной сумкой", "kz": "Ақ көйлекті қыз қара былғары сөмкемен", "en": "Woman in a white shirt with a black leather bag"}},
     {"image": "hero-5.jpg", "ratio": 0.6667, "focus": [0.5, 0.34], "alt": {"ru": "Оливковая сумка в руке", "kz": "Қолдағы зәйтүн түсті сөмке", "en": "Olive bag in hand"}}
   ],
-  "hero_wide": {"image": "hero-wide.jpg", "ratio": 1.5, "focus": [0.5, 0.5], "alt": {"ru": "Сумка из канваса с кожаной отделкой, кружка attré и мелочи на белой плитке", "kz": "Былғары жиекті канвас сөмке, attré кесесі және ақ плиткадағы ұсақ заттар", "en": "Canvas bag with leather trim, an attré mug and small things on white tiles"}},
+  "hero_wide": {"image": "hero-wide.jpg", "ratio": 1.5, "focus": [0.32, 0.5], "alt": {"ru": "Сумка из канваса с кожаной отделкой, кружка attré и мелочи на белой плитке", "kz": "Былғары жиекті канвас сөмке, attré кесесі және ақ плиткадағы ұсақ заттар", "en": "Canvas bag with leather trim, an attré mug and small things on white tiles"}},
   "video": {"file": "backstage.mp4", "image": "backstage.jpg", "ratio": 0.8, "focus": [0.5, 0.5], "alt": {"ru": "Съёмка attré: девушка в белой рубашке с чёрной сумкой и кружкой attré", "kz": "attré түсірілімі: ақ көйлекті қыз қара сөмкемен және attré кесесімен", "en": "attré shoot: woman in a white shirt with a black bag and an attré mug"}},
   "about": [
     {"image": "about-paris.jpg", "ratio": 0.6667, "focus": [0.5, 0.5], "alt": {"ru": "Две девушки у Триумфальной арки в Париже", "kz": "Париждегі Триумф аркасының жанындағы екі қыз", "en": "Two women by the Arc de Triomphe in Paris"}},
