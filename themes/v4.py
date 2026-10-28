@@ -42,7 +42,7 @@ def tx(key, lang):
 
 # Логотип — вектор (src/img/brand/logo-black.svg, обводка исходника заказчицы: tools/logo_svg.py):
 # PNG в шапке высотой 17–19px мылился на компьютерах, особенно при масштабе Windows 125–150 %.
-# Свои значки (рисованы здесь): крестик, плюс, минус, шеврон, сердце, сумка корзины
+# Свои значки (рисованы здесь): крестик, плюс, минус, шеврон, сердце, сумка корзины, Instagram и Pinterest
 X_ICON = ('<svg class="ico" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
           '<path d="M1.5 1.5l11 11M12.5 1.5l-11 11"/></svg>')
 PLUS = '<span class="plus" aria-hidden="true"></span>'
@@ -54,6 +54,14 @@ HEART = ('<svg class="heart" viewBox="0 0 24 24" stroke="currentColor" stroke-wi
 # Сумка: линии на полупикселях сетки 16px — чёткие и при масштабе 100 %; на странице корзины тело сумки залито
 BAG = ('<svg class="bag" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
        '<path d="M2.5 5.5h11v9h-11z"/><path fill="none" d="M5.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5"/></svg>')
+# Соцсети у «открыть в 2ГИС» на главной: тонкие линии, как у остальных значков, без цветных логотипов
+IG_ICON = ('<svg class="soc__i" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
+           '<rect x="2.5" y="2.5" width="15" height="15" rx="4.5"/><circle cx="10" cy="10" r="3.5"/>'
+           '<circle cx="14.3" cy="5.7" r=".8" fill="currentColor" stroke="none"/></svg>')
+PIN_ICON = ('<svg class="soc__i" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1" '
+            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+            '<circle cx="10" cy="10" r="7.9"/><path d="M6.5 17 10 9.1"/>'
+            '<path d="M8.86 11.76c.38 1.1 1.26 1.75 2.24 1.75 1.82 0 3.29-1.36 3.29-3.51a4.39 4.39 0 1 0-8.51 1.49"/></svg>')
 ARROW = '<span class="arr" aria-hidden="true">→</span>'
 CUR = ' aria-current="page"'
 
@@ -67,6 +75,10 @@ def phone():
 
 def ig_url():
     return f"https://www.instagram.com/{DATA['instagram']}/"
+
+
+def pin_url():
+    return f"https://www.pinterest.com/{DATA['pinterest']}/"
 
 
 def langs(lang, suffix, cls):
@@ -212,6 +224,7 @@ def footer(lang, suffix):
 {acc(t('f_contacts', lang), f"""<ul class="flist">
 <li><a href="{e(wa_link(t('wa_general', lang)))}" target="_blank" rel="noopener">WhatsApp <span class="tnum">{phone()}</span></a></li>
 <li><a href="{ig_url()}" target="_blank" rel="noopener">Instagram @{e(DATA['instagram'])}</a></li>
+<li><a href="{pin_url()}" target="_blank" rel="noopener">Pinterest @{e(DATA['pinterest'])}</a></li>
 <li><a href="mailto:{e(DATA['email'])}">{e(DATA['email'])}</a></li>
 </ul>""", ' acc--f')}
 {acc(tx('store', lang), f"""<ul class="flist">
@@ -646,6 +659,10 @@ def home(lang):
 <p>{e(t('hours', lang))}</p>
 <p class="mute">{e(t('delivery_world', lang))}</p>
 <p><a class="ulink" href="{e(DATA['map_url'])}" target="_blank" rel="noopener">{e(t('map', lang))}</a></p>
+<ul class="soc">
+<li><a href="{ig_url()}" target="_blank" rel="noopener" aria-label="Instagram">{IG_ICON}</a></li>
+<li><a href="{pin_url()}" target="_blank" rel="noopener" aria-label="Pinterest">{PIN_ICON}</a></li>
+</ul>
 </section>
 </div>'''
     return layout(lang, title=t('site_title', lang), desc=t('site_desc', lang), body=body, suffix='',
@@ -783,6 +800,7 @@ def info(lang):
 <ul class="ilinks">
 <li><a class="ulink" href="{wa}" target="_blank" rel="noopener">WhatsApp <span class="tnum">{phone()}</span></a></li>
 <li><a class="ulink" href="{ig_url()}" target="_blank" rel="noopener">Instagram @{e(DATA['instagram'])}</a></li>
+<li><a class="ulink" href="{pin_url()}" target="_blank" rel="noopener">Pinterest @{e(DATA['pinterest'])}</a></li>
 <li><a class="ulink" href="mailto:{e(DATA['email'])}">{e(DATA['email'])}</a></li>
 <li><a class="ulink" href="{e(DATA['map_url'])}" target="_blank" rel="noopener">{e(t('map', lang))}</a></li>
 </ul>""")}

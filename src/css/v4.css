@@ -304,6 +304,11 @@ html.js .film__v { cursor: pointer; }
 .store { margin: 64px var(--g) 0; padding-top: 40px; border-top: 1px solid var(--line); text-align: center; }
 .store__t { margin-bottom: 12px; }
 .store p + p { margin-top: 2px; }
+/* Instagram и Pinterest под «открыть в 2ГИС»: значок 20px, зона нажатия 44×44, рамка фокуса вокруг значка */
+.soc { display: flex; justify-content: center; }
+.soc a { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
+.soc a:focus-visible { outline-offset: -6px; }
+.soc__i { display: block; width: 20px; height: 20px; flex: none; }
 
 /* ——— Липкая панель раздела (каталог, избранное, о бренде, покупателям) ——— */
 .pb {
@@ -630,7 +635,7 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 @media (hover: hover) and (pointer: fine) {
   .promo:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   .sec-h__a:hover, .pb__btn:hover, .menu__main a:hover, .menu__sub a:hover, .menu__contacts a:hover,
-  .slist a:hover, .acc summary:hover, .flist a:hover, .lng:hover, .pp__bonus:hover, .ulink:hover,
+  .slist a:hover, .acc summary:hover, .flist a:hover, .lng:hover, .pp__bonus:hover, .ulink:hover, .soc a:hover,
   .tabs a:hover, .flt__reset:hover, .vc__a:hover .vc__name, .ci__name a:hover, .ci__del:hover, .cartp__bonus:hover { opacity: .6; }
   .btn:hover { background: var(--ink); color: #fff; }
   .btn--ink:hover { opacity: .8; }
