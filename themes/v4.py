@@ -259,6 +259,7 @@ def js_texts(lang):
         'cartAdded': t('cart_added', lang), 'cartAsk': t('cart_ask', lang), 'waCart': t('wa_cart', lang),
         'waCartItem': t('wa_cart_item', lang), 'waCartTotal': t('wa_cart_total', lang),
         'waCartAsk': t('wa_cart_ask', lang), 'waCartBonus': t('wa_cart_bonus', lang),
+        'waColor': t('wa_color', lang), 'waProductC': t('wa_product_c', lang),
     }, ensure_ascii=False).replace('</', '<\\/')
 
 
@@ -360,45 +361,84 @@ def swatch(key, cls=''):
     return f'<span class="sw sw--{key}{cls}"{style} aria-hidden="true"></span>'
 
 
+def is_light(hexv):
+    """Светлый кружочек (молочный, бежевый) на белом не виден без тонкой серой обводки."""
+    try:
+        r, g, b = (int(str(hexv)[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    except ValueError:
+        return False
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.82
+
+
+def vswatch(v, cls=''):
+    """Кружочек цвета вещи: свой оттенок (hex) или узор принта — леопард, зебра, корова, далматин."""
+    pat = v['pattern'] if v['pattern'] in ('leopard', 'zebra', 'cow', 'dalmatian') else 'leopard' if v['key'] == 'animal' else None
+    if pat:
+        return f'<span class="sw sw--{pat}{cls}" aria-hidden="true"></span>'
+    light = ' sw--light' if is_light(v['hex']) else ''
+    return f'<span class="sw{light}{cls}" style="background:{v["hex"]}" aria-hidden="true"></span>'
+
+
+def vmats(p, v, lang):
+    return ', '.join(MATS[m][lang] for m in (v['materials'] or p['materials']))
+
+
 def card(p, lang, kind, *, h='h2', load='lazy', hidden=False):
     """kind: 'w' — крупно на всю ширину, 'h' / 'h2' — половина ряда (h2 — правая), 'row' — карточка ленты;
     ' r' в конце — на компьютере крупная карточка стоит справа (ряды идут «ёлочкой»).
     Фото в карточке листаются вправо-влево (полоски внизу, у мыши — стрелки), нажатие на фото открывает товар.
-    В лентах главной не листаются: там вбок уже едет сама лента. У проданной вещи — одно фото."""
-    imgs = p['images']
-    gal = len(imgs) > 1 and not sold(p) and kind != 'row'
+    В лентах главной не листаются: там вбок уже едет сама лента. У проданной вещи — одно фото.
+    Кружочки цветов под ценой (просьба заказчицы): нажатие меняет фото карточки на фото этого цвета, ссылка ведёт
+    на товар в этом цвете (?c=black). Фото остальных цветов лежат в <template> и не грузятся, пока цвет не выбран."""
+    vs = p['variants'] or []
+    multi = len(vs) > 1 and not sold(p)
+    row = kind == 'row'
+    sets = [v['images'] for v in vs] if multi else [p['images']]
+    gal = not sold(p) and not row and any(len(x) > 1 for x in sets)   # листается хотя бы у одного цвета
     wide = kind.startswith('w')
-    sizes = SIZES['row'] if kind == 'row' else SIZES['w2' if gal else 'w1'] if wide else SIZES['h']
+    sizes = SIZES['row'] if row else SIZES['w2' if gal else 'w1'] if wide else SIZES['h']
     first = {'lazy': 'loading="lazy"', 'eager': 'loading="eager"',
              'high': 'loading="eager" fetchpriority="high"'}[load]
-    shots = imgs if gal else imgs[:1]
-    pics = ''.join(
-        f'<img class="vc__img" src="{asset(f"assets/img/p/{x}-600.webp")}" srcset="{img_srcset(x)}" sizes="{sizes}" '
-        f'width="600" height="800" alt="" {first if i == 0 else 'loading="lazy"'} decoding="async">'
-        for i, x in enumerate(shots))
+
+    def pics(stems, live=True):
+        return ''.join(
+            f'<img class="vc__img" src="{asset(f"assets/img/p/{x}-600.webp")}" srcset="{img_srcset(x)}" sizes="{sizes}" '
+            f'width="600" height="800" alt="" {first if live and i == 0 else 'loading="lazy"'} decoding="async">'
+            for i, x in enumerate(stems if gal else stems[:1]))
+
+    shots = p['images'] if gal else p['images'][:1]
     url_p = item_url(p, lang)
     extra = ''
     if gal:   # полоски — сколько фото и какое сейчас; стрелки — только мышь (для клавиатуры есть страница товара)
-        bars = ''.join('<i class="is-on"></i>' if i == 0 else '<i></i>' for i in range(len(shots)))
+        bars = ''.join('<i class="is-on"></i>' if i == 0 else '<i></i>' for i in range(len(shots))) if len(shots) > 1 else ''
         extra = (f'<span class="vc__bars js-only" aria-hidden="true">{bars}</span>'
                  f'<button class="vc__arr vc__arr--prev js-only" type="button" data-vstep="-1" tabindex="-1" aria-hidden="true" hidden>{ARR_ICON}</button>'
-                 f'<button class="vc__arr vc__arr--next js-only" type="button" data-vstep="1" tabindex="-1" aria-hidden="true">{ARR_ICON}</button>')
+                 f'<button class="vc__arr vc__arr--next js-only" type="button" data-vstep="1" tabindex="-1" aria-hidden="true"'
+                 f'{"" if len(shots) > 1 else " hidden"}>{ARR_ICON}</button>')
     cls = 'vc' + {'row': ' vc--row'}.get(kind, '') + (' vc--w' if wide else '') + (' vc--2' if kind == 'h2' else '')
     cls += (' vc--r' if kind.endswith(' r') else '') + (' vc--gal' if gal else ' vc--one') + (' vc--sold' if sold(p) else '')
     data = (f' data-slug="{p["slug"]}" data-id="{e(p["id"])}" data-name="{e(p["name"][lang])}"'
             f' data-mat="{" ".join(p["materials"])}" data-col="{" ".join(p["colors"])}" data-price="{p["price"] or ""}"'
+            + (f' data-v="{vs[0]["id"]}" data-v0="{vs[0]["id"]}"' if multi else '')
             + (' data-new' if p['is_new'] else '') + (' data-pop' if p['popular'] else '')
             + (' data-sold' if sold(p) else '') + (' hidden' if hidden else ''))
     meta = p['type'][lang] if p['colors'] else meta_line(p, lang)
-    dots = ''
-    if p['colors']:
-        names = ', '.join(COLORS[c][lang] for c in p['colors'])
-        dots = (f'<p class="vc__sw" title="{e(names)}"><span class="sr-only">{e(t("f_col", lang))}: {e(names)}</span>'
-                + ''.join(swatch(c, ' sw--s') for c in p['colors']) + '</p>')
+    names = ', '.join(v['name'][lang] for v in vs) if vs else ', '.join(COLORS[c][lang] for c in p['colors'])
+    said = f'<span class="sr-only">{e(t("f_col", lang))}: {e(names)}</span>' if names else ''
+    dots, tpls = '', ''
+    if multi:   # кнопки — для мыши и пальца; диктору цвета прочитаны в подписи, выбор цвета с клавиатуры — на странице товара
+        dots = ('<div class="vc__sw vc__sw--pick js-only" aria-hidden="true">' + ''.join(
+            f'<button class="vc__c" type="button" tabindex="-1" data-v="{v["id"]}" data-k="{v["key"]}" '
+            f'aria-pressed="{"true" if i == 0 else "false"}" title="{e(v["name"][lang])}">{vswatch(v, " sw--s")}</button>'
+            for i, v in enumerate(vs)) + '</div>')
+        tpls = ''.join(f'<template data-v="{v["id"]}">{pics(v["images"], live=False)}</template>' for v in vs[1:])
+    elif names:
+        dots = (f'<p class="vc__sw" title="{e(names)}" aria-hidden="true">'
+                + (''.join(vswatch(v, ' sw--s') for v in vs) if vs else ''.join(swatch(c, ' sw--s') for c in p['colors'])) + '</p>')
     return f'''<li class="{cls}"{data}>
-<div class="vc__media"><a class="vc__ph" href="{url_p}" tabindex="-1" aria-hidden="true"><span class="vc__track">{pics}</span></a>{extra}</div>
-<a class="vc__a" href="{url_p}"><div class="vc__cap">{tag(p, lang)}<{h} class="vc__name">{e(p['name'][lang])}</{h}>{f'<p class="vc__meta">{e(meta)}</p>' if meta and kind != 'row' else ''}<p class="vc__price tnum">{e(price_text(p, lang))}</p>{dots}</div></a>
-{fav_btn(p, lang)}</li>'''
+<div class="vc__media"><a class="vc__ph" href="{url_p}" tabindex="-1" aria-hidden="true"><span class="vc__track">{pics(p['images'])}</span></a>{extra}</div>
+<a class="vc__a" href="{url_p}"><div class="vc__cap">{tag(p, lang)}<{h} class="vc__name">{e(p['name'][lang])}</{h}>{f'<p class="vc__meta">{e(meta)}</p>' if meta and kind != 'row' else ''}<p class="vc__price tnum">{e(price_text(p, lang))}</p>{said}</div></a>
+{dots}{tpls}{fav_btn(p, lang)}</li>'''
 
 
 def rhythm(n):
@@ -513,23 +553,34 @@ def product(p, lang):
     name = p['name'][lang]
     info = url(f'{lang}/info/')
     page_url = abs_url(f"{lang}/p/{p['slug']}/")
-    n = len(p['images'])
-    slides = []
-    for i, stem in enumerate(p['images']):
-        alt = e(name) + (' — ' + e(t('photo_n', lang, i=i + 1, n=n)) if i else '')
-        # первые два — сразу (второе увидят первым свайпом), остальные v4.js догрузит после загрузки страницы
-        load = 'loading="eager" fetchpriority="high"' if i == 0 else 'loading="eager"' if i == 1 else 'loading="lazy"'
-        slides.append(f'<figure class="pg__slide"><img src="{asset(f"assets/img/p/{stem}-1200.webp")}" '
-                      f'srcset="{img_srcset(stem)}" sizes="(min-width: 960px) 45vw, 100vw" width="1200" height="1600" '
-                      f'alt="{alt}" {load} decoding="async"></figure>')
+    vs = p['variants'] or []
+    cur = vs[0] if vs else None
+
+    def slides(stems, v=None, live=True):
+        out, n = [], len(stems)
+        label = f'{name}, {v["name"][lang]}' if v and len(vs) > 1 else name
+        for i, stem in enumerate(stems):
+            alt = e(label) + (' — ' + e(t('photo_n', lang, i=i + 1, n=n)) if i else '')
+            # первые два — сразу (второе увидят первым свайпом), остальные v4.js догрузит после загрузки страницы
+            load = ('loading="eager" fetchpriority="high"' if i == 0 else 'loading="eager"' if i == 1 else 'loading="lazy"') if live else 'loading="lazy"'
+            out.append(f'<figure class="pg__slide"><img src="{asset(f"assets/img/p/{stem}-1200.webp")}" '
+                       f'srcset="{img_srcset(stem)}" sizes="(min-width: 960px) 45vw, 100vw" width="1200" height="1600" '
+                       f'alt="{alt}" {load} decoding="async"></figure>')
+        return ''.join(out)
+
+    n = max([len(v['images']) for v in vs] or [len(p['images'])])   # полоски и стрелки — если листается хоть один цвет
+    # фото остальных цветов — в <template>: не грузятся, пока человек не выбрал цвет
+    tpls = ''.join(f'<template data-pv="{v["id"]}">{slides(v["images"], v, live=False)}</template>' for v in vs[1:])
 
     todo = f'<span class="todo">{e(t("todo", lang))}</span>'
     size = (f'<span class="tnum">{e(t("p_size_fmt", lang, w=p["size"][0], h=p["size"][1], d=p["size"][2]))}</span>'
             if p['size'] else todo)
     spec_rows = [
         (t('p_type', lang), e(p['type'][lang]) if p['type'][lang] else todo),
-        (t('p_color', lang), e(p['color'][lang]) if p['color'][lang] else todo),
-        (t('p_material', lang), e(mats_text(p, lang)) if p['materials'] else todo),
+        (t('p_color', lang), f'<span data-pcol-name>{e(cur["name"][lang])}</span>' if cur
+         else e(p['color'][lang]) if p['color'][lang] else todo),
+        (t('p_material', lang), f'<span data-pcol-mat>{e(vmats(p, cur, lang))}</span>' if cur and vmats(p, cur, lang)
+         else e(mats_text(p, lang)) if p['materials'] else todo),
         (t('p_size', lang), size),
         (t('p_strap', lang), e(p['strap'][lang]) if p['strap'] else todo),
         (t('p_made', lang), e(t('made_in', lang))),   # по просьбе заказчицы — вместо «производитель» и «страна»
@@ -550,12 +601,16 @@ def product(p, lang):
         msg, label = t('wa_sold', lang, name=name, id=p['id'], url=page_url), t('wa_btn_sold', lang)
     elif p['soon']:
         msg, label = t('wa_soon', lang, name=name, id=p['id'], url=page_url), t('wa_btn_soon', lang)
+    elif cur:
+        msg = t('wa_product_c', lang, name=name, id=p['id'], color=cur['name'][lang], url=page_url)
+        label = t('wa_btn', lang)
     else:
         msg, label = t('wa_product', lang, name=name, id=p['id'], price=price_text(p, lang), url=page_url), t('wa_btn', lang)
     # «В корзину» — только у вещей в наличии. Вещь уже в корзине — вместо кнопки ссылка «перейти в корзину» (v4.js).
     # Без JS корзины нет: кнопки скрыты, WhatsApp остаётся кнопкой с подписью; с JS он сжимается до значка 44×44.
     buy = not sold(p) and not p['soon']
-    to_cart = (f'<button class="btn btn--ink js-only" type="button" data-cart-add="{p["slug"]}">{e(t("cart_add", lang))}</button>'
+    vid = f' data-v="{cur["id"]}" data-v0="{cur["id"]}"' if cur else ''
+    to_cart = (f'<button class="btn btn--ink js-only" type="button" data-cart-add="{p["slug"]}"{vid}>{e(t("cart_add", lang))}</button>'
                f'<a class="btn js-only" href="{url(lang + "/cart/")}" data-cart-go="{p["slug"]}" hidden>{e(t("cart_go", lang))}</a>'
                f'<span class="sr-only" role="status" data-cart-live></span>') if buy else ''
     typ, color = p['type'][lang], p['color'][lang]
@@ -565,21 +620,35 @@ def product(p, lang):
 <div class="sec-h"><h2 class="sec-h__t" id="sim-t">{e(t('similar', lang))}</h2><a class="sec-h__a" href="{url(f"{lang}/c/{p['cat']}/")}">{e(CATS[p['cat']][lang])}{ARROW}</a></div>
 {vitrine(sim, lang, h='h3')}
 </section>''' if sim else ''
-    gallery = f'''<div class="pg rail" data-rail="slides">
-<div class="pg__track" data-track role="region" aria-label="{e(tx('photos', lang))}">{''.join(slides)}</div>
-{rail_nav(lang, n) if n > 1 else ''}
+    gallery = f'''<div class="pg rail" data-rail="slides"{f' data-v="{cur["id"]}"' if cur else ''}>
+<div class="pg__track" data-track role="region" aria-label="{e(tx('photos', lang))}">{slides(p['images'], cur)}</div>
+{rail_nav(lang, max(len(p['images']), 2)) if n > 1 else ''}{tpls}
 </div>'''
+    # Цвет — кружочки сразу под «в корзину» (как показала заказчица): выбранный в кольце, подпись «цвет: молочный».
+    # Нажатие меняет фото, строки «цвет» и «материал», цвет для корзины и текст для WhatsApp (v4.js). Без JS — строка цветов.
+    picker = ''
+    if cur:
+        opts = ''.join(
+            f'<label class="pcol__o" title="{e(v["name"][lang])}"><input type="radio" name="pcol" value="{v["id"]}"'
+            f'{" checked" if i == 0 else ""} data-name="{e(v["name"][lang])}" data-mat="{e(vmats(p, v, lang))}">'
+            f'{vswatch(v)}<span class="sr-only">{e(v["name"][lang])}</span></label>'
+            for i, v in enumerate(vs))
+        picker = (f'<fieldset class="pcol js-only"><legend class="pcol__t">{e(t("p_color", lang))}: '
+                  f'<span data-pcol-name>{e(cur["name"][lang])}</span></legend><div class="pcol__opts">{opts}</div></fieldset>')
+    wa_data = (f' data-wa-c data-wa-name="{e(name)}" data-wa-id="{e(p["id"])}" data-wa-url="{e(page_url)}"'
+               if cur and buy else '')
     body = f'''<article class="pp">
 {gallery}
 <div class="pp__side">
 <div class="pp__bar">
 <div class="pp__head"><h1 class="pp__name">{e(name)}</h1><p class="pp__price tnum">{e(price_text(p, lang))}</p></div>
-<div class="pp__acts{' pp__acts--cart' if buy else ''}">{to_cart}<a class="btn btn--wa" href="{e(wa_link(msg))}" target="_blank" rel="noopener">{WA_ICON}<span class="btn__l">{e(label)}</span></a>{fav_btn(p, lang, 'fav fav--box')}</div>
+<div class="pp__acts{' pp__acts--cart' if buy else ''}">{to_cart}<a class="btn btn--wa" href="{e(wa_link(msg))}" target="_blank" rel="noopener"{wa_data}>{WA_ICON}<span class="btn__l">{e(label)}</span></a>{fav_btn(p, lang, 'fav fav--box')}</div>
 </div>
 <div class="pp__info">
+{picker}
 {tag(p, lang)}
 {f'<p class="pp__type">{e(typ)}</p>' if typ else ''}
-{f'<p class="pp__color">{e(color)}</p>' if color else ''}
+{f'<p class="pp__color{" pp__color--all" if cur else ""}">{e(color)}</p>' if color else ''}
 <p class="pp__ref">{e(tx('ref', lang))} <span class="tnum">{e(p['id'])}</span></p>
 <a class="pp__bonus" href="{info}#bonus"><span class="u">{e(t('bonus_short', lang))}</span> — {e(t('bonus_hint', lang))}</a>
 {desc}
@@ -726,13 +795,16 @@ def cart_max(p):
     return min(CART_MAX, p['stock']) if p['stock'] else CART_MAX
 
 
-def cart_row(p, lang):
-    """Строка корзины. Проданная или «скоро в наличии» (статус сменился, пока вещь лежала в корзине) остаётся
-    с пометкой «не войдёт в заказ» — её можно только удалить."""
+def cart_row(p, lang, v=None):
+    """Строка корзины — вещь в выбранном цвете (v). Проданная или «скоро в наличии» (статус сменился, пока вещь
+    лежала в корзине) остаётся с пометкой «не войдёт в заказ» — её можно только удалить."""
     name = p['name'][lang]
-    href = item_url(p, lang)
+    main = not v or v is p['variants'][0]
+    href = item_url(p, lang) + ('' if main else f'?c={v["id"]}')
     off = sold(p) or p['soon']
-    meta = meta_line(p, lang)
+    meta = p['type'][lang] if v else meta_line(p, lang)
+    col = (f'<p class="ci__col">{vswatch(v, " sw--s")}<span>{e(t("p_color", lang))}: {e(v["name"][lang])}</span></p>'
+           if v else '')
     remove = (f'<button class="ci__del" type="button" data-cart-del>{e(t("cart_del", lang))}'
               f'<span class="sr-only"> {e(name)}</span></button>')
     if off:
@@ -746,19 +818,22 @@ def cart_row(p, lang):
 <button class="qty__b" type="button" data-cart-step="1" aria-label="{e(t('cart_more', lang))}">{PLUS}</button>
 </div>{remove}</div>'''
     data = (f' data-slug="{p["slug"]}" data-id="{e(p["id"])}" data-name="{e(name)}" data-price="{p["price"] or ""}"'
-            f' data-max="{cart_max(p)}"' + (' data-off' if off else ''))
+            f' data-max="{cart_max(p)}"' + (f' data-v="{v["id"]}" data-color="{e(v["name"][lang])}"' if v else '')
+            + (' data-off' if off else ''))
+    img = (v['images'] if v else p['images'])[0]
     return f'''<li class="ci{' ci--off' if off else ''}"{data} hidden>
-<a class="ci__img" href="{href}" tabindex="-1" aria-hidden="true"><img src="{asset(f"assets/img/p/{p['images'][0]}-600.webp")}" width="600" height="800" alt="" loading="lazy" decoding="async"></a>
+<a class="ci__img" href="{href}" tabindex="-1" aria-hidden="true"><img src="{asset(f"assets/img/p/{img}-600.webp")}" width="600" height="800" alt="" loading="lazy" decoding="async"></a>
 <div class="ci__txt">
 <h2 class="ci__name"><a href="{href}">{e(name)}</a></h2>
 {f'<p class="ci__meta">{e(meta)}</p>' if meta else ''}
+{col}
 {state}
 </div>
 </li>'''
 
 
 def cart(lang):
-    rows = ''.join(cart_row(p, lang) for p in ordered(DATA['products']))
+    rows = ''.join(cart_row(p, lang, v) for p in ordered(DATA['products']) for v in (p['variants'] or [None]))
     body = f'''<div class="pb"><h1 class="pb__t">{e(t('cart_title', lang))}<sup class="pb__n tnum" data-cart-n aria-hidden="true"></sup></h1></div>
 <noscript><p class="empty">{e(t('cart_nojs', lang))}</p></noscript>
 <div class="cartp js-only">

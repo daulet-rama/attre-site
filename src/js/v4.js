@@ -1,6 +1,6 @@
 // attré · Вариант 4 «Витрина». Меню и нижние листы (фокус внутри, Esc), строки details, ленты со свайпом
 // (слайдер главной, фото товара, подборки: стрелки для мыши, счётчик «1 / 5»; фото в карточках — с полосками),
-// избранное и корзина (localStorage),
+// избранное и корзина (localStorage), цвета (кружочки в карточке и на товаре меняют фото; в корзину идёт выбранный цвет),
 // фильтр и сортировка каталога, видео «за кадром». Анимаций при прокрутке нет: фото просто стоят на местах.
 // Без JS всё видно и листается пальцем; не работают только избранное, корзина, фильтр и сортировка.
 (function () {
@@ -125,12 +125,22 @@
   function eager(i) { if (i && i.loading === 'lazy') i.loading = 'eager'; }
   function cardGal(c) {
     if (c.__gal !== undefined) return c.__gal;
-    var t = c.querySelector('.vc__track');
+    var t = c.querySelector('.vc__track'), box = c.querySelector('.vc__bars');
     c.__gal = null;
-    if (!t || t.children.length < 2) return null;
-    var g = { t: t, imgs: t.children, bars: c.querySelectorAll('.vc__bars i'), all: false, aim: null, aimT: 0,
+    if (!t || !box) return null;   // у карточки без полосок фото одно у всех цветов
+    var g = { t: t, imgs: t.children, bars: box.children, all: false, aim: null, aimT: 0,
               prev: c.querySelector('[data-vstep="-1"]'), next: c.querySelector('[data-vstep="1"]') };
-    g.step = function () { return g.imgs[1].offsetLeft - g.imgs[0].offsetLeft; };
+    g.step = function () { return g.imgs.length > 1 ? g.imgs[1].offsetLeft - g.imgs[0].offsetLeft : 0; };
+    g.refresh = function () {   // другой цвет — другие фото: полоски по их числу, лента — с первого
+      var n = g.imgs.length, html = '';
+      for (var k = 0; k < n && n > 1; k++) html += k ? '<i></i>' : '<i class="is-on"></i>';
+      box.innerHTML = html;
+      g.all = false;
+      t.scrollLeft = 0;
+      if (g.prev) g.prev.hidden = true;
+      if (g.next) g.next.hidden = n < 2;
+      g.update();
+    };
     g.update = function () {
       var s = g.step();
       if (!s) return;   // карточка скрыта (избранное, фильтр)
@@ -187,22 +197,54 @@
     }, { passive: true });
   }
 
+  // ——— Цвет в карточке: кружочек меняет фото на фото этого цвета, ссылка ведёт на товар в этом цвете (?c=black).
+  // Фото цвета лежат в <template> и грузятся только после выбора; прежние фото остаются в запасе — без повторной загрузки ———
+  function cardColor(c, vid, quiet) {
+    var cur = c.getAttribute('data-v'), tr = c.querySelector('.vc__track');
+    if (!tr || !vid || vid === cur) return;
+    var keep = c.__vs || (c.__vs = {});
+    var tpl = c.querySelector('template[data-v="' + vid + '"]');
+    var next = keep[vid] || (tpl ? Array.prototype.slice.call(tpl.content.cloneNode(true).children) : null);
+    if (!next || !next.length) return;
+    var sizes = tr.firstElementChild ? tr.firstElementChild.getAttribute('sizes') : null;   // размер карточки мог смениться (фильтр)
+    keep[cur] = Array.prototype.slice.call(tr.children);
+    while (tr.firstChild) tr.removeChild(tr.firstChild);
+    next.forEach(function (im) { if (sizes) im.setAttribute('sizes', sizes); tr.appendChild(im); });
+    if (!quiet) eager(next[0]);
+    c.setAttribute('data-v', vid);
+    var main = vid === c.getAttribute('data-v0');
+    each('.vc__ph, .vc__a', function (a) {
+      var h = a.getAttribute('href').split('?')[0];
+      a.setAttribute('href', main ? h : h + '?c=' + vid);
+    }, c);
+    each('.vc__c', function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-v') === vid ? 'true' : 'false'); }, c);
+    var g = cardGal(c);
+    if (g) g.refresh();
+  }
+  d.addEventListener('click', function (ev) {
+    var b = ev.target && ev.target.closest && ev.target.closest('.vc__c');
+    if (!b) return;
+    ev.preventDefault();
+    var c = b.closest('.vc');
+    if (!c) return;
+    c.__byFilter = false;   // выбор человека — фильтр его не переключает обратно
+    cardColor(c, b.getAttribute('data-v'));
+  });
+
   // ——— Ленты: слайдер главной и фото товара (по одному, по кругу, полоски), подборки (страницами) ———
   each('[data-rail]', function (r) {
     var track = r.querySelector('[data-track]');
     if (!track) return;
-    var items = track.children, n = items.length;
+    var items = track.children, n = 0;
     var slides = r.getAttribute('data-rail') === 'slides';
     var box = r.querySelector('.rail__bars'), bars = box ? box.children : [];
     var prev = r.querySelector('[data-step="-1"]'), next = r.querySelector('[data-step="1"]');
-    if (n < 2) { [box, prev, next].forEach(function (x) { if (x) x.hidden = true; }); return; }
-    track.tabIndex = 0;   // листается стрелками клавиатуры
-    var step = function () { return (items[1].offsetLeft - items[0].offsetLeft) || track.clientWidth; };
+    var step = function () { return (items.length > 1 && items[1].offsetLeft - items[0].offsetLeft) || track.clientWidth; };
     var max = function () { return track.scrollWidth - track.clientWidth; };
     var cur = -1;
     var update = function () {
       var x = track.scrollLeft;
-      if (bars.length) {
+      if (n > 1 && bars.length) {
         var i = Math.max(0, Math.min(n - 1, Math.round(x / step())));
         if (i !== cur) {
           cur = i;
@@ -219,7 +261,21 @@
       if (!raf) raf = requestAnimationFrame(function () { raf = 0; update(); });
     }, { passive: true });
     w.addEventListener('resize', update);
-    update();
+    // Число фото и полоски — заново, когда на странице товара выбрали другой цвет
+    var setup = r.__refresh = function () {
+      n = items.length;
+      [box, prev, next].forEach(function (x) { if (x) x.hidden = n < 2; });
+      if (n > 1) track.tabIndex = 0; else track.removeAttribute('tabindex');   // листается стрелками клавиатуры
+      if (box) {
+        var html = '';
+        for (var k = 0; k < n && n > 1; k++) html += '<i></i>';
+        box.innerHTML = html;
+      }
+      cur = -1;
+      track.scrollLeft = 0;
+      update();
+    };
+    setup();
     var aim = null, aimT = 0;   // куда уже едем: быстрые повторные нажатия считаются от цели, а не от середины пути
     var go = function (dir) {
       var x = aim !== null ? aim : track.scrollLeft, m = max(), s = step(), to;
@@ -315,36 +371,54 @@
   w.addEventListener('pageshow', function (ev) { if (ev.persisted) { close(false); sync(); } });   // «назад» из кэша
   sync();
 
-  // ——— Корзина: [{slug, qty}] в localStorage, как избранное. Заказ — готовое сообщение в WhatsApp: сервера нет,
-  // личных данных человек на сайте не вводит, сообщение отправляет сам ———
+  // ——— Корзина: [{slug, v, qty}] в localStorage, как избранное; v — выбранный цвет (одна вещь в двух цветах — две строки).
+  // Заказ — готовое сообщение в WhatsApp: сервера нет, личных данных человек на сайте не вводит, сообщение отправляет сам ———
   var CART = 'attre-cart', QMAX = 5, cartMem = [];
+  var ckey = function (x) { return x.slug + '|' + (x.v || ''); };
   function cartRead() {
     var v = null, seen = {};
     try { v = JSON.parse(w.localStorage.getItem(CART) || '[]'); } catch (e) { /* см. read() */ }
     if (!Array.isArray(v)) v = cartMem;
     return v.filter(function (x) {
-      if (!x || typeof x.slug !== 'string' || seen[x.slug]) return false;
-      return (seen[x.slug] = true);
-    }).map(function (x) { return { slug: x.slug, qty: Math.max(1, Math.min(QMAX, Math.floor(Number(x.qty)) || 1)) }; });
+      if (!x || typeof x.slug !== 'string' || seen[ckey(x)]) return false;
+      return (seen[ckey(x)] = true);
+    }).map(function (x) {
+      return { slug: x.slug, v: typeof x.v === 'string' ? x.v : '', qty: Math.max(1, Math.min(QMAX, Math.floor(Number(x.qty)) || 1)) };
+    });
   }
   function cartWrite(list) {
-    cartMem = list.map(function (x) { return { slug: x.slug, qty: x.qty }; });
+    cartMem = list.map(function (x) { return { slug: x.slug, v: x.v || '', qty: x.qty }; });
     try { w.localStorage.setItem(CART, JSON.stringify(cartMem)); } catch (e) { /* см. read() */ }
   }
-  function cartFind(list, s) {
-    for (var i = 0; i < list.length; i++) if (list[i].slug === s) return list[i];
+  // v0 — основной цвет: запись из корзины, сделанной до появления цветов (без v), считается им
+  function cartFind(list, s, v, v0) {
+    for (var i = 0; i < list.length; i++) {
+      var x = list[i];
+      if (x.slug === s && ((x.v || '') === (v || '') || (!x.v && v && v === v0))) return x;
+    }
     return null;
   }
   var cartBox = d.querySelector('[data-cart-list]');
   function cartPage(list) {
-    var rows = {}, lost = false;
-    each('[data-slug]', function (li) { rows[li.getAttribute('data-slug')] = li; }, cartBox);
-    // вещь сняли с сайта — убираем; количество — не больше предела строки (у штучной вещи — остаток)
-    var fixed = list.filter(function (x) { return rows[x.slug]; }).map(function (x) {
-      return { slug: x.slug, qty: Math.min(x.qty, Number(rows[x.slug].getAttribute('data-max')) || QMAX) };
+    var rows = {}, first = {}, lost = false;
+    each('[data-slug]', function (li) {
+      var s = li.getAttribute('data-slug');
+      rows[s + '|' + (li.getAttribute('data-v') || '')] = li;
+      if (!first[s]) first[s] = li;   // строка основного цвета — первая у вещи
+    }, cartBox);
+    // вещь или её цвет сняли с сайта — убираем; запись без цвета — основной цвет; количество — не больше предела
+    // строки (у штучной вещи — остаток); одинаковые позиции складываем
+    var fixed = [], same = {};
+    list.forEach(function (x) {
+      var li = rows[ckey(x)];
+      if (!li && !x.v && first[x.slug]) { li = first[x.slug]; x = { slug: x.slug, v: li.getAttribute('data-v') || '', qty: x.qty }; }
+      if (!li) return;
+      var max = Number(li.getAttribute('data-max')) || QMAX, k = ckey(x);
+      if (same[k]) { same[k].qty = Math.min(max, same[k].qty + x.qty); return; }
+      fixed.push(same[k] = { slug: x.slug, v: x.v || '', qty: Math.min(x.qty, max) });
     });
     if (JSON.stringify(fixed) !== JSON.stringify(list)) { cartWrite(fixed); list = fixed; }
-    var shown = list.map(function (x) { return rows[x.slug]; }).reverse();   // недавние — первыми
+    var shown = list.map(function (x) { return rows[ckey(x)]; }).reverse();   // недавние — первыми
     each('[data-slug]', function (li) {
       var on = shown.indexOf(li) >= 0;
       if (!on && !li.hidden && li.contains(d.activeElement)) lost = true;
@@ -355,7 +429,7 @@
     if (now.some(function (li, i) { return li !== shown[i]; })) shown.forEach(function (li) { cartBox.appendChild(li); });
     var sum = 0, priced = true, lines = [];
     shown.forEach(function (li) {
-      var x = cartFind(list, li.getAttribute('data-slug'));
+      var x = cartFind(list, li.getAttribute('data-slug'), li.getAttribute('data-v'));
       var max = Number(li.getAttribute('data-max')) || QMAX, price = Number(li.getAttribute('data-price')) || 0;
       var q = li.querySelector('[data-cart-qty]'), out = li.querySelector('[data-cart-sum]');
       if (q) q.textContent = String(x.qty);
@@ -366,7 +440,8 @@
       if (out && price) out.textContent = money(price * x.qty);
       if (li.hasAttribute('data-off')) return;   // продано или «скоро в наличии» — в заказ не идёт
       if (price) sum += price * x.qty; else priced = false;
-      var a = li.querySelector('a[href]'), item = { n: lines.length + 1, name: li.getAttribute('data-name'),
+      var a = li.querySelector('a[href]'), col = li.getAttribute('data-color');
+      var item = { n: lines.length + 1, name: li.getAttribute('data-name'), color: col && T.waColor ? fill(T.waColor, 'color', col) : '',
         id: li.getAttribute('data-id'), qty: x.qty, url: a ? a.href : '' };
       lines.push(Object.keys(item).reduce(function (s, k) { return fill(s, k, item[k]); }, T.waCartItem || ''));
     });
@@ -389,8 +464,8 @@
     if (cartBox) list = cartPage(list);
     var n = list.reduce(function (s, x) { return s + x.qty; }, 0);   // в шапке — число вещей с учётом количества
     each('[data-cart-n]', function (el) { el.textContent = n ? String(n) : ''; });
-    each('[data-cart-add]', function (b) {   // товар: «в корзину» ↔ «перейти в корзину»
-      var s = b.getAttribute('data-cart-add'), on = !!cartFind(list, s);
+    each('[data-cart-add]', function (b) {   // товар: «в корзину» ↔ «перейти в корзину» — для выбранного цвета
+      var s = b.getAttribute('data-cart-add'), on = !!cartFind(list, s, b.getAttribute('data-v'), b.getAttribute('data-v0'));
       b.hidden = on;
       each('[data-cart-go="' + s + '"]', function (a) { a.hidden = !on; });
     });
@@ -402,7 +477,8 @@
     if (b.getAttribute('aria-disabled') === 'true') return;
     var list = cartRead(), s = b.getAttribute('data-cart-add');
     if (s) {
-      if (!cartFind(list, s)) list.push({ slug: s, qty: 1 });
+      var v = b.getAttribute('data-v') || '';
+      if (!cartFind(list, s, v, b.getAttribute('data-v0'))) list.push({ slug: s, v: v, qty: 1 });
       cartWrite(list);
       cartSync();
       var go = d.querySelector('[data-cart-go="' + s + '"]'), live = d.querySelector('[data-cart-live]');
@@ -410,7 +486,7 @@
       if (live && T.cartAdded) live.textContent = T.cartAdded;
       return;
     }
-    var li = b.closest('[data-slug]'), x = li && cartFind(list, li.getAttribute('data-slug'));
+    var li = b.closest('[data-slug]'), x = li && cartFind(list, li.getAttribute('data-slug'), li.getAttribute('data-v'));
     if (!x) return;
     if (b.hasAttribute('data-cart-del')) list.splice(list.indexOf(x), 1);
     else x.qty = Math.max(1, Math.min(Number(li.getAttribute('data-max')) || QMAX, x.qty + Number(b.getAttribute('data-cart-step'))));
@@ -420,6 +496,49 @@
   w.addEventListener('storage', function (ev) { if (ev.key === CART) cartSync(); });
   w.addEventListener('pageshow', function (ev) { if (ev.persisted) cartSync(); });
   cartSync();
+
+  // ——— Товар: цвет — кружочки под «в корзину». Выбор меняет фото, строки «цвет» и «материал», цвет для корзины
+  // и текст сообщения в WhatsApp; адрес запоминает цвет (?c=black) — ссылкой можно поделиться ———
+  var pick = d.querySelector('.pcol');
+  if (pick) {
+    var pg = d.querySelector('.pg'), ptrack = pg && pg.querySelector('[data-track]');
+    var radios = pick.querySelectorAll('input[name="pcol"]'), v0 = radios.length ? radios[0].value : '';
+    var waBtn = d.querySelector('[data-wa-c]'), pkeep = {};
+    var setColor = function (inp, initial) {
+      var vid = inp.value, was = pg && pg.getAttribute('data-v');
+      each('[data-pcol-name]', function (el) { el.textContent = inp.getAttribute('data-name'); });
+      each('[data-pcol-mat]', function (el) { el.textContent = inp.getAttribute('data-mat'); });
+      if (pg && ptrack && was && vid !== was) {
+        var tpl = pg.querySelector('template[data-pv="' + vid + '"]');
+        var next = pkeep[vid] || (tpl ? Array.prototype.slice.call(tpl.content.cloneNode(true).children) : null);
+        if (next && next.length) {
+          pkeep[was] = Array.prototype.slice.call(ptrack.children);
+          while (ptrack.firstChild) ptrack.removeChild(ptrack.firstChild);
+          next.forEach(function (f, i) { if (i < 2) eager(f.querySelector('img')); ptrack.appendChild(f); });
+          pg.setAttribute('data-v', vid);
+          if (pg.__refresh) pg.__refresh();
+        }
+      }
+      each('[data-cart-add]', function (b) { b.setAttribute('data-v', vid); });
+      var link = location.pathname + (vid === v0 ? '' : '?c=' + vid);
+      if (waBtn && T.waProductC && T.wa) {
+        var msg = [['name', waBtn.getAttribute('data-wa-name')], ['color', inp.getAttribute('data-name')], ['id', waBtn.getAttribute('data-wa-id')],
+                   ['url', waBtn.getAttribute('data-wa-url') + (vid === v0 ? '' : '?c=' + vid)]]
+          .reduce(function (m, kv) { return fill(m, kv[0], kv[1]); }, T.waProductC);
+        waBtn.href = 'https://wa.me/' + T.wa + '?text=' + encodeURIComponent(msg);
+      }
+      if (!initial) { try { history.replaceState(null, '', link + location.hash); } catch (e) { /* file:// */ } }
+      cartSync();
+    };
+    pick.addEventListener('change', function (ev) { if (ev.target && ev.target.name === 'pcol') setColor(ev.target); });
+    var cm = /[?&]c=([a-z0-9-]+)/.exec(location.search);   // пришли из карточки, где выбрали цвет
+    var start = cm && pick.querySelector('input[name="pcol"][value="' + cm[1] + '"]');
+    if (start && start.value !== v0) { start.checked = true; setColor(start, true); }
+    w.addEventListener('pageshow', function (ev) {   // «назад» из кэша: браузер мог вернуть отметку — фото под неё
+      var on = pick.querySelector('input[name="pcol"]:checked');
+      if (ev.persisted && on && pg && on.value !== pg.getAttribute('data-v')) setColor(on, true);
+    });
+  }
 
   // ——— Каталог: фильтр (материал, цвет, цена) и сортировка; ритм витрины перестраивается под найденное ———
   var SIZES = { w1: '(min-width: 600px) 25vw, 100vw', w2: '(min-width: 600px) 25vw, 100vw', h: '(min-width: 600px) 25vw, 50vw' };
@@ -520,9 +639,25 @@
       var m = /^(\d+)-(\d+)$/.exec(q.price || '');
       if (m && live) { rMin.value = m[1]; rMax.value = m[2]; }
     };
+    var tint = function (list, cols) {   // фильтр «цвет»: карточка показывает фото подходящего цвета, без фильтра — основного
+      list.forEach(function (c) {
+        var el = c.el, btns = el.querySelectorAll('.vc__c');
+        if (!btns.length) return;
+        var cur = el.querySelector('.vc__c[aria-pressed="true"]'), want = null;
+        if (cols.length) {
+          if (cur && cols.indexOf(cur.getAttribute('data-k')) >= 0) return;
+          for (var i = 0; i < btns.length && !want; i++) if (cols.indexOf(btns[i].getAttribute('data-k')) >= 0) want = btns[i].getAttribute('data-v');
+          if (want) { el.__byFilter = true; cardColor(el, want, true); }
+        } else if (el.__byFilter) {
+          el.__byFilter = false;
+          cardColor(el, el.getAttribute('data-v0'), true);
+        }
+      });
+    };
     var apply = function (save) {
       var s = state();
       var list = all.filter(function (c) { return match(c, s); }).sort(cmp(s.sort));
+      tint(list, s.col);
       all.forEach(function (c) { c.el.hidden = list.indexOf(c) < 0; });
       list.forEach(function (c) { grid.appendChild(c.el); });
       relayout(list.map(function (c) { return c.el; }));

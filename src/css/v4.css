@@ -179,8 +179,13 @@ html.bar-red .promo { background: var(--red); }
 }
 .vc__bars i, .rail__bars i { flex: 1; height: 2px; background: rgba(0, 0, 0, .16); box-shadow: 0 0 0 .5px rgba(255, 255, 255, .5); }
 .vc__bars i.is-on, .rail__bars i.is-on { background: rgba(0, 0, 0, .78); }
-/* Кружочки цветов под карточкой (просьба заказчицы) */
-.vc__sw { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+/* Кружочки цветов под карточкой (просьба заказчицы). Нажатие меняет фото карточки на этот цвет: кнопка 24×24,
+   кружочек 10px; выбранный — в тонком кольце. Отступы — как у подписи карточки (.vc__cap) */
+.vc__sw { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding: 0 12px; }
+.vc__sw--pick { gap: 0; margin-top: 2px; }
+.vc__c { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; }
+.vc__c:first-child { margin-left: -7px; }   /* первый кружочек — ровно по левому краю текста */
+.vc__c[aria-pressed="true"] .sw { outline: 1px solid var(--ink); outline-offset: 2px; }
 /* Стрелки — только мышь, при наведении на карточку; у края ленты прячутся. Белая кнопка, тонкая длинная стрелка */
 .vc__arr {
   position: absolute; top: 50%; z-index: 2;
@@ -224,6 +229,7 @@ html.bar-red .promo { background: var(--red); }
 .vc--w { grid-column: 1 / -1; }
 .vc--w .vc__media { aspect-ratio: 4 / 5; }
 .vc--w .vc__cap { padding: 12px var(--g) 0; }
+.vc--w .vc__sw { padding: 0 var(--g); }
 .vc--w .fav { right: calc(var(--g) - 14px); }
 .vit--even .vc--w { grid-column: auto; }
 
@@ -266,6 +272,7 @@ html.bar-red .promo { background: var(--red); }
 .row::after { content: ''; flex: 0 0 calc(var(--g) - 2px); }   /* поле справа у последней карточки */
 .vc--row { flex: 0 0 44%; scroll-snap-align: start; }
 .vc--row .vc__cap { padding: 10px 10px 0; }
+.vc--row .vc__sw { padding: 0 10px; }
 .rail--row .rail__arr { top: calc(50% - 24px); }
 .shelf--new .tag--new { display: none; }   /* в «новинках» бирка «новинка» лишняя */
 
@@ -396,13 +403,33 @@ html.is-locked { overflow: hidden; }   /* только корень: overflow у
 .sw { display: block; flex: none; width: 14px; height: 14px; border: 1px solid rgba(0, 0, 0, .14); border-radius: 50%; }
 .sw--s { width: 10px; height: 10px; }
 .sw--white { border-color: #c8c8c8; }
-.sw--animal {
+.sw--light { border-color: #c8c8c8; }
+.sw--animal, .sw--leopard {
   background:
     radial-gradient(circle at 26% 30%, #3a2413 0 17%, transparent 19%),
     radial-gradient(circle at 72% 64%, #3a2413 0 15%, transparent 17%),
     radial-gradient(circle at 78% 20%, #3a2413 0 11%, transparent 13%),
     radial-gradient(circle at 28% 80%, #3a2413 0 11%, transparent 13%),
     #c9995a;
+}
+.sw--zebra { background: repeating-linear-gradient(118deg, #151515 0 2px, #f3f0e9 2px 5px); }
+.sw--cow {
+  border-color: #c8c8c8;
+  background:
+    radial-gradient(circle at 30% 34%, #4a2c1a 0 22%, transparent 24%),
+    radial-gradient(circle at 74% 70%, #4a2c1a 0 18%, transparent 20%),
+    radial-gradient(circle at 80% 22%, #4a2c1a 0 9%, transparent 11%),
+    #f4f1ea;
+}
+.sw--dalmatian {
+  border-color: #c8c8c8;
+  background:
+    radial-gradient(circle at 28% 32%, #151515 0 9%, transparent 11%),
+    radial-gradient(circle at 68% 28%, #151515 0 7%, transparent 9%),
+    radial-gradient(circle at 50% 64%, #151515 0 10%, transparent 12%),
+    radial-gradient(circle at 80% 70%, #151515 0 6%, transparent 8%),
+    radial-gradient(circle at 22% 74%, #151515 0 6%, transparent 8%),
+    #f6f4ef;
 }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { position: relative; display: block; cursor: pointer; }
@@ -520,6 +547,17 @@ html.js .acc:not(.is-open) .plus::after { rotate: 90deg; }
 .pg .rail__bars { bottom: 12px; }
 
 .pp__info { order: 2; padding: 24px var(--g) 40px; }
+/* Цвет — кружочки под «в корзину» (просьба заказчицы): «цвет: молочный», выбранный — в кольце, кнопка 36×36 */
+.pcol { min-width: 0; margin: 0 0 14px; padding: 0; border: 0; }
+.pcol__t { float: left; width: 100%; padding: 0; margin-bottom: 6px; color: var(--mute); }
+.pcol__t span { color: var(--ink); }
+.pcol__opts { clear: both; display: flex; flex-wrap: wrap; margin-left: -9px; }
+.pcol__o { position: relative; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; cursor: pointer; }
+.pcol__o input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pcol__o .sw { width: 18px; height: 18px; }
+.pcol__o input:checked + .sw { outline: 1px solid var(--ink); outline-offset: 3px; }
+.pcol__o input:focus-visible + .sw { outline: 2px solid var(--ink); outline-offset: 3px; }
+html.js .pp__color--all { display: none; }   /* с JS цвета — кружочками; без JS — строкой */
 .pp__info > .tag { margin-bottom: 8px; }
 .pp__color, .pp__ref { color: var(--mute); }
 .pp__bonus, .cartp__bonus { display: block; margin-top: 14px; padding: 10px 0; color: var(--mute); }
@@ -579,6 +617,7 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 .ci__txt { display: flex; flex-direction: column; min-width: 0; }
 .ci__name a { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ci__meta, .ci__off { margin-top: 3px; color: var(--mute); }
+.ci__col { display: flex; align-items: center; gap: 6px; margin-top: 3px; color: var(--mute); }
 .ci__price { margin-top: 3px; }
 .ci__row { display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 8px; }
 .qty { display: flex; align-items: center; margin-left: -17px; }   /* минус — ровно по левому краю текста */
@@ -650,6 +689,9 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   .btn:hover { background: var(--ink); color: #fff; }
   .btn--ink:hover { opacity: .8; }
   .chip span:hover { border-color: var(--ink); }
+  .vc__c:hover .sw, .pcol__o:hover .sw { outline: 1px solid var(--mute); outline-offset: 2px; }
+  .vc__c[aria-pressed="true"]:hover .sw { outline-color: var(--ink); }
+  .pcol__o:hover input:checked + .sw { outline-color: var(--ink); }
 }
 
 /* ——— Движение — только у того, что открыл человек ——— */
@@ -676,6 +718,7 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   .vc--w { grid-column: span 1; }
   .vc--w .vc__media { aspect-ratio: 3 / 4; }
   .vc--w .vc__cap { padding: 10px 12px 0; }
+  .vc--w .vc__sw { padding: 0 12px; }
   .vc--w .fav { right: 0; }
   /* С планшета все карточки одинаковые — по одному фото (просьба заказчицы); «крупно + две рядом» — только телефон */
   .vit--even .vc--w, html.js .vit--even .vc--w { grid-column: auto; }
@@ -732,6 +775,7 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 
   .vit { gap: 48px 2px; }
   .vc__cap, .vc--w .vc__cap { padding: 12px 16px 0; }
+  .vc__sw, .vc--w .vc__sw { padding: 0 16px; }
 
   /* Товар: сведения справа и липнут под шапкой */
   /* Фото — по одному (просьба заказчицы), целиком в первом экране; сведения справа; пара — по центру страницы */

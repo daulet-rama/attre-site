@@ -14,8 +14,10 @@ from build import THEMES  # noqa: E402
 name = sys.argv[1]
 sub = next(s for n, s, *_ in THEMES if n == name)
 shutil.copytree(ROOT / 'src', core.OUT_ROOT / 'assets', dirs_exist_ok=True)
-for p in core.DATA['products']:
-    p['images'] = [f"{p['slug']}-{i + 1}" for i in range(len(p['srcs']))]
+for p in core.DATA['products']:   # имена — как в core.render_images()
+    for v in p['variants']:
+        v['images'] = [core.img_stem(p, v['id'], i) for i in range(len(v['srcs']))]
+    p['images'] = p['variants'][0]['images'] if p['variants'] else [core.img_stem(p, None, i) for i in range(len(p['srcs']))]
 about = core.HOME.get('about') or []   # фото «о бренде»: одно или список
 extra = [x for x in (core.HOME.get('hero_wide'), *(about if isinstance(about, list) else [about]), core.HOME.get('video')) if x]
 for item in [core.HOME['cover'], *core.HOME['banners'], *core.HOME.get('hero', []), *core.HOME.get('wear', []), *extra]:

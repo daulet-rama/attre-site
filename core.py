@@ -94,6 +94,54 @@ def num(v):
     return f if f >= 0 else None
 
 
+PATTERNS = ('leopard', 'zebra', 'cow', 'dalmatian', 'croc')   # узор кружочка цвета: принты и кроко-тиснение
+
+
+def clean_variants(d, f):
+    """Цвета вещи — у каждого свои фото: variants = [{color, name, hex, pattern, material, images}].
+    Первый цвет — основной: его фото в каталоге и на странице товара, пока человек не выбрал другой.
+    color — ключ палитры (фильтр «цвет»), name — как назвать оттенок покупателю (молочный, карамельный…),
+    hex — цвет кружочка (если не задан — из палитры). Два оттенка одного ключа — разные цвета: ?c=brown и ?c=brown-2."""
+    out, seen = [], {}
+    for n, v in enumerate(d.get('variants') or [], 1):
+        if not isinstance(v, dict) or v.get('published') is False:
+            continue
+        key = v.get('color')
+        if key not in COLORS:
+            warn(f'products/{f}.json: цвет № {n}: нет цвета «{key}» в data/colors.json — пропущен')
+            continue
+        srcs = []
+        for x in v.get('images') or []:
+            x = x.get('image') if isinstance(x, dict) else x
+            if not x:
+                continue
+            path = MEDIA / Path(str(x)).name
+            if path.exists():
+                srcs.append(path)
+            else:
+                warn(f'products/{f}.json: цвет «{key}»: нет файла фото {x}')
+        if not srcs:
+            warn(f'products/{f}.json: цвет «{key}»: нет ни одного фото — пропущен')
+            continue
+        seen[key] = seen.get(key, 0) + 1
+        name = tri(v.get('name'))
+        raw = v.get('materials') or ([v['material']] if v.get('material') else [])
+        for m in raw:
+            if m not in MATS and m != 'other':
+                warn(f'products/{f}.json: цвет «{key}»: нет материала «{m}» — не учитывается')
+        hexv = str(v.get('hex') or '').strip()
+        out.append({
+            'id': key if seen[key] == 1 else f'{key}-{seen[key]}',
+            'key': key,
+            'name': {c: name[c] or COLORS[key][c] for c in CODES},
+            'hex': hexv if re.fullmatch(r'#[0-9a-fA-F]{6}', hexv) else COLORS[key]['hex'],
+            'pattern': v.get('pattern') if v.get('pattern') in PATTERNS else None,
+            'materials': [m for m in raw if m in MATS],
+            'srcs': srcs,
+        })
+    return out
+
+
 def clean_product(d):
     f = d['_file']
     if d.get('published') is False:
@@ -117,8 +165,15 @@ def clean_product(d):
     for c in d.get('colors') or []:
         if c not in COLORS:
             warn(f'products/{f}.json: нет цвета «{c}» в data/colors.json — не учитывается')
+    variants = clean_variants(d, f)
+    color = tri(d.get('color'))
     srcs = []
-    for x in d.get('images') or []:
+    if variants:   # цвета со своими фото: фильтр, материалы и подпись «цвет» берутся из них
+        colors = list(dict.fromkeys(v['key'] for v in variants))
+        mats = list(dict.fromkeys(m for v in variants for m in v['materials'])) or mats
+        color = {c: ', '.join(v['name'][c] for v in variants) for c in CODES}
+        srcs = variants[0]['srcs']
+    for x in [] if variants else d.get('images') or []:
         x = x.get('image') if isinstance(x, dict) else x
         if not x:
             continue
@@ -139,12 +194,12 @@ def clean_product(d):
         'slug': f, 'id': str(d.get('id') or f), 'order': num(d.get('order')) or 9999,
         'cat': d['cat'], 'material': mats[0] if mats else None, 'materials': mats, 'colors': colors,
         'is_new': bool(d.get('new')), 'popular': bool(d.get('popular')), 'soon': bool(d.get('soon')),
-        'name': name, 'type': tri(d.get('type')), 'color': tri(d.get('color')), 'desc': tri(d.get('desc')),
+        'name': name, 'type': tri(d.get('type')), 'color': color, 'desc': tri(d.get('desc')),
         'strap': strap if strap['ru'] else None,
         'size': [f'{v:g}' for v in dims] if all(dims) else None,
         'price': int(price_v) if price_v else None,          # нет цены — «цена по запросу»
         'stock': int(stock) if stock is not None else None,  # нет остатка — просто «в наличии»
-        'srcs': srcs, 'focus': d.get('focus') or {},
+        'srcs': srcs, 'focus': d.get('focus') or {}, 'variants': variants,
     }
 
 
@@ -227,6 +282,11 @@ def item_url(p, lang):
     return url(f"{lang}/p/{p['slug']}/")
 
 
+def img_stem(p, vid, i):
+    """Имя нарезанного фото: altea-3 (вещь без цветов) или altea-black-2 (фото цвета)."""
+    return f"{p['slug']}-{vid}-{i + 1}" if vid else f"{p['slug']}-{i + 1}"
+
+
 def img_srcset(stem):
     return f"{asset(f'assets/img/p/{stem}-600.webp')} 600w, {asset(f'assets/img/p/{stem}-1200.webp')} 1200w"
 
@@ -286,20 +346,23 @@ def render_images():
     out = OUT_ROOT / 'assets' / 'img' / 'p'
     out.mkdir(parents=True, exist_ok=True)
     for p in DATA['products']:
-        shots = []
-        for i, src in enumerate(p['srcs']):
-            frame = fit_34(open_rgb(src), p['focus'] if i == 0 else {})
-            stem = f"{p['slug']}-{i + 1}"
-            for width in (600, 1200):
-                frame.resize((width, round(width * 4 / 3)), Image.LANCZOS).save(
-                    out / f'{stem}-{width}.webp', 'WEBP', quality=86, method=6)
-            shots.append(stem)
-            if i == 0:
-                og = frame.resize((900, 1200), Image.LANCZOS)
-                sq = Image.new('RGB', (1200, 1200), og.getpixel((2, 2)))
-                sq.paste(og, (150, 0))
-                sq.save(out / f"{p['slug']}-og.jpg", 'JPEG', quality=88, optimize=True, progressive=True)
-        p['images'] = shots
+        for vi, v in enumerate(p['variants'] or [{'id': None, 'srcs': p['srcs']}]):
+            shots = []
+            for i, src in enumerate(v['srcs']):
+                frame = fit_34(open_rgb(src), p['focus'] if vi == 0 and i == 0 else {})
+                stem = img_stem(p, v['id'], i)
+                for width in (600, 1200):
+                    frame.resize((width, round(width * 4 / 3)), Image.LANCZOS).save(
+                        out / f'{stem}-{width}.webp', 'WEBP', quality=86, method=6)
+                shots.append(stem)
+                if vi == 0 and i == 0:
+                    og = frame.resize((900, 1200), Image.LANCZOS)
+                    sq = Image.new('RGB', (1200, 1200), og.getpixel((2, 2)))
+                    sq.paste(og, (150, 0))
+                    sq.save(out / f"{p['slug']}-og.jpg", 'JPEG', quality=88, optimize=True, progressive=True)
+            v['images'] = shots
+            if vi == 0:
+                p['images'] = shots
 
     hout = OUT_ROOT / 'assets' / 'img' / 'home'
     hout.mkdir(parents=True, exist_ok=True)

@@ -124,6 +124,11 @@
       "kz": "Сәлеметсіз бе! «{name}» (№ {id}) қызықтырады. {url}",
       "en": "Hello! I’m interested in “{name}” (No. {id}). {url}"
     },
+    "wa_product_c": {
+      "ru": "Здравствуйте! Интересует «{name}», цвет: {color} (№ {id}). {url}",
+      "kz": "Сәлеметсіз бе! «{name}», түсі: {color} (№ {id}) қызықтырады. {url}",
+      "en": "Hello! I’m interested in “{name}”, colour: {color} (No. {id}). {url}"
+    },
     "wa_sold": {
       "ru": "Здравствуйте! «{name}» (№ {id}) уже нет в наличии. Есть что-то похожее? {url}",
       "kz": "Сәлеметсіз бе! «{name}» (№ {id}) сатылып кетіпті. Осыған ұқсасы бар ма? {url}",
@@ -780,9 +785,14 @@
       "en": "Hello! I’d like to place an order:"
     },
     "wa_cart_item": {
-      "ru": "{n}. «{name}» (№ {id}) — {qty} шт. {url}",
-      "kz": "{n}. «{name}» (№ {id}) — {qty} дана {url}",
-      "en": "{n}. “{name}” (No. {id}) × {qty} {url}"
+      "ru": "{n}. «{name}»{color} (№ {id}) — {qty} шт. {url}",
+      "kz": "{n}. «{name}»{color} (№ {id}) — {qty} дана {url}",
+      "en": "{n}. “{name}”{color} (No. {id}) × {qty} {url}"
+    },
+    "wa_color": {
+      "ru": ", цвет: {color}",
+      "kz": ", түсі: {color}",
+      "en": ", colour: {color}"
     },
     "wa_cart_total": {
       "ru": "Итого: {sum}",
