@@ -13,18 +13,6 @@
     "kz": "боулер сөмке",
     "en": "bowler bag"
   },
-  "color": {
-    "ru": "чёрный, тёмно-коричневый",
-    "kz": "қара, қою қоңыр",
-    "en": "black, dark brown"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "black",
-    "brown"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,9 +33,27 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/stockholm-1.jpg",
-    "media/products/stockholm-2.jpg",
-    "media/products/stockholm-3.jpg"
+  "variants": [
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/stockholm-black-1.jpg",
+        "media/products/stockholm-black-2.jpg",
+        "media/products/stockholm-black-3.jpg",
+        "media/products/stockholm-black-4.jpg",
+        "media/products/stockholm-black-5.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "material": "leather",
+      "images": [
+        "media/products/stockholm-brown-1.jpg",
+        "media/products/stockholm-brown-2.jpg",
+        "media/products/stockholm-brown-3.jpg",
+        "media/products/stockholm-brown-4.jpg"
+      ]
+    }
   ]
 }

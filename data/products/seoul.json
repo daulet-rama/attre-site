@@ -13,18 +13,6 @@
     "kz": "хобо сөмке",
     "en": "hobo bag"
   },
-  "color": {
-    "ru": "чёрный, тёмно-коричневый",
-    "kz": "қара, қою қоңыр",
-    "en": "black, dark brown"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "black",
-    "brown"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,10 +33,27 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/seoul-1.jpg",
-    "media/products/seoul-2.jpg",
-    "media/products/seoul-3.jpg",
-    "media/products/seoul-4.jpg"
+  "variants": [
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/seoul-black-1.jpg",
+        "media/products/seoul-black-2.jpg",
+        "media/products/seoul-black-3.jpg",
+        "media/products/seoul-black-4.jpg",
+        "media/products/seoul-black-5.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "material": "leather",
+      "images": [
+        "media/products/seoul-brown-1.jpg",
+        "media/products/seoul-brown-2.jpg",
+        "media/products/seoul-brown-3.jpg",
+        "media/products/seoul-brown-4.jpg"
+      ]
+    }
   ]
 }

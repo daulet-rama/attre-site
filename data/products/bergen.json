@@ -13,18 +13,6 @@
     "kz": "кросс-боди",
     "en": "crossbody bag"
   },
-  "color": {
-    "ru": "молочный, чёрный",
-    "kz": "сүт түсті, қара",
-    "en": "cream, black"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "white",
-    "black"
-  ],
   "new": false,
   "popular": true,
   "soon": false,
@@ -45,11 +33,26 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/bergen-1.jpg",
-    "media/products/bergen-2.jpg",
-    "media/products/bergen-3.jpg",
-    "media/products/bergen-4.jpg",
-    "media/products/bergen-5.jpg"
+  "variants": [
+    {
+      "color": "milky",
+      "material": "leather",
+      "images": [
+        "media/products/bergen-milky-1.jpg",
+        "media/products/bergen-milky-2.jpg",
+        "media/products/bergen-milky-3.jpg",
+        "media/products/bergen-milky-4.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/bergen-black-1.jpg",
+        "media/products/bergen-black-2.jpg",
+        "media/products/bergen-black-3.jpg",
+        "media/products/bergen-black-4.jpg"
+      ]
+    }
   ]
 }

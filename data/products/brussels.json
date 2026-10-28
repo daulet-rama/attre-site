@@ -13,18 +13,6 @@
     "kz": "саквояж",
     "en": "doctor bag"
   },
-  "color": {
-    "ru": "бежевый, коричневый, тёмно-коричневый",
-    "kz": "бежевый, қоңыр, қою қоңыр",
-    "en": "beige, brown, dark brown"
-  },
-  "materials": [
-    "suede"
-  ],
-  "colors": [
-    "beige",
-    "brown"
-  ],
   "new": false,
   "popular": false,
   "soon": true,
@@ -45,8 +33,49 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/brussels-1.jpg",
-    "media/products/brussels-2.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "suede",
+      "images": [
+        "media/products/brussels-beige-1.jpg",
+        "media/products/brussels-beige-2.jpg",
+        "media/products/brussels-beige-3.jpg",
+        "media/products/brussels-beige-4.jpg",
+        "media/products/brussels-beige-5.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "name": {
+        "ru": "карамельный",
+        "kz": "карамель түсті",
+        "en": "caramel"
+      },
+      "hex": "#7a5536",
+      "material": "suede",
+      "images": [
+        "media/products/brussels-brown-1.jpg",
+        "media/products/brussels-brown-2.jpg",
+        "media/products/brussels-brown-3.jpg",
+        "media/products/brussels-brown-4.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "name": {
+        "ru": "шоколадный",
+        "kz": "шоколад түсті",
+        "en": "chocolate"
+      },
+      "hex": "#3a251c",
+      "material": "suede",
+      "images": [
+        "media/products/brussels-brown-2-1.jpg",
+        "media/products/brussels-brown-2-2.jpg",
+        "media/products/brussels-brown-2-3.jpg",
+        "media/products/brussels-brown-2-4.jpg"
+      ]
+    }
   ]
 }

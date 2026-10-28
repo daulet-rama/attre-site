@@ -13,18 +13,6 @@
     "kz": "шелек сөмке",
     "en": "bucket bag"
   },
-  "color": {
-    "ru": "песочный, чёрный, молочный",
-    "kz": "құм түсті, қара, сүт түсті",
-    "en": "sand, black, cream"
-  },
-  "materials": [
-    "textile"
-  ],
-  "colors": [
-    "beige",
-    "black"
-  ],
   "new": false,
   "popular": true,
   "soon": false,
@@ -45,11 +33,37 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/capri-1.jpg",
-    "media/products/capri-2.jpg",
-    "media/products/capri-3.jpg",
-    "media/products/capri-4.jpg",
-    "media/products/capri-5.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "textile",
+      "images": [
+        "media/products/capri-beige-1.jpg",
+        "media/products/capri-beige-2.jpg",
+        "media/products/capri-beige-3.jpg",
+        "media/products/capri-beige-4.jpg",
+        "media/products/capri-beige-5.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "textile",
+      "images": [
+        "media/products/capri-black-1.jpg",
+        "media/products/capri-black-2.jpg",
+        "media/products/capri-black-3.jpg",
+        "media/products/capri-black-4.jpg"
+      ]
+    },
+    {
+      "color": "milky",
+      "material": "textile",
+      "images": [
+        "media/products/capri-milky-1.jpg",
+        "media/products/capri-milky-2.jpg",
+        "media/products/capri-milky-3.jpg",
+        "media/products/capri-milky-4.jpg"
+      ]
+    }
   ]
 }

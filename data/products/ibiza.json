@@ -13,21 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "натуральный песочный, чёрный, коричневый",
-    "kz": "табиғи құм түсті, қара, қоңыр",
-    "en": "natural sand, black, brown"
-  },
-  "materials": [
-    "textile"
-  ],
-  "colors": [
-    "beige",
-    "black",
-    "brown",
-    "green",
-    "red"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -48,10 +33,57 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/ibiza-1.jpg",
-    "media/products/ibiza-2.jpg",
-    "media/products/ibiza-3.jpg",
-    "media/products/ibiza-4.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "textile",
+      "images": [
+        "media/products/ibiza-beige-1.jpg",
+        "media/products/ibiza-beige-2.jpg",
+        "media/products/ibiza-beige-3.jpg",
+        "media/products/ibiza-beige-4.jpg",
+        "media/products/ibiza-beige-5.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "textile",
+      "images": [
+        "media/products/ibiza-black-1.jpg",
+        "media/products/ibiza-black-2.jpg",
+        "media/products/ibiza-black-3.jpg",
+        "media/products/ibiza-black-4.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "material": "textile",
+      "images": [
+        "media/products/ibiza-brown-1.jpg",
+        "media/products/ibiza-brown-2.jpg",
+        "media/products/ibiza-brown-3.jpg",
+        "media/products/ibiza-brown-4.jpg"
+      ]
+    },
+    {
+      "color": "green",
+      "material": "textile",
+      "images": [
+        "media/products/ibiza-green-1.jpg",
+        "media/products/ibiza-green-2.jpg",
+        "media/products/ibiza-green-3.jpg",
+        "media/products/ibiza-green-4.jpg"
+      ]
+    },
+    {
+      "color": "red",
+      "material": "textile",
+      "images": [
+        "media/products/ibiza-red-1.jpg",
+        "media/products/ibiza-red-2.jpg",
+        "media/products/ibiza-red-3.jpg",
+        "media/products/ibiza-red-4.jpg"
+      ]
+    }
   ]
 }

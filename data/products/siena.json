@@ -13,23 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "чёрный, коричневый, рыжий (кэмел)",
-    "kz": "қара, қоңыр, ашық қоңыр (кэмел)",
-    "en": "black, brown, camel"
-  },
-  "materials": [
-    "suede",
-    "leather",
-    "textile"
-  ],
-  "colors": [
-    "black",
-    "brown",
-    "blue",
-    "turquoise",
-    "green"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -50,8 +33,95 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/siena-1.jpg",
-    "media/products/siena-2.jpg"
+  "variants": [
+    {
+      "color": "brown",
+      "name": {
+        "ru": "карамельный",
+        "kz": "карамель түсті",
+        "en": "caramel"
+      },
+      "hex": "#7d4c25",
+      "material": "suede",
+      "images": [
+        "media/products/siena-brown-1.jpg",
+        "media/products/siena-brown-2.jpg",
+        "media/products/siena-brown-3.jpg",
+        "media/products/siena-brown-4.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "name": {
+        "ru": "шоколадный",
+        "kz": "шоколад түсті",
+        "en": "chocolate"
+      },
+      "hex": "#563a30",
+      "material": "suede",
+      "images": [
+        "media/products/siena-brown-2-1.jpg",
+        "media/products/siena-brown-2-2.jpg",
+        "media/products/siena-brown-2-3.jpg",
+        "media/products/siena-brown-2-4.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/siena-black-1.jpg",
+        "media/products/siena-black-2.jpg",
+        "media/products/siena-black-3.jpg",
+        "media/products/siena-black-4.jpg"
+      ]
+    },
+    {
+      "color": "light-blue",
+      "name": {
+        "ru": "голубой",
+        "kz": "көгілдір",
+        "en": "cornflower blue"
+      },
+      "hex": "#6f9be8",
+      "material": "textile",
+      "images": [
+        "media/products/siena-light-blue-1.jpg",
+        "media/products/siena-light-blue-2.jpg",
+        "media/products/siena-light-blue-3.jpg"
+      ]
+    },
+    {
+      "color": "light-blue",
+      "name": {
+        "ru": "светло-бирюзовый",
+        "kz": "ашық бирюза",
+        "en": "light aqua"
+      },
+      "hex": "#addcd5",
+      "material": "textile",
+      "images": [
+        "media/products/siena-light-blue-2-1.jpg",
+        "media/products/siena-light-blue-2-2.jpg",
+        "media/products/siena-light-blue-2-3.jpg",
+        "media/products/siena-light-blue-2-4.jpg"
+      ]
+    },
+    {
+      "color": "pink",
+      "material": "textile",
+      "images": [
+        "media/products/siena-pink-1.jpg",
+        "media/products/siena-pink-2.jpg"
+      ]
+    },
+    {
+      "color": "green",
+      "material": "textile",
+      "images": [
+        "media/products/siena-green-1.jpg",
+        "media/products/siena-green-2.jpg"
+      ]
+    }
   ]
 }

@@ -13,17 +13,6 @@
     "kz": "хобо сөмке",
     "en": "hobo bag"
   },
-  "color": {
-    "ru": "молочно-бежевый, чёрный",
-    "kz": "сүт түсті-бежевый, қара",
-    "en": "cream, black"
-  },
-  "materials": [
-    "pony"
-  ],
-  "colors": [
-    "beige"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -44,8 +33,17 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/zurich-1.jpg",
-    "media/products/zurich-2.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "pony",
+      "images": [
+        "media/products/zurich-beige-1.jpg",
+        "media/products/zurich-beige-2.jpg",
+        "media/products/zurich-beige-3.jpg",
+        "media/products/zurich-beige-4.jpg",
+        "media/products/zurich-beige-5.jpg"
+      ]
+    }
   ]
 }

@@ -13,17 +13,6 @@
     "kz": "шелек сөмке",
     "en": "bucket bag"
   },
-  "color": {
-    "ru": "красный",
-    "kz": "қызыл",
-    "en": "red"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "red"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -44,9 +33,16 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/verona-1.jpg",
-    "media/products/verona-2.jpg",
-    "media/products/verona-3.jpg"
+  "variants": [
+    {
+      "color": "red",
+      "material": "leather",
+      "images": [
+        "media/products/verona-red-1.jpg",
+        "media/products/verona-red-2.jpg",
+        "media/products/verona-red-3.jpg",
+        "media/products/verona-red-4.jpg"
+      ]
+    }
   ]
 }

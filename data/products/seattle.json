@@ -13,17 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "чёрный",
-    "kz": "қара",
-    "en": "black"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "black"
-  ],
   "new": true,
   "popular": false,
   "soon": false,
@@ -44,8 +33,16 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/seattle-1.jpg",
-    "media/products/seattle-2.jpg"
+  "variants": [
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/seattle-black-1.jpg",
+        "media/products/seattle-black-2.jpg",
+        "media/products/seattle-black-3.jpg",
+        "media/products/seattle-black-4.jpg"
+      ]
+    }
   ]
 }

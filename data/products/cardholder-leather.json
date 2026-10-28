@@ -13,20 +13,6 @@
     "kz": "кардхолдер",
     "en": "cardholder"
   },
-  "color": {
-    "ru": "чёрный, тёмно-коричневый, оливковый, серебристый",
-    "kz": "қара, қою қоңыр, зәйтүн, күміс",
-    "en": "black, dark brown, olive, silver"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "black",
-    "brown",
-    "green",
-    "grey"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -47,10 +33,36 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/cardholder-leather-1.jpg",
-    "media/products/cardholder-leather-2.jpg",
-    "media/products/cardholder-leather-3.jpg",
-    "media/products/cardholder-leather-4.jpg"
+  "variants": [
+    {
+      "color": "green",
+      "material": "leather",
+      "images": [
+        "media/products/cardholder-leather-green-1.jpg",
+        "media/products/cardholder-leather-green-2.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/cardholder-leather-black-1.jpg"
+      ]
+    },
+    {
+      "color": "grey",
+      "material": "leather",
+      "images": [
+        "media/products/cardholder-leather-grey-1.jpg",
+        "media/products/cardholder-leather-grey-2.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "material": "leather",
+      "images": [
+        "media/products/cardholder-leather-brown-1.jpg"
+      ]
+    }
   ]
 }

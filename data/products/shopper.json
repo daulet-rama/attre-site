@@ -13,18 +13,6 @@
     "kz": "шопер",
     "en": "shopper"
   },
-  "color": {
-    "ru": "молочный с красным цветочным принтом",
-    "kz": "сүт түсті, қызыл гүл принтімен",
-    "en": "cream with red floral print"
-  },
-  "materials": [
-    "textile"
-  ],
-  "colors": [
-    "red",
-    "beige"
-  ],
   "new": true,
   "popular": false,
   "soon": false,
@@ -45,8 +33,17 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/shopper-1.jpg",
-    "media/products/shopper-2.jpg"
+  "variants": [
+    {
+      "color": "red",
+      "material": "textile",
+      "images": [
+        "media/products/shopper-red-1.jpg",
+        "media/products/shopper-red-2.jpg",
+        "media/products/shopper-red-3.jpg",
+        "media/products/shopper-red-4.jpg",
+        "media/products/shopper-red-5.jpg"
+      ]
+    }
   ]
 }

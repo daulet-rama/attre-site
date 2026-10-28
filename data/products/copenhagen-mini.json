@@ -13,18 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "песочный, графитово-серый",
-    "kz": "құм түсті, қою сұр",
-    "en": "sand, graphite grey"
-  },
-  "materials": [
-    "textile"
-  ],
-  "colors": [
-    "beige",
-    "grey"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,8 +33,26 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/copenhagen-mini-1.jpg",
-    "media/products/copenhagen-mini-2.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "textile",
+      "images": [
+        "media/products/copenhagen-mini-beige-1.jpg",
+        "media/products/copenhagen-mini-beige-2.jpg",
+        "media/products/copenhagen-mini-beige-3.jpg",
+        "media/products/copenhagen-mini-beige-4.jpg"
+      ]
+    },
+    {
+      "color": "grey",
+      "material": "textile",
+      "images": [
+        "media/products/copenhagen-mini-grey-1.jpg",
+        "media/products/copenhagen-mini-grey-2.jpg",
+        "media/products/copenhagen-mini-grey-3.jpg",
+        "media/products/copenhagen-mini-grey-4.jpg"
+      ]
+    }
   ]
 }

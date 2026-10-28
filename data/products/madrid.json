@@ -13,17 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "чёрный",
-    "kz": "қара",
-    "en": "black"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "black"
-  ],
   "new": false,
   "popular": true,
   "soon": false,
@@ -44,11 +33,17 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/madrid-1.jpg",
-    "media/products/madrid-2.jpg",
-    "media/products/madrid-3.jpg",
-    "media/products/madrid-4.jpg",
-    "media/products/madrid-5.jpg"
+  "variants": [
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/madrid-black-1.jpg",
+        "media/products/madrid-black-2.jpg",
+        "media/products/madrid-black-3.jpg",
+        "media/products/madrid-black-4.jpg",
+        "media/products/madrid-black-5.jpg"
+      ]
+    }
   ]
 }

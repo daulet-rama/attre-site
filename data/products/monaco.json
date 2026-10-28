@@ -13,18 +13,6 @@
     "kz": "боулер сөмке",
     "en": "bowler bag"
   },
-  "color": {
-    "ru": "розовый в чёрный горошек, бежевый в тёмный горошек",
-    "kz": "қара нүктелі қызғылт, қою нүктелі бежевый",
-    "en": "pink with black polka dots, beige with dark polka dots"
-  },
-  "materials": [
-    "suede"
-  ],
-  "colors": [
-    "pink",
-    "beige"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,8 +33,27 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/monaco-1.jpg",
-    "media/products/monaco-2.jpg"
+  "variants": [
+    {
+      "color": "pink",
+      "material": "suede",
+      "images": [
+        "media/products/monaco-pink-1.jpg",
+        "media/products/monaco-pink-2.jpg",
+        "media/products/monaco-pink-3.jpg",
+        "media/products/monaco-pink-4.jpg",
+        "media/products/monaco-pink-5.jpg"
+      ]
+    },
+    {
+      "color": "beige",
+      "material": "suede",
+      "images": [
+        "media/products/monaco-beige-1.jpg",
+        "media/products/monaco-beige-2.jpg",
+        "media/products/monaco-beige-3.jpg",
+        "media/products/monaco-beige-4.jpg"
+      ]
+    }
   ]
 }

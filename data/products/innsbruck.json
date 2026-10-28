@@ -13,19 +13,6 @@
     "kz": "хобо сөмке",
     "en": "hobo bag"
   },
-  "color": {
-    "ru": "бордовый, тёмно-коричневый",
-    "kz": "бордо, қою қоңыр",
-    "en": "burgundy, dark brown"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "red",
-    "brown",
-    "black"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -46,8 +33,25 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/innsbruck-1.jpg",
-    "media/products/innsbruck-2.jpg"
+  "variants": [
+    {
+      "color": "burgundy",
+      "material": "leather",
+      "images": [
+        "media/products/innsbruck-burgundy-1.jpg",
+        "media/products/innsbruck-burgundy-2.jpg",
+        "media/products/innsbruck-burgundy-3.jpg",
+        "media/products/innsbruck-burgundy-4.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/innsbruck-black-1.jpg",
+        "media/products/innsbruck-black-2.jpg",
+        "media/products/innsbruck-black-3.jpg"
+      ]
+    }
   ]
 }

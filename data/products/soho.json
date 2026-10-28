@@ -13,18 +13,6 @@
     "kz": "багет сөмке",
     "en": "baguette bag"
   },
-  "color": {
-    "ru": "тёмно-коричневый, оливковый (хаки)",
-    "kz": "қою қоңыр, зәйтүн жасыл (хаки)",
-    "en": "dark brown, olive"
-  },
-  "materials": [
-    "suede"
-  ],
-  "colors": [
-    "green",
-    "brown"
-  ],
   "new": false,
   "popular": true,
   "soon": false,
@@ -45,11 +33,27 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/soho-1.jpg",
-    "media/products/soho-2.jpg",
-    "media/products/soho-3.jpg",
-    "media/products/soho-4.jpg",
-    "media/products/soho-5.jpg"
+  "variants": [
+    {
+      "color": "brown",
+      "material": "suede",
+      "images": [
+        "media/products/soho-brown-1.jpg",
+        "media/products/soho-brown-2.jpg",
+        "media/products/soho-brown-3.jpg",
+        "media/products/soho-brown-4.jpg",
+        "media/products/soho-brown-5.jpg"
+      ]
+    },
+    {
+      "color": "green",
+      "material": "suede",
+      "images": [
+        "media/products/soho-green-1.jpg",
+        "media/products/soho-green-2.jpg",
+        "media/products/soho-green-3.jpg",
+        "media/products/soho-green-4.jpg"
+      ]
+    }
   ]
 }

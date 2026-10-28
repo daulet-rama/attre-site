@@ -13,20 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "жёлтый, коричневый, чёрный",
-    "kz": "сары, қоңыр, қара",
-    "en": "yellow, brown, black"
-  },
-  "materials": [
-    "suede",
-    "leather"
-  ],
-  "colors": [
-    "mustard",
-    "brown",
-    "black"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -47,8 +33,35 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/london-1.jpg",
-    "media/products/london-2.jpg"
+  "variants": [
+    {
+      "color": "brown",
+      "material": "leather",
+      "images": [
+        "media/products/london-brown-1.jpg",
+        "media/products/london-brown-2.jpg",
+        "media/products/london-brown-3.jpg",
+        "media/products/london-brown-4.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/london-black-1.jpg",
+        "media/products/london-black-2.jpg",
+        "media/products/london-black-3.jpg",
+        "media/products/london-black-4.jpg"
+      ]
+    },
+    {
+      "color": "yellow",
+      "material": "leather",
+      "images": [
+        "media/products/london-yellow-1.jpg",
+        "media/products/london-yellow-2.jpg",
+        "media/products/london-yellow-3.jpg"
+      ]
+    }
   ]
 }

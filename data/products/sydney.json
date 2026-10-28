@@ -13,20 +13,6 @@
     "kz": "тубус сөмке",
     "en": "barrel bag"
   },
-  "color": {
-    "ru": "чёрный с принтом зебра, молочный с синим",
-    "kz": "қара (зебра принт), сүт түсті және көк",
-    "en": "black with zebra print, cream with blue"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "black",
-    "white",
-    "blue",
-    "animal"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -47,8 +33,26 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/sydney-1.jpg",
-    "media/products/sydney-2.jpg"
+  "variants": [
+    {
+      "color": "blue",
+      "material": "leather",
+      "images": [
+        "media/products/sydney-blue-1.jpg",
+        "media/products/sydney-blue-2.jpg",
+        "media/products/sydney-blue-3.jpg",
+        "media/products/sydney-blue-4.jpg"
+      ]
+    },
+    {
+      "color": "zebra",
+      "material": "leather",
+      "images": [
+        "media/products/sydney-zebra-1.jpg",
+        "media/products/sydney-zebra-2.jpg",
+        "media/products/sydney-zebra-3.jpg",
+        "media/products/sydney-zebra-4.jpg"
+      ]
+    }
   ]
 }

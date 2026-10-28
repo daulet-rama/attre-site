@@ -13,17 +13,6 @@
     "kz": "багет сөмке",
     "en": "baguette bag"
   },
-  "color": {
-    "ru": "тёмно-коричневый, карамельный",
-    "kz": "қою қоңыр, ашық қоңыр",
-    "en": "dark brown, caramel"
-  },
-  "materials": [
-    "suede"
-  ],
-  "colors": [
-    "brown"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -44,8 +33,39 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/bologna-1.jpg",
-    "media/products/bologna-2.jpg"
+  "variants": [
+    {
+      "color": "brown",
+      "name": {
+        "ru": "карамельный",
+        "kz": "карамель түсті",
+        "en": "caramel"
+      },
+      "hex": "#7f5230",
+      "material": "suede",
+      "images": [
+        "media/products/bologna-brown-1.jpg",
+        "media/products/bologna-brown-2.jpg",
+        "media/products/bologna-brown-3.jpg",
+        "media/products/bologna-brown-4.jpg",
+        "media/products/bologna-brown-5.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "name": {
+        "ru": "шоколадный",
+        "kz": "шоколад түсті",
+        "en": "chocolate"
+      },
+      "hex": "#47302a",
+      "material": "suede",
+      "images": [
+        "media/products/bologna-brown-2-1.jpg",
+        "media/products/bologna-brown-2-2.jpg",
+        "media/products/bologna-brown-2-3.jpg",
+        "media/products/bologna-brown-2-4.jpg"
+      ]
+    }
   ]
 }

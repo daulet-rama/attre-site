@@ -13,21 +13,6 @@
     "kz": "хобо сөмке",
     "en": "hobo bag"
   },
-  "color": {
-    "ru": "розовый, жёлтый, красный",
-    "kz": "қызғылт, сары, қызыл",
-    "en": "pink, yellow, red"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "mustard",
-    "pink",
-    "red",
-    "brown",
-    "blue"
-  ],
   "new": true,
   "popular": false,
   "soon": false,
@@ -48,11 +33,64 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/tokyo-1.jpg",
-    "media/products/tokyo-2.jpg",
-    "media/products/tokyo-3.jpg",
-    "media/products/tokyo-4.jpg",
-    "media/products/tokyo-5.jpg"
+  "variants": [
+    {
+      "color": "yellow",
+      "material": "leather",
+      "images": [
+        "media/products/tokyo-yellow-1.jpg",
+        "media/products/tokyo-yellow-2.jpg",
+        "media/products/tokyo-yellow-3.jpg",
+        "media/products/tokyo-yellow-4.jpg",
+        "media/products/tokyo-yellow-5.jpg"
+      ]
+    },
+    {
+      "color": "pink",
+      "material": "leather",
+      "images": [
+        "media/products/tokyo-pink-1.jpg",
+        "media/products/tokyo-pink-2.jpg",
+        "media/products/tokyo-pink-3.jpg",
+        "media/products/tokyo-pink-4.jpg"
+      ]
+    },
+    {
+      "color": "red",
+      "material": "leather",
+      "images": [
+        "media/products/tokyo-red-1.jpg",
+        "media/products/tokyo-red-2.jpg",
+        "media/products/tokyo-red-3.jpg",
+        "media/products/tokyo-red-4.jpg"
+      ]
+    },
+    {
+      "color": "light-blue",
+      "material": "leather",
+      "images": [
+        "media/products/tokyo-light-blue-1.jpg",
+        "media/products/tokyo-light-blue-2.jpg",
+        "media/products/tokyo-light-blue-3.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/tokyo-black-1.jpg",
+        "media/products/tokyo-black-2.jpg",
+        "media/products/tokyo-black-3.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "material": "leather",
+      "images": [
+        "media/products/tokyo-brown-1.jpg",
+        "media/products/tokyo-brown-2.jpg",
+        "media/products/tokyo-brown-3.jpg"
+      ]
+    }
   ]
 }

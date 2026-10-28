@@ -13,21 +13,6 @@
     "kz": "шелек сөмке",
     "en": "bucket bag"
   },
-  "color": {
-    "ru": "чёрный, коричневый, красный",
-    "kz": "қара, қоңыр, қызыл",
-    "en": "black, brown, red"
-  },
-  "materials": [
-    "leather",
-    "suede"
-  ],
-  "colors": [
-    "black",
-    "brown",
-    "green",
-    "red"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -48,9 +33,77 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/verde-1.jpg",
-    "media/products/verde-2.jpg",
-    "media/products/verde-3.jpg"
+  "variants": [
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/verde-black-1.jpg",
+        "media/products/verde-black-2.jpg",
+        "media/products/verde-black-3.jpg",
+        "media/products/verde-black-4.jpg",
+        "media/products/verde-black-5.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "name": {
+        "ru": "карамельный",
+        "kz": "карамель түсті",
+        "en": "caramel"
+      },
+      "hex": "#9b6732",
+      "material": "suede",
+      "images": [
+        "media/products/verde-brown-1.jpg",
+        "media/products/verde-brown-2.jpg",
+        "media/products/verde-brown-3.jpg",
+        "media/products/verde-brown-4.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "name": {
+        "ru": "шоколадный",
+        "kz": "шоколад түсті",
+        "en": "chocolate"
+      },
+      "hex": "#46302b",
+      "material": "leather",
+      "images": [
+        "media/products/verde-brown-2-1.jpg",
+        "media/products/verde-brown-2-2.jpg",
+        "media/products/verde-brown-2-3.jpg",
+        "media/products/verde-brown-2-4.jpg"
+      ]
+    },
+    {
+      "color": "green",
+      "material": "suede",
+      "images": [
+        "media/products/verde-green-1.jpg",
+        "media/products/verde-green-2.jpg",
+        "media/products/verde-green-3.jpg"
+      ]
+    },
+    {
+      "color": "red",
+      "material": "leather",
+      "images": [
+        "media/products/verde-red-1.jpg",
+        "media/products/verde-red-2.jpg",
+        "media/products/verde-red-3.jpg",
+        "media/products/verde-red-4.jpg"
+      ]
+    },
+    {
+      "color": "burgundy",
+      "material": "suede",
+      "images": [
+        "media/products/verde-burgundy-1.jpg",
+        "media/products/verde-burgundy-2.jpg",
+        "media/products/verde-burgundy-3.jpg"
+      ]
+    }
   ]
 }

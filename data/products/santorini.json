@@ -13,17 +13,6 @@
     "kz": "шопер",
     "en": "shopper"
   },
-  "color": {
-    "ru": "бежевый с чёрной окантовкой",
-    "kz": "бежевый, қара жиекті",
-    "en": "natural beige with black trim"
-  },
-  "materials": [
-    "textile"
-  ],
-  "colors": [
-    "beige"
-  ],
   "new": false,
   "popular": true,
   "soon": false,
@@ -44,11 +33,17 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/santorini-1.jpg",
-    "media/products/santorini-2.jpg",
-    "media/products/santorini-3.jpg",
-    "media/products/santorini-4.jpg",
-    "media/products/santorini-5.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "textile",
+      "images": [
+        "media/products/santorini-beige-1.jpg",
+        "media/products/santorini-beige-2.jpg",
+        "media/products/santorini-beige-3.jpg",
+        "media/products/santorini-beige-4.jpg",
+        "media/products/santorini-beige-5.jpg"
+      ]
+    }
   ]
 }

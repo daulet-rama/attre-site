@@ -13,17 +13,6 @@
     "kz": "шелек сөмке",
     "en": "bucket bag"
   },
-  "color": {
-    "ru": "чёрно-белый (зебра)",
-    "kz": "қара-ақ (зебра принті)",
-    "en": "black and white zebra print"
-  },
-  "materials": [
-    "pony"
-  ],
-  "colors": [
-    "animal"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -44,8 +33,16 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/savanna-1.jpg",
-    "media/products/savanna-2.jpg"
+  "variants": [
+    {
+      "color": "zebra",
+      "material": "pony",
+      "images": [
+        "media/products/savanna-zebra-1.jpg",
+        "media/products/savanna-zebra-2.jpg",
+        "media/products/savanna-zebra-3.jpg",
+        "media/products/savanna-zebra-4.jpg"
+      ]
+    }
   ]
 }

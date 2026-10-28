@@ -13,19 +13,6 @@
     "kz": "бокс сөмке",
     "en": "box bag"
   },
-  "color": {
-    "ru": "бежевый (замша), чёрный",
-    "kz": "бежевый (замша), қара",
-    "en": "beige (suede), black"
-  },
-  "materials": [
-    "suede",
-    "leather"
-  ],
-  "colors": [
-    "beige",
-    "black"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -46,8 +33,26 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/sylt-1.jpg",
-    "media/products/sylt-2.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "suede",
+      "images": [
+        "media/products/sylt-beige-1.jpg",
+        "media/products/sylt-beige-2.jpg",
+        "media/products/sylt-beige-3.jpg",
+        "media/products/sylt-beige-4.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/sylt-black-1.jpg",
+        "media/products/sylt-black-2.jpg",
+        "media/products/sylt-black-3.jpg",
+        "media/products/sylt-black-4.jpg"
+      ]
+    }
   ]
 }

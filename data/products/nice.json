@@ -13,18 +13,6 @@
     "kz": "боулер сөмке",
     "en": "bowler bag"
   },
-  "color": {
-    "ru": "красный, хаки",
-    "kz": "қызыл, хаки",
-    "en": "red, khaki"
-  },
-  "materials": [
-    "suede"
-  ],
-  "colors": [
-    "red",
-    "green"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,10 +33,27 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/nice-1.jpg",
-    "media/products/nice-2.jpg",
-    "media/products/nice-3.jpg",
-    "media/products/nice-4.jpg"
+  "variants": [
+    {
+      "color": "red",
+      "material": "suede",
+      "images": [
+        "media/products/nice-red-1.jpg",
+        "media/products/nice-red-2.jpg",
+        "media/products/nice-red-3.jpg",
+        "media/products/nice-red-4.jpg",
+        "media/products/nice-red-5.jpg"
+      ]
+    },
+    {
+      "color": "green",
+      "material": "suede",
+      "images": [
+        "media/products/nice-green-1.jpg",
+        "media/products/nice-green-2.jpg",
+        "media/products/nice-green-3.jpg",
+        "media/products/nice-green-4.jpg"
+      ]
+    }
   ]
 }

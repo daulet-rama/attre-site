@@ -13,17 +13,6 @@
     "kz": "багет сөмке",
     "en": "baguette bag"
   },
-  "color": {
-    "ru": "леопардовый, коричнево-белый (коровий принт)",
-    "kz": "леопард принті, қоңыр-ақ (сиыр принті)",
-    "en": "leopard print, brown-and-white cow print"
-  },
-  "materials": [
-    "pony"
-  ],
-  "colors": [
-    "animal"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -44,8 +33,44 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/nairobi-1.jpg",
-    "media/products/nairobi-2.jpg"
+  "variants": [
+    {
+      "color": "leopard",
+      "name": {
+        "ru": "леопард",
+        "kz": "леопард",
+        "en": "leopard"
+      },
+      "material": "pony",
+      "images": [
+        "media/products/nairobi-leopard-1.jpg",
+        "media/products/nairobi-leopard-2.jpg",
+        "media/products/nairobi-leopard-3.jpg",
+        "media/products/nairobi-leopard-4.jpg"
+      ]
+    },
+    {
+      "color": "cow",
+      "material": "pony",
+      "images": [
+        "media/products/nairobi-cow-1.jpg",
+        "media/products/nairobi-cow-2.jpg",
+        "media/products/nairobi-cow-3.jpg",
+        "media/products/nairobi-cow-4.jpg"
+      ]
+    },
+    {
+      "color": "leopard",
+      "name": {
+        "ru": "оливковый леопард",
+        "kz": "зәйтүн түсті леопард",
+        "en": "olive leopard"
+      },
+      "material": "pony",
+      "images": [
+        "media/products/nairobi-leopard-2-1.jpg",
+        "media/products/nairobi-leopard-2-2.jpg"
+      ]
+    }
   ]
 }

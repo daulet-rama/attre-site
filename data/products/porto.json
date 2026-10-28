@@ -13,17 +13,6 @@
     "kz": "боулер сөмке",
     "en": "bowler bag"
   },
-  "color": {
-    "ru": "коричневый",
-    "kz": "қоңыр",
-    "en": "brown"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "brown"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -44,8 +33,17 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/porto-1.jpg",
-    "media/products/porto-2.jpg"
+  "variants": [
+    {
+      "color": "brown",
+      "material": "leather",
+      "images": [
+        "media/products/porto-brown-1.jpg",
+        "media/products/porto-brown-2.jpg",
+        "media/products/porto-brown-3.jpg",
+        "media/products/porto-brown-4.jpg",
+        "media/products/porto-brown-5.jpg"
+      ]
+    }
   ]
 }

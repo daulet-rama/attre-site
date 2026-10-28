@@ -13,17 +13,6 @@
     "kz": "боулер сөмке",
     "en": "bowler bag"
   },
-  "color": {
-    "ru": "чёрно-белый (далматин), молочный с коричневыми пятнами",
-    "kz": "қара-ақ (далматин), қоңыр дақты ақ",
-    "en": "black-and-white dalmatian print, cream with brown spots"
-  },
-  "materials": [
-    "pony"
-  ],
-  "colors": [
-    "animal"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -44,8 +33,36 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/monbasa-1.jpg",
-    "media/products/monbasa-2.jpg"
+  "variants": [
+    {
+      "color": "cow",
+      "name": {
+        "ru": "корова",
+        "kz": "сиыр принті",
+        "en": "cow print"
+      },
+      "material": "pony",
+      "images": [
+        "media/products/monbasa-cow-1.jpg",
+        "media/products/monbasa-cow-2.jpg",
+        "media/products/monbasa-cow-3.jpg",
+        "media/products/monbasa-cow-4.jpg"
+      ]
+    },
+    {
+      "color": "cow",
+      "name": {
+        "ru": "чёрный далматин",
+        "kz": "қара далматин",
+        "en": "black dalmatian"
+      },
+      "pattern": "dalmatian",
+      "material": "pony",
+      "images": [
+        "media/products/monbasa-cow-2-1.jpg",
+        "media/products/monbasa-cow-2-2.jpg",
+        "media/products/monbasa-cow-2-3.jpg"
+      ]
+    }
   ]
 }

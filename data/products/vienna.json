@@ -13,18 +13,6 @@
     "kz": "пауч сөмке",
     "en": "pouch bag"
   },
-  "color": {
-    "ru": "чёрный, молочный (айвори)",
-    "kz": "қара, сүт түсті",
-    "en": "black, ivory"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "white",
-    "black"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,8 +33,26 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/vienna-1.jpg",
-    "media/products/vienna-2.jpg"
+  "variants": [
+    {
+      "color": "milky",
+      "material": "leather",
+      "images": [
+        "media/products/vienna-milky-1.jpg",
+        "media/products/vienna-milky-2.jpg",
+        "media/products/vienna-milky-3.jpg",
+        "media/products/vienna-milky-4.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/vienna-black-1.jpg",
+        "media/products/vienna-black-2.jpg",
+        "media/products/vienna-black-3.jpg",
+        "media/products/vienna-black-4.jpg"
+      ]
+    }
   ]
 }

@@ -13,18 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "серо-бежевый (хаки), чёрный",
-    "kz": "сұр-бежевый (хаки), қара",
-    "en": "greige/khaki with black trim"
-  },
-  "materials": [
-    "textile"
-  ],
-  "colors": [
-    "green",
-    "beige"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,8 +33,15 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/visby-1.jpg",
-    "media/products/visby-2.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "textile",
+      "images": [
+        "media/products/visby-beige-1.jpg",
+        "media/products/visby-beige-2.jpg",
+        "media/products/visby-beige-3.jpg"
+      ]
+    }
   ]
 }

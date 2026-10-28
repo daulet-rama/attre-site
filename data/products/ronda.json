@@ -13,20 +13,6 @@
     "kz": "багет сөмке",
     "en": "baguette bag"
   },
-  "color": {
-    "ru": "красный, горчично-жёлтый, салатовый",
-    "kz": "қызыл, сары (қыша түсті), ашық жасыл",
-    "en": "red, mustard yellow, lime green"
-  },
-  "materials": [
-    "suede"
-  ],
-  "colors": [
-    "red",
-    "mustard",
-    "green",
-    "black"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -47,9 +33,75 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/ronda-1.jpg",
-    "media/products/ronda-2.jpg",
-    "media/products/ronda-3.jpg"
+  "variants": [
+    {
+      "color": "yellow",
+      "material": "suede",
+      "images": [
+        "media/products/ronda-yellow-1.jpg",
+        "media/products/ronda-yellow-2.jpg",
+        "media/products/ronda-yellow-3.jpg",
+        "media/products/ronda-yellow-4.jpg",
+        "media/products/ronda-yellow-5.jpg"
+      ]
+    },
+    {
+      "color": "red",
+      "name": {
+        "ru": "алый",
+        "kz": "ал қызыл",
+        "en": "scarlet"
+      },
+      "hex": "#c41a17",
+      "material": "suede",
+      "images": [
+        "media/products/ronda-red-1.jpg",
+        "media/products/ronda-red-2.jpg",
+        "media/products/ronda-red-3.jpg",
+        "media/products/ronda-red-4.jpg"
+      ]
+    },
+    {
+      "color": "red",
+      "name": {
+        "ru": "красный",
+        "kz": "қызыл",
+        "en": "red"
+      },
+      "hex": "#b8282c",
+      "material": "leather",
+      "images": [
+        "media/products/ronda-red-2-1.jpg",
+        "media/products/ronda-red-2-2.jpg",
+        "media/products/ronda-red-2-3.jpg",
+        "media/products/ronda-red-2-4.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/ronda-black-1.jpg",
+        "media/products/ronda-black-2.jpg",
+        "media/products/ronda-black-3.jpg",
+        "media/products/ronda-black-4.jpg"
+      ]
+    },
+    {
+      "color": "green",
+      "material": "suede",
+      "images": [
+        "media/products/ronda-green-1.jpg",
+        "media/products/ronda-green-2.jpg"
+      ]
+    },
+    {
+      "color": "milky",
+      "material": "leather",
+      "images": [
+        "media/products/ronda-milky-1.jpg",
+        "media/products/ronda-milky-2.jpg"
+      ]
+    }
   ]
 }

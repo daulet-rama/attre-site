@@ -13,19 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "тёмно-синий, серо-коричневый (тауп)",
-    "kz": "қою көк, сұр-қоңыр (тауп)",
-    "en": "navy blue, taupe"
-  },
-  "materials": [
-    "textile",
-    "suede"
-  ],
-  "colors": [
-    "blue",
-    "brown"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -46,8 +33,26 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/lyon-1.jpg",
-    "media/products/lyon-2.jpg"
+  "variants": [
+    {
+      "color": "blue",
+      "material": "suede",
+      "images": [
+        "media/products/lyon-blue-1.jpg",
+        "media/products/lyon-blue-2.jpg",
+        "media/products/lyon-blue-3.jpg",
+        "media/products/lyon-blue-4.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "material": "suede",
+      "images": [
+        "media/products/lyon-brown-1.jpg",
+        "media/products/lyon-brown-2.jpg",
+        "media/products/lyon-brown-3.jpg",
+        "media/products/lyon-brown-4.jpg"
+      ]
+    }
   ]
 }

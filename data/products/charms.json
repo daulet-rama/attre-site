@@ -13,20 +13,6 @@
     "kz": "брелок",
     "en": "bag charm"
   },
-  "color": {
-    "ru": "разноцветный (чёрно-белый, зелёный, розовый",
-    "kz": "түрлі-түсті",
-    "en": "multicolor"
-  },
-  "materials": [],
-  "colors": [
-    "black",
-    "pink",
-    "green",
-    "blue",
-    "beige",
-    "white"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -47,7 +33,67 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/charms-1.jpg"
+  "variants": [
+    {
+      "color": "green",
+      "name": {
+        "ru": "оливковая кисть",
+        "kz": "зәйтүн түсті шашақ",
+        "en": "olive tassel"
+      },
+      "hex": "#737a3a",
+      "images": [
+        "media/products/charms-green-1.jpg",
+        "media/products/charms-green-2.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "name": {
+        "ru": "чёрно-белые бусины",
+        "kz": "қара-ақ моншақтар",
+        "en": "black and white beads"
+      },
+      "hex": "#1e1e1e",
+      "images": [
+        "media/products/charms-black-1.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "name": {
+        "ru": "чёрная гроздь",
+        "kz": "қара шоқ моншақ",
+        "en": "black bead cluster"
+      },
+      "hex": "#141414",
+      "images": [
+        "media/products/charms-black-2-1.jpg"
+      ]
+    },
+    {
+      "color": "green",
+      "name": {
+        "ru": "салатовые бусины",
+        "kz": "жасыл моншақтар",
+        "en": "lime green beads"
+      },
+      "hex": "#8db33a",
+      "images": [
+        "media/products/charms-green-2-1.jpg"
+      ]
+    },
+    {
+      "color": "red",
+      "images": [
+        "media/products/charms-red-1.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "images": [
+        "media/products/charms-brown-1.jpg"
+      ]
+    }
   ]
 }

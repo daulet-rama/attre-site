@@ -13,17 +13,6 @@
     "kz": "багет сөмке",
     "en": "baguette bag"
   },
-  "color": {
-    "ru": "тёмно-коричневый",
-    "kz": "қою қоңыр",
-    "en": "dark brown"
-  },
-  "materials": [
-    "suede"
-  ],
-  "colors": [
-    "brown"
-  ],
   "new": false,
   "popular": true,
   "soon": false,
@@ -44,11 +33,17 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/paris-bag-1.jpg",
-    "media/products/paris-bag-2.jpg",
-    "media/products/paris-bag-3.jpg",
-    "media/products/paris-bag-4.jpg",
-    "media/products/paris-bag-5.jpg"
+  "variants": [
+    {
+      "color": "brown",
+      "material": "suede",
+      "images": [
+        "media/products/paris-bag-brown-1.jpg",
+        "media/products/paris-bag-brown-2.jpg",
+        "media/products/paris-bag-brown-3.jpg",
+        "media/products/paris-bag-brown-4.jpg",
+        "media/products/paris-bag-brown-5.jpg"
+      ]
+    }
   ]
 }

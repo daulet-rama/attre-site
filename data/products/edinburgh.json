@@ -13,17 +13,6 @@
     "kz": "багет сөмке",
     "en": "baguette bag"
   },
-  "color": {
-    "ru": "серый",
-    "kz": "сұр",
-    "en": "grey"
-  },
-  "materials": [
-    "suede"
-  ],
-  "colors": [
-    "grey"
-  ],
   "new": false,
   "popular": false,
   "soon": true,
@@ -44,8 +33,16 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/edinburgh-1.jpg",
-    "media/products/edinburgh-2.jpg"
+  "variants": [
+    {
+      "color": "grey",
+      "material": "suede",
+      "images": [
+        "media/products/edinburgh-grey-1.jpg",
+        "media/products/edinburgh-grey-2.jpg",
+        "media/products/edinburgh-grey-3.jpg",
+        "media/products/edinburgh-grey-4.jpg"
+      ]
+    }
   ]
 }

@@ -13,17 +13,6 @@
     "kz": "хобо сөмке",
     "en": "hobo bag"
   },
-  "color": {
-    "ru": "карамельно-коричневый, тёмно-коричневый",
-    "kz": "ашық қоңыр, қою қоңыр",
-    "en": "caramel brown, dark brown"
-  },
-  "materials": [
-    "suede"
-  ],
-  "colors": [
-    "brown"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -44,9 +33,39 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/granda-1.jpg",
-    "media/products/granda-2.jpg",
-    "media/products/granda-3.jpg"
+  "variants": [
+    {
+      "color": "brown",
+      "name": {
+        "ru": "карамельный",
+        "kz": "карамель түсті",
+        "en": "caramel"
+      },
+      "hex": "#8a5630",
+      "material": "suede",
+      "images": [
+        "media/products/granda-brown-1.jpg",
+        "media/products/granda-brown-2.jpg",
+        "media/products/granda-brown-3.jpg",
+        "media/products/granda-brown-4.jpg",
+        "media/products/granda-brown-5.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "name": {
+        "ru": "шоколадный",
+        "kz": "шоколад түсті",
+        "en": "chocolate"
+      },
+      "hex": "#4f3a2c",
+      "material": "suede",
+      "images": [
+        "media/products/granda-brown-2-1.jpg",
+        "media/products/granda-brown-2-2.jpg",
+        "media/products/granda-brown-2-3.jpg",
+        "media/products/granda-brown-2-4.jpg"
+      ]
+    }
   ]
 }

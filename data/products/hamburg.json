@@ -13,18 +13,6 @@
     "kz": "кросс-боди",
     "en": "crossbody bag"
   },
-  "color": {
-    "ru": "чёрный, оливковый",
-    "kz": "қара, зәйтүн түсті",
-    "en": "black, olive"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "black",
-    "green"
-  ],
   "new": true,
   "popular": false,
   "soon": false,
@@ -45,11 +33,26 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/hamburg-1.jpg",
-    "media/products/hamburg-2.jpg",
-    "media/products/hamburg-3.jpg",
-    "media/products/hamburg-4.jpg",
-    "media/products/hamburg-5.jpg"
+  "variants": [
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/hamburg-black-1.jpg",
+        "media/products/hamburg-black-2.jpg",
+        "media/products/hamburg-black-3.jpg",
+        "media/products/hamburg-black-4.jpg",
+        "media/products/hamburg-black-5.jpg"
+      ]
+    },
+    {
+      "color": "green",
+      "material": "leather",
+      "images": [
+        "media/products/hamburg-green-1.jpg",
+        "media/products/hamburg-green-2.jpg",
+        "media/products/hamburg-green-3.jpg"
+      ]
+    }
   ]
 }

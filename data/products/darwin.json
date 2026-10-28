@@ -13,18 +13,6 @@
     "kz": "иыққа асатын сөмке",
     "en": "shoulder bag"
   },
-  "color": {
-    "ru": "коричневый, молочный",
-    "kz": "қоңыр, сүт түсті",
-    "en": "brown, cream"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "brown",
-    "beige"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,8 +33,27 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/darwin-1.jpg",
-    "media/products/darwin-2.jpg"
+  "variants": [
+    {
+      "color": "brown",
+      "material": "leather",
+      "images": [
+        "media/products/darwin-brown-1.jpg",
+        "media/products/darwin-brown-2.jpg",
+        "media/products/darwin-brown-3.jpg",
+        "media/products/darwin-brown-4.jpg",
+        "media/products/darwin-brown-5.jpg"
+      ]
+    },
+    {
+      "color": "beige",
+      "material": "leather",
+      "images": [
+        "media/products/darwin-beige-1.jpg",
+        "media/products/darwin-beige-2.jpg",
+        "media/products/darwin-beige-3.jpg",
+        "media/products/darwin-beige-4.jpg"
+      ]
+    }
   ]
 }

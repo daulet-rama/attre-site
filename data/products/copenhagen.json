@@ -13,18 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "хаки",
-    "kz": "хаки",
-    "en": "khaki"
-  },
-  "materials": [
-    "textile"
-  ],
-  "colors": [
-    "green",
-    "grey"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,10 +33,17 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/copenhagen-1.jpg",
-    "media/products/copenhagen-2.jpg",
-    "media/products/copenhagen-3.jpg",
-    "media/products/copenhagen-4.jpg"
+  "variants": [
+    {
+      "color": "green",
+      "material": "textile",
+      "images": [
+        "media/products/copenhagen-green-1.jpg",
+        "media/products/copenhagen-green-2.jpg",
+        "media/products/copenhagen-green-3.jpg",
+        "media/products/copenhagen-green-4.jpg",
+        "media/products/copenhagen-green-5.jpg"
+      ]
+    }
   ]
 }

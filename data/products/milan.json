@@ -13,20 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "чёрный, бежевый, молочный",
-    "kz": "қара, бежевый, сүттей ақ",
-    "en": "black, beige, cream"
-  },
-  "materials": [
-    "leather",
-    "suede"
-  ],
-  "colors": [
-    "black",
-    "white",
-    "beige"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -47,8 +33,35 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/milan-1.jpg",
-    "media/products/milan-2.jpg"
+  "variants": [
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/milan-black-1.jpg",
+        "media/products/milan-black-2.jpg",
+        "media/products/milan-black-3.jpg",
+        "media/products/milan-black-4.jpg"
+      ]
+    },
+    {
+      "color": "beige",
+      "material": "suede",
+      "images": [
+        "media/products/milan-beige-1.jpg",
+        "media/products/milan-beige-2.jpg",
+        "media/products/milan-beige-3.jpg",
+        "media/products/milan-beige-4.jpg"
+      ]
+    },
+    {
+      "color": "milky",
+      "material": "suede",
+      "images": [
+        "media/products/milan-milky-1.jpg",
+        "media/products/milan-milky-2.jpg",
+        "media/products/milan-milky-3.jpg"
+      ]
+    }
   ]
 }

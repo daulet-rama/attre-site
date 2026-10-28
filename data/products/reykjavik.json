@@ -13,17 +13,6 @@
     "kz": "боулер сөмке",
     "en": "bowler bag"
   },
-  "color": {
-    "ru": "бежево-коричневый, тёмно-коричневый",
-    "kz": "бежево-қоңыр, қою қоңыр",
-    "en": "camel beige, dark brown"
-  },
-  "materials": [
-    "pony"
-  ],
-  "colors": [
-    "brown"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -44,8 +33,24 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/reykjavik-1.jpg",
-    "media/products/reykjavik-2.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "pony",
+      "images": [
+        "media/products/reykjavik-beige-1.jpg",
+        "media/products/reykjavik-beige-2.jpg",
+        "media/products/reykjavik-beige-3.jpg",
+        "media/products/reykjavik-beige-4.jpg",
+        "media/products/reykjavik-beige-5.jpg"
+      ]
+    },
+    {
+      "color": "brown",
+      "material": "pony",
+      "images": [
+        "media/products/reykjavik-brown-1.jpg"
+      ]
+    }
   ]
 }

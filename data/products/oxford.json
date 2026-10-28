@@ -13,18 +13,6 @@
     "kz": "тоут",
     "en": "tote"
   },
-  "color": {
-    "ru": "бежевый с чёрным",
-    "kz": "бежевый, қара",
-    "en": "beige and black"
-  },
-  "materials": [
-    "textile"
-  ],
-  "colors": [
-    "beige",
-    "black"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,8 +33,17 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/oxford-1.jpg",
-    "media/products/oxford-2.jpg"
+  "variants": [
+    {
+      "color": "beige",
+      "material": "textile",
+      "images": [
+        "media/products/oxford-beige-1.jpg",
+        "media/products/oxford-beige-2.jpg",
+        "media/products/oxford-beige-3.jpg",
+        "media/products/oxford-beige-4.jpg",
+        "media/products/oxford-beige-5.jpg"
+      ]
+    }
   ]
 }

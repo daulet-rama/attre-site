@@ -13,17 +13,6 @@
     "kz": "тубус сөмке",
     "en": "barrel bag"
   },
-  "color": {
-    "ru": "леопардовый, коричнево-белый (коровий принт)",
-    "kz": "леопард принті, қоңыр-ақ (сиыр принті)",
-    "en": "leopard print, brown-and-white cow print"
-  },
-  "materials": [
-    "pony"
-  ],
-  "colors": [
-    "animal"
-  ],
   "new": true,
   "popular": false,
   "soon": false,
@@ -44,11 +33,27 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/nairobi-tube-1.jpg",
-    "media/products/nairobi-tube-2.jpg",
-    "media/products/nairobi-tube-3.jpg",
-    "media/products/nairobi-tube-4.jpg",
-    "media/products/nairobi-tube-5.jpg"
+  "variants": [
+    {
+      "color": "leopard",
+      "material": "pony",
+      "images": [
+        "media/products/nairobi-tube-leopard-1.jpg",
+        "media/products/nairobi-tube-leopard-2.jpg",
+        "media/products/nairobi-tube-leopard-3.jpg",
+        "media/products/nairobi-tube-leopard-4.jpg",
+        "media/products/nairobi-tube-leopard-5.jpg"
+      ]
+    },
+    {
+      "color": "cow",
+      "material": "pony",
+      "images": [
+        "media/products/nairobi-tube-cow-1.jpg",
+        "media/products/nairobi-tube-cow-2.jpg",
+        "media/products/nairobi-tube-cow-3.jpg",
+        "media/products/nairobi-tube-cow-4.jpg"
+      ]
+    }
   ]
 }

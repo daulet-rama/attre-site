@@ -13,19 +13,6 @@
     "kz": "багет сөмке",
     "en": "baguette bag"
   },
-  "color": {
-    "ru": "тёмно-коричневый, чёрный, жёлтый",
-    "kz": "қою қоңыр, қара, сары",
-    "en": "dark brown, black, yellow"
-  },
-  "materials": [
-    "leather"
-  ],
-  "colors": [
-    "black",
-    "brown",
-    "mustard"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -46,8 +33,34 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/funchal-1.jpg",
-    "media/products/funchal-2.jpg"
+  "variants": [
+    {
+      "color": "brown",
+      "material": "leather",
+      "images": [
+        "media/products/funchal-brown-1.jpg",
+        "media/products/funchal-brown-2.jpg",
+        "media/products/funchal-brown-3.jpg",
+        "media/products/funchal-brown-4.jpg"
+      ]
+    },
+    {
+      "color": "yellow",
+      "material": "leather",
+      "images": [
+        "media/products/funchal-yellow-1.jpg",
+        "media/products/funchal-yellow-2.jpg",
+        "media/products/funchal-yellow-3.jpg",
+        "media/products/funchal-yellow-4.jpg"
+      ]
+    },
+    {
+      "color": "black",
+      "material": "leather",
+      "images": [
+        "media/products/funchal-black-1.jpg",
+        "media/products/funchal-black-2.jpg"
+      ]
+    }
   ]
 }

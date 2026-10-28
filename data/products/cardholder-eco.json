@@ -13,18 +13,6 @@
     "kz": "кардхолдер",
     "en": "cardholder"
   },
-  "color": {
-    "ru": "розовый и бордовый, тиснение под крокодила",
-    "kz": "қызғылт және күрең, крокодил бедері",
-    "en": "pink and burgundy, croc-embossed"
-  },
-  "materials": [
-    "eco-leather"
-  ],
-  "colors": [
-    "pink",
-    "red"
-  ],
   "new": false,
   "popular": false,
   "soon": false,
@@ -45,9 +33,21 @@
   },
   "price": null,
   "stock": null,
-  "images": [
-    "media/products/cardholder-eco-1.jpg",
-    "media/products/cardholder-eco-2.jpg",
-    "media/products/cardholder-eco-3.jpg"
+  "variants": [
+    {
+      "color": "burgundy",
+      "material": "eco-leather",
+      "images": [
+        "media/products/cardholder-eco-burgundy-1.jpg",
+        "media/products/cardholder-eco-burgundy-2.jpg"
+      ]
+    },
+    {
+      "color": "pink",
+      "material": "eco-leather",
+      "images": [
+        "media/products/cardholder-eco-pink-1.jpg"
+      ]
+    }
   ]
 }
