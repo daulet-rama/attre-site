@@ -277,6 +277,7 @@ def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', page
 <meta property="og:locale" content="{cfg['og']}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="{asset('assets/img/brand/favicon.png')}" type="image/png">
+<link rel="icon" href="{asset('assets/img/brand/favicon.svg')}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{asset('assets/img/brand/apple-touch-icon.png')}">
 <link rel="preload" href="{asset('assets/fonts/onest-var.woff2')}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{asset('assets/css/' + CSS)}?v={VER}">
@@ -643,9 +644,13 @@ def home(lang):
 # ——— О бренде ———
 
 def about(lang):
-    pic = HOME.get('about')
-    media = (f'<figure class="about__media">{home_img(pic, "(min-width: 960px) 40vw, 100vw", lang, load="high")}</figure>'
-             if pic and pic.get('_widths') else '')
+    pics = HOME.get('about') or []
+    pics = [x for x in (pics if isinstance(pics, list) else [pics]) if x.get('_widths')]
+    media = ''.join(
+        f'<figure class="about__media{" about__media--more" if i else ""}">'
+        f'{home_img(x, "(min-width: 960px) 40vw, 100vw", lang, load="high" if i == 0 else "lazy")}</figure>'
+        for i, x in enumerate(pics))
+    media = f'<div class="about__pics">{media}</div>' if media else ''
     body = f'''<div class="pb"><h1 class="pb__t">{e(t('about_title', lang))}</h1></div>
 <div class="about">
 {media}

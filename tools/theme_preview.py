@@ -16,7 +16,8 @@ sub = next(s for n, s, *_ in THEMES if n == name)
 shutil.copytree(ROOT / 'src', core.OUT_ROOT / 'assets', dirs_exist_ok=True)
 for p in core.DATA['products']:
     p['images'] = [f"{p['slug']}-{i + 1}" for i in range(len(p['srcs']))]
-extra = [x for x in (core.HOME.get('hero_wide'), core.HOME.get('about'), core.HOME.get('video')) if x]
+about = core.HOME.get('about') or []   # фото «о бренде»: одно или список
+extra = [x for x in (core.HOME.get('hero_wide'), *(about if isinstance(about, list) else [about]), core.HOME.get('video')) if x]
 for item in [core.HOME['cover'], *core.HOME['banners'], *core.HOME.get('hero', []), *core.HOME.get('wear', []), *extra]:
     stem = Path(item['image']).stem
     item['_stem'], item['_ratio'] = stem, item.get('ratio', 2 / 3)

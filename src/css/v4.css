@@ -533,7 +533,10 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 
 /* ——— О бренде ——— */
 .about { display: grid; gap: 28px; }
+.about__pics { display: contents; }   /* телефон: первое фото над текстом, остальные — после него */
 .about__media { aspect-ratio: 2 / 3; overflow: hidden; background: var(--pad); }   /* фото целиком, без обрезки */
+.about__media--more { order: 3; }
+.about__txt { order: 2; }
 .about__media img { width: 100%; height: 100%; object-fit: cover; }
 .about__txt { max-width: 620px; padding: 0 var(--g); }
 .about__txt p { font-size: 13px; line-height: 1.7; }
@@ -724,9 +727,11 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   .pp__acts { margin-top: 24px; }
   .pp__info { order: 1; padding: 24px 0 0; }
 
+  /* Компьютер: фото столбцом слева, текст справа держится на экране, пока листаются фото */
   .about { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; gap: 64px; padding-right: var(--g); }
-  .about__media { position: sticky; top: calc(var(--hdr) + var(--bar)); }
-  .about__txt { padding: 24px 0 0; }
+  .about__pics { display: grid; gap: 2px; }
+  .about__media--more { order: 0; }
+  .about__txt { order: 0; position: sticky; top: calc(var(--hdr) + var(--bar)); padding: 24px 0 0; }
 
   /* Корзина: список слева, итог и кнопка справа и липнут под шапкой */
   .cartp { display: grid; grid-template-columns: minmax(0, 1fr) 400px; align-items: start; column-gap: 64px; max-width: none; padding: 0 var(--g); }

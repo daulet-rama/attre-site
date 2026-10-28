@@ -1,5 +1,5 @@
 """Брендовые картинки: превью ссылки og-{ru,kz,en}.jpg (логотип + слоган на языке),
-favicon.png, apple-touch-icon.png. Нужен Pillow. Фото товаров режет build.py при сборке.
+Нужен Pillow (иконка сайта — отдельно, см. README). Фото товаров режет build.py при сборке.
 
 Запуск после смены слогана в data/i18n.json: python tools/brand_assets.py
 """
@@ -33,18 +33,8 @@ def brand_assets():
         d.text((x, 400), a, font=font, fill=(17, 17, 17))
         d.text((x + wa, 400), b, font=font, fill=RED)
         og.save(BRAND / f'og-{lang}.jpg', 'JPEG', quality=88, optimize=True)
-
-    # Иконка: белая «a» из логотипа на красном квадрате.
-    white = Image.open(BRAND / 'logo-white.png').convert('RGBA')
-    a_glyph = white.crop((0, 0, round(white.width * 0.235), white.height))
-    a_glyph = a_glyph.crop(a_glyph.getbbox())
-    for size, name in ((64, 'favicon.png'), (180, 'apple-touch-icon.png')):
-        sq = Image.new('RGBA', (size, size), RED + (255,))
-        gh = round(size * 0.56)
-        g = a_glyph.resize((round(a_glyph.width * gh / a_glyph.height), gh), Image.LANCZOS)
-        sq.paste(g, ((size - g.width) // 2, round(size * 0.24)), g)
-        sq.save(BRAND / name, optimize=True)
-
+    # Иконка сайта — «a´» чёрно-белая (просьба заказчицы): src/img/brand/favicon.svg, favicon.png, apple-touch-icon.png;
+    # собрана из контуров logo-black.svg, здесь больше не рисуется.
 
 if __name__ == '__main__':
     brand_assets()
