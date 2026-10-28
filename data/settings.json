@@ -2,5 +2,36 @@
   "whatsapp": "77067232349",
   "instagram": "attre.studio",
   "email": "attre.studio@gmail.com",
-  "map_url": "https://2gis.kz/almaty/search/attre"
+  "map_url": "https://2gis.kz/almaty/search/attre",
+  "delivery": {
+    "free_from": 70000,
+    "kz": [
+      {
+        "price": 4000,
+        "name": {
+          "ru": "Стандартная доставка до двери",
+          "kz": "Есікке дейін стандартты жеткізу",
+          "en": "Standard door-to-door delivery"
+        },
+        "days": {
+          "ru": "2–3 рабочих дня",
+          "kz": "2–3 жұмыс күні",
+          "en": "2–3 business days"
+        }
+      },
+      {
+        "price": 2000,
+        "name": {
+          "ru": "До отделения Казпочты",
+          "kz": "Қазпошта бөлімшесіне дейін",
+          "en": "To a Kazpost branch"
+        },
+        "days": {
+          "ru": "5–6 рабочих дней",
+          "kz": "5–6 жұмыс күні",
+          "en": "5–6 business days"
+        }
+      }
+    ]
+  }
 }

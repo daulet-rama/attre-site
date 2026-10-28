@@ -92,6 +92,21 @@ def slogan(lang):
     return f'<span{s_lang}>{e(s1)} {e(s2)}</span>'
 
 
+def delivery(lang):
+    """Доставка из data/settings.json: способы по Казахстану (цена, срок), порог бесплатной, «по миру — уточнить»."""
+    dl = DATA.get('delivery') or {}
+    if not dl.get('kz'):
+        return f'<p>{e(t("delivery_body", lang))}</p>'
+    rows = ''.join(
+        f'<li class="dlv__i"><span class="dlv__n">{e(tri(o["name"])[lang])}</span>'
+        f'<span class="dlv__p tnum">{e(money(o["price"], lang))}</span><span class="dlv__d">{e(tri(o["days"])[lang])}</span></li>'
+        for o in dl['kz'])
+    free = (f'<p class="dlv__free">{e(t("dlv_free", lang, sum=money(dl["free_from"], lang)))}</p>'
+            if dl.get('free_from') else '')
+    return (f'<h3 class="dlv__t">{e(t("dlv_kz_title", lang))}</h3><ul class="dlv">{rows}</ul>{free}'
+            f'<h3 class="dlv__t">{e(t("dlv_world_title", lang))}</h3><p>{e(t("dlv_world", lang))}</p>')
+
+
 def paras(text):
     return ''.join(f'<p>{e(x.strip())}</p>' for x in text.split('\n\n') if x.strip())
 
@@ -495,7 +510,7 @@ def product(p, lang):
     wa_general = e(wa_link(t('wa_general', lang)))
     rows = ''.join([
         acc(t('acc_details', lang), spec),
-        acc(t('f_delivery', lang), f'<p>{e(t("delivery_body", lang))}</p><p>{e(t("payment_body", lang))}</p>'
+        acc(t('f_delivery', lang), f'{delivery(lang)}<h3 class="dlv__t">{e(t("pay_title", lang))}</h3><p>{e(t("payment_body", lang))}</p>'
                                    f'<p><a class="ulink" href="{info}#delivery">{e(tx("more", lang))}</a></p>'),
         acc(t('acc_returns', lang), f'<p>{e(t("returns_body", lang))}</p>'),
         acc(t('acc_store', lang), f'<p>{e(t("store_body", lang))}</p><p>{e(t("hours", lang))}</p>'
@@ -747,7 +762,7 @@ def info(lang):
 {toc_sheet}
 <div class="info">
 {sec('bonus', t('bonus_title', lang), f'<p>{e(t("bonus_body", lang))}</p>')}
-{sec('delivery', t('delivery_title', lang), f'<p>{e(t("delivery_body", lang))}</p><p>{e(t("payment_body", lang))}</p>')}
+{sec('delivery', t('delivery_title', lang), f'{delivery(lang)}<h3 class="dlv__t">{e(t("pay_title", lang))}</h3><p>{e(t("payment_body", lang))}</p>')}
 {sec('returns', t('returns_title', lang), f'<p>{e(t("returns_body", lang))}</p>')}
 {sec('contacts', t('contacts_title', lang), f"""<p>{e(t('address', lang))}<br>{e(t('hours', lang))}</p>
 <ul class="ilinks">

@@ -575,6 +575,16 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 .cartp__dlv { margin-top: 2px; color: var(--mute); text-align: right; }
 .cartp__note { margin-top: 10px; color: var(--mute); }
 
+/* ——— Доставка: способ слева, цена справа, срок под способом ——— */
+.dlv__t { margin: 20px 0 8px; color: var(--mute); font-size: 11px; line-height: 1.35; font-weight: 400; letter-spacing: .16em; text-transform: uppercase; }
+.acc__in > .dlv__t:first-child, .isec > h2 + .dlv__t { margin-top: 4px; }
+.dlv { border-top: 1px solid var(--line); }
+.dlv__i { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.dlv__p { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+.dlv__d { color: var(--mute); }
+.dlv__free { margin-top: 12px; }
+.acc__in .dlv__free, .acc__in .dlv + p { margin-top: 12px; }
+
 /* ——— Покупателям ——— */
 .info { max-width: 680px; padding: 0 var(--g); }
 .isec { padding-top: 40px; }

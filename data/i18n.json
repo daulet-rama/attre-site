@@ -200,9 +200,9 @@
       "en": "see it in store"
     },
     "delivery_body": {
-      "ru": "Доставляем по Алматы, Казахстану и всему миру. Способ, стоимость и срок подскажет менеджер в WhatsApp.",
-      "kz": "Алматы, Қазақстан және бүкіл әлем бойынша жеткіземіз. Жеткізу тәсілін, құнын және мерзімін менеджер WhatsApp-та айтып береді.",
-      "en": "We deliver within Almaty, across Kazakhstan and worldwide. Our manager will confirm the method, cost and timing on WhatsApp."
+      "ru": "По Казахстану: до двери — 4 000 ₸, 2–3 рабочих дня; до отделения Казпочты — 2 000 ₸, 5–6 рабочих дней. От 70 000 ₸ доставка по Казахстану бесплатная. Доставка по всему миру — стоимость и сроки уточняйте у нас в WhatsApp.",
+      "kz": "Қазақстан бойынша: есікке дейін — 4 000 ₸, 2–3 жұмыс күні; Қазпошта бөлімшесіне дейін — 2 000 ₸, 5–6 жұмыс күні. 70 000 ₸-ден бастап Қазақстан бойынша жеткізу тегін. Әлем бойынша жеткізу — құны мен мерзімін бізден WhatsApp арқылы нақтылаңыз.",
+      "en": "Within Kazakhstan: door-to-door — 4,000 ₸, 2–3 business days; to a Kazpost branch — 2,000 ₸, 5–6 business days. Free delivery within Kazakhstan on orders from 70,000 ₸. Worldwide delivery — message us on WhatsApp for cost and timing."
     },
     "returns_body": {
       "ru": "Вещь надлежащего качества можно вернуть или обменять в течение 14 дней, если её не использовали и сохранены товарный вид, ярлыки и чек. Если обнаружится брак, действуют права потребителя по законодательству РК.",
@@ -808,6 +808,31 @@
       "ru": "Гуанчжоу, Китай",
       "kz": "Гуанчжоу, Қытай",
       "en": "Guangzhou, China"
+    },
+    "dlv_kz_title": {
+      "ru": "по Казахстану",
+      "kz": "Қазақстан бойынша",
+      "en": "within Kazakhstan"
+    },
+    "dlv_free": {
+      "ru": "От {sum} доставка по Казахстану бесплатная.",
+      "kz": "{sum} бастап Қазақстан бойынша жеткізу тегін.",
+      "en": "Free delivery within Kazakhstan on orders from {sum}."
+    },
+    "dlv_world_title": {
+      "ru": "по всему миру",
+      "kz": "әлем бойынша",
+      "en": "worldwide"
+    },
+    "dlv_world": {
+      "ru": "Стоимость и сроки уточняйте у нас в WhatsApp.",
+      "kz": "Құны мен мерзімін бізден WhatsApp арқылы нақтылаңыз.",
+      "en": "Message us on WhatsApp for cost and timing."
+    },
+    "pay_title": {
+      "ru": "оплата",
+      "kz": "төлем",
+      "en": "payment"
     }
   }
 }
