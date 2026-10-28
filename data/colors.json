@@ -9,17 +9,8 @@
     }
   },
   {
-    "key": "red",
-    "hex": "#b3141c",
-    "name": {
-      "ru": "красный",
-      "kz": "қызыл",
-      "en": "red"
-    }
-  },
-  {
     "key": "blue",
-    "hex": "#22408c",
+    "hex": "#1f3f8f",
     "name": {
       "ru": "синий",
       "kz": "көк",
@@ -36,12 +27,21 @@
     }
   },
   {
-    "key": "turquoise",
-    "hex": "#2a9d9a",
+    "key": "beige",
+    "hex": "#d8c3a0",
     "name": {
-      "ru": "бирюзовый",
-      "kz": "бирюза",
-      "en": "turquoise"
+      "ru": "бежевый",
+      "kz": "беж",
+      "en": "beige"
+    }
+  },
+  {
+    "key": "milky",
+    "hex": "#f2ecdf",
+    "name": {
+      "ru": "молочный",
+      "kz": "сүт түсті",
+      "en": "milky"
     }
   },
   {
@@ -54,44 +54,17 @@
     }
   },
   {
-    "key": "green",
-    "hex": "#58693c",
+    "key": "red",
+    "hex": "#c3161f",
     "name": {
-      "ru": "зелёный",
-      "kz": "жасыл",
-      "en": "green"
-    }
-  },
-  {
-    "key": "beige",
-    "hex": "#d9c4a3",
-    "name": {
-      "ru": "бежевый",
-      "kz": "беж",
-      "en": "beige"
-    }
-  },
-  {
-    "key": "white",
-    "hex": "#ffffff",
-    "name": {
-      "ru": "белый",
-      "kz": "ақ",
-      "en": "white"
-    }
-  },
-  {
-    "key": "animal",
-    "hex": null,
-    "name": {
-      "ru": "анималистичный принт",
-      "kz": "анималистік принт",
-      "en": "animal print"
+      "ru": "красный",
+      "kz": "қызыл",
+      "en": "red"
     }
   },
   {
     "key": "pink",
-    "hex": "#e8a8b9",
+    "hex": "#eaa9bb",
     "name": {
       "ru": "розовый",
       "kz": "қызғылт",
@@ -99,12 +72,69 @@
     }
   },
   {
-    "key": "mustard",
-    "hex": "#c9980f",
+    "key": "light-blue",
+    "hex": "#9fc3e7",
     "name": {
-      "ru": "горчичный",
-      "kz": "қыша түсті",
-      "en": "mustard"
+      "ru": "голубой",
+      "kz": "көгілдір",
+      "en": "light blue"
+    }
+  },
+  {
+    "key": "burgundy",
+    "hex": "#6e1423",
+    "name": {
+      "ru": "бордовый",
+      "kz": "бордо",
+      "en": "burgundy"
+    }
+  },
+  {
+    "key": "green",
+    "hex": "#556b3a",
+    "name": {
+      "ru": "зелёный",
+      "kz": "жасыл",
+      "en": "green"
+    }
+  },
+  {
+    "key": "yellow",
+    "hex": "#e0b51f",
+    "name": {
+      "ru": "жёлтый",
+      "kz": "сары",
+      "en": "yellow"
+    }
+  },
+  {
+    "key": "leopard",
+    "hex": null,
+    "pattern": "leopard",
+    "name": {
+      "ru": "леопардовый",
+      "kz": "леопард",
+      "en": "leopard"
+    }
+  },
+  {
+    "key": "cow",
+    "hex": null,
+    "pattern": "cow",
+    "name": {
+      "ru": "коровий",
+      "kz": "сиыр принті",
+      "en": "cow print"
+    }
+  },
+  {
+    "key": "zebra",
+    "hex": null,
+    "pattern": "zebra",
+    "name": {
+      "ru": "зебра",
+      "kz": "зебра",
+      "en": "zebra"
     }
   }
 ]

@@ -356,9 +356,11 @@ SIZES = {   # те же значения повторяет v4.js при пер�
 
 
 def swatch(key, cls=''):
+    """Кружочек цвета палитры (фильтр): заливка или узор принта (леопард, коровий, зебра — классы в v4.css)."""
     hexv = COLORS[key]['hex']
     style = f' style="background:{hexv}"' if hexv else ''
-    return f'<span class="sw sw--{key}{cls}"{style} aria-hidden="true"></span>'
+    light = ' sw--light' if hexv and is_light(hexv) else ''
+    return f'<span class="sw sw--{key}{light}{cls}"{style} aria-hidden="true"></span>'
 
 
 def is_light(hexv):
@@ -372,7 +374,7 @@ def is_light(hexv):
 
 def vswatch(v, cls=''):
     """Кружочек цвета вещи: свой оттенок (hex) или узор принта — леопард, зебра, корова, далматин."""
-    pat = v['pattern'] if v['pattern'] in ('leopard', 'zebra', 'cow', 'dalmatian') else 'leopard' if v['key'] == 'animal' else None
+    pat = v['pattern'] if v['pattern'] in ('leopard', 'zebra', 'cow', 'dalmatian') else None
     if pat:
         return f'<span class="sw sw--{pat}{cls}" aria-hidden="true"></span>'
     light = ' sw--light' if is_light(v['hex']) else ''

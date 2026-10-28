@@ -402,9 +402,8 @@ html.is-locked { overflow: hidden; }   /* только корень: overflow у
 .opt--c input:focus-visible + .sw { outline: 2px solid var(--ink); outline-offset: 3px; }
 .sw { display: block; flex: none; width: 14px; height: 14px; border: 1px solid rgba(0, 0, 0, .14); border-radius: 50%; }
 .sw--s { width: 10px; height: 10px; }
-.sw--white { border-color: #c8c8c8; }
 .sw--light { border-color: #c8c8c8; }
-.sw--animal, .sw--leopard {
+.sw--leopard {
   background:
     radial-gradient(circle at 26% 30%, #3a2413 0 17%, transparent 19%),
     radial-gradient(circle at 72% 64%, #3a2413 0 15%, transparent 17%),

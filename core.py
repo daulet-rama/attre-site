@@ -80,8 +80,9 @@ CATS = dict_by_key(_CAT_ITEMS)
 # Родитель категории: кардхолдеры и брелоки лежат внутри «аксессуаров»
 PARENT = {str(d.get('key') or d['_file']).strip(): (d.get('parent') or None) for d in _CAT_ITEMS}
 MATS = dict_by_key(load_dir('materials'))
-# Палитра цветов для фильтра: ключ, hex, названия на трёх языках (порядок — как у заказчика)
-COLORS = {c['key']: {'hex': c.get('hex', '#ccc'), **tri(c.get('name'))} for c in json.loads((ROOT / 'data' / 'colors.json').read_text('utf-8'))}
+# Палитра — 15 цветов заказчиц (фильтр, кружочки, выбор в админке): ключ, hex или узор принта, названия на трёх языках
+COLORS = {c['key']: {'hex': c.get('hex'), 'pattern': c.get('pattern'), **tri(c.get('name'))}
+          for c in json.loads((ROOT / 'data' / 'colors.json').read_text('utf-8'))}
 SETTINGS = json.loads((ROOT / 'data' / 'settings.json').read_text('utf-8'))
 HOME = json.loads((ROOT / 'data' / 'home.json').read_text('utf-8'))
 
@@ -135,7 +136,7 @@ def clean_variants(d, f):
             'key': key,
             'name': {c: name[c] or COLORS[key][c] for c in CODES},
             'hex': hexv if re.fullmatch(r'#[0-9a-fA-F]{6}', hexv) else COLORS[key]['hex'],
-            'pattern': v.get('pattern') if v.get('pattern') in PATTERNS else None,
+            'pattern': v.get('pattern') if v.get('pattern') in PATTERNS else COLORS[key]['pattern'],
             'materials': [m for m in raw if m in MATS],
             'srcs': srcs,
         })
