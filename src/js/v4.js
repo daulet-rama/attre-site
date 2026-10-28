@@ -187,24 +187,27 @@
     }, { passive: true });
   }
 
-  // ——— Ленты: слайдер главной и фото товара (по одному, по кругу, счётчик), подборки (страницами) ———
+  // ——— Ленты: слайдер главной и фото товара (по одному, по кругу, полоски), подборки (страницами) ———
   each('[data-rail]', function (r) {
     var track = r.querySelector('[data-track]');
     if (!track) return;
     var items = track.children, n = items.length;
     var slides = r.getAttribute('data-rail') === 'slides';
-    var out = r.querySelector('[data-count]');
+    var box = r.querySelector('.rail__bars'), bars = box ? box.children : [];
     var prev = r.querySelector('[data-step="-1"]'), next = r.querySelector('[data-step="1"]');
-    if (n < 2) { [out, prev, next].forEach(function (x) { if (x) x.hidden = true; }); return; }
+    if (n < 2) { [box, prev, next].forEach(function (x) { if (x) x.hidden = true; }); return; }
     track.tabIndex = 0;   // листается стрелками клавиатуры
     var step = function () { return (items[1].offsetLeft - items[0].offsetLeft) || track.clientWidth; };
     var max = function () { return track.scrollWidth - track.clientWidth; };
     var cur = -1;
     var update = function () {
       var x = track.scrollLeft;
-      if (out) {
+      if (bars.length) {
         var i = Math.max(0, Math.min(n - 1, Math.round(x / step())));
-        if (i !== cur) { cur = i; out.textContent = (i + 1) + ' / ' + n; }
+        if (i !== cur) {
+          cur = i;
+          for (var k = 0; k < bars.length; k++) bars[k].classList.toggle('is-on', k === i);
+        }
       }
       if (!slides) {
         if (prev) prev.disabled = x <= 2;

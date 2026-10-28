@@ -172,18 +172,22 @@ html.bar-red .promo { background: var(--red); }
   position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 1;
   display: flex; gap: 3px; pointer-events: none;
 }
-.vc__bars i { flex: 1; height: 2px; background: rgba(0, 0, 0, .16); box-shadow: 0 0 0 .5px rgba(255, 255, 255, .5); }
-.vc__bars i.is-on { background: rgba(0, 0, 0, .78); }
-/* Стрелки — только мышь, при наведении на карточку; у края ленты прячутся */
+.vc__bars i, .rail__bars i { flex: 1; height: 2px; background: rgba(0, 0, 0, .16); box-shadow: 0 0 0 .5px rgba(255, 255, 255, .5); }
+.vc__bars i.is-on, .rail__bars i.is-on { background: rgba(0, 0, 0, .78); }
+/* Кружочки цветов под карточкой (просьба заказчицы) */
+.vc__sw { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+/* Стрелки — только мышь, при наведении на карточку; у края ленты прячутся. Белая кнопка, тонкая длинная стрелка */
 .vc__arr {
   position: absolute; top: 50%; z-index: 2;
   display: none; align-items: center; justify-content: center;
-  width: 36px; height: 56px; margin-top: -28px; color: var(--ink);
+  width: 34px; height: 34px; margin-top: -17px;
+  background: rgba(255, 255, 255, .94); color: var(--ink);
+  transition: background-color .2s ease, color .2s ease;
 }
-.vc__arr .ico { width: 8px; height: 14px; filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff); }
-.vc__arr--prev { left: 0; }
+.vc__arr .ico { width: 14px; height: 10px; }
+.vc__arr--prev { left: 8px; }
 .vc__arr--prev .ico { rotate: 180deg; }
-.vc__arr--next { right: 0; }
+.vc__arr--next { right: 8px; }
 @media (hover: hover) and (pointer: fine) {
   html.js .vc:hover .vc__arr { display: flex; }
 }
@@ -223,21 +227,28 @@ html.bar-red .promo { background: var(--red); }
 .rail [data-track] { position: relative; scrollbar-width: none; }
 .rail [data-track]::-webkit-scrollbar { display: none; }
 .rail [data-track]:focus-visible { outline: 1px solid var(--ink); outline-offset: -2px; }
-.rail__count { position: absolute; bottom: 16px; z-index: 1; pointer-events: none; }
+/* Полоски внизу фото (вместо счётчика «1 / 5» — просьба заказчицы) */
+.rail__bars {
+  position: absolute; left: var(--g); right: var(--g); bottom: 12px; z-index: 1;
+  display: flex; gap: 3px; pointer-events: none;
+}
+/* Стрелки: белая квадратная кнопка с тонкой длинной стрелкой; при наведении — чёрная */
 .rail__arr {
   position: absolute; top: 50%; z-index: 2;
   display: none; align-items: center; justify-content: center;
-  width: 44px; height: 64px; margin-top: -32px;
-  color: var(--ink);
+  width: 44px; height: 44px; margin-top: -22px;
+  background: rgba(255, 255, 255, .94); color: var(--ink);
+  transition: background-color .2s ease, color .2s ease;
 }
-.rail__arr .ico { width: 8px; height: 14px; filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff); }
-.rail__arr--prev { left: 4px; }
+.rail__arr .ico { width: 18px; height: 13px; }
+.rail__arr--prev { left: 12px; }
 .rail__arr--prev .ico { rotate: 180deg; }
-.rail__arr--next { right: 4px; }
+.rail__arr--next { right: 12px; }
 .rail__arr:disabled { visibility: hidden; }
-.rail__arr:focus-visible { outline-offset: -8px; }
+.rail__arr:focus-visible, .vc__arr:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
 @media (hover: hover) and (pointer: fine) {
   html.js .rail__arr { display: flex; }
+  .rail__arr:hover, .vc__arr:hover { background: var(--ink); color: #fff; opacity: 1; }
 }
 
 /* Подборки: следующая карточка выглядывает справа */
@@ -263,13 +274,13 @@ html.bar-red .promo { background: var(--red); }
 }
 .hero__slide img { width: 100%; height: 100%; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 40%); }
 .hero__cap {
-  position: absolute; left: var(--g); bottom: 16px; z-index: 1;
+  position: absolute; left: var(--g); bottom: 26px; z-index: 1;
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
   max-width: calc(100% - 2 * var(--g) - 64px);
 }
 .hero__cta { min-height: 44px; padding: 0 16px; gap: 0; }
 .hero__cta:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
-.hero .rail__count { right: var(--g); }
+.hero .rail__bars { bottom: 10px; }
 .hero + .shelf .sec-h { margin-top: 12px; }
 
 /* Видео «за кадром» и пара строк о бренде */
@@ -372,7 +383,8 @@ html.is-locked { overflow: hidden; }   /* только корень: overflow у
 .opt--c input:checked + .sw { outline: 1px solid var(--ink); outline-offset: 3px; }
 .opt--c input:checked ~ span:last-child { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .opt--c input:focus-visible + .sw { outline: 2px solid var(--ink); outline-offset: 3px; }
-.sw { display: block; flex: none; width: 14px; height: 14px; border: 1px solid rgba(0, 0, 0, .14); }
+.sw { display: block; flex: none; width: 14px; height: 14px; border: 1px solid rgba(0, 0, 0, .14); border-radius: 50%; }
+.sw--s { width: 10px; height: 10px; }
 .sw--white { border-color: #c8c8c8; }
 .sw--animal {
   background:
@@ -495,7 +507,7 @@ html.js .acc:not(.is-open) .plus::after { rotate: 90deg; }
 .pg__track { display: flex; gap: 2px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; }
 .pg__slide { flex: 0 0 100%; aspect-ratio: 3 / 4; overflow: hidden; background: var(--pad); scroll-snap-align: start; scroll-snap-stop: always; }
 .pg__slide img { width: 100%; height: 100%; object-fit: cover; }
-.pg .rail__count { left: var(--g); bottom: 14px; }
+.pg .rail__bars { bottom: 12px; }
 
 .pp__info { order: 2; padding: 24px var(--g) 40px; }
 .pp__info > .tag { margin-bottom: 8px; }
@@ -679,7 +691,7 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   }
   .hero__cap { bottom: 24px; }
   /* Есть горизонтальное фото: оно одно на весь экран, кнопка «каталог» по центру — как у muliér */
-  .hero--wide .hero__slide:not(:first-child), .hero--wide .rail__count, html.js .hero--wide .rail__arr { display: none; }
+  .hero--wide .hero__slide:not(:first-child), .hero--wide .rail__bars, html.js .hero--wide .rail__arr { display: none; }
   .hero--wide .hero__slide img { object-position: 50% 50%; }
   .hero--wide .hero__cap {
     inset: 0; max-width: none;

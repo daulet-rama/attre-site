@@ -47,8 +47,8 @@ X_ICON = ('<svg class="ico" viewBox="0 0 14 14" fill="none" stroke="currentColor
           '<path d="M1.5 1.5l11 11M12.5 1.5l-11 11"/></svg>')
 PLUS = '<span class="plus" aria-hidden="true"></span>'
 MINUS = '<span class="plus plus--minus" aria-hidden="true"></span>'
-CHEV = ('<svg class="ico" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
-        '<path d="M1 1l6 6-6 6"/></svg>')
+ARR_ICON = ('<svg class="ico ico--arr" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
+            '<path d="M1 7h17M12.5 1.5 18 7l-5.5 5.5"/></svg>')   # «красивые стрелки» по просьбе заказчицы
 HEART = ('<svg class="heart" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" aria-hidden="true">'
          '<path d="M12 20.3c-.3 0-7.6-4.5-9.3-9-1.2-3.2.8-6.8 4.3-6.8 2.1 0 3.8 1.3 5 3.1 1.2-1.8 2.9-3.1 5-3.1 3.5 0 5.5 3.6 4.3 6.8-1.7 4.5-9 9-9.3 9z"/></svg>')
 # Сумка: линии на полупикселях сетки 16px — чёткие и при масштабе 100 %; на странице корзины тело сумки залито
@@ -182,10 +182,13 @@ def acc(title, inner, cls=''):
 
 
 def rail_nav(lang, count=None):
-    """Стрелки ленты (только мышь) и счётчик «1 / 5» (только телефон и планшет)."""
-    out = f'<span class="ptag rail__count tnum js-only" data-count aria-hidden="true">1 / {count}</span>' if count else ''
-    return out + (f'<button class="rail__arr rail__arr--prev js-only" type="button" data-step="-1" aria-label="{e(tx("prev", lang))}">{CHEV}</button>'
-                  f'<button class="rail__arr rail__arr--next js-only" type="button" data-step="1" aria-label="{e(tx("next", lang))}">{CHEV}</button>')
+    """Стрелки ленты (только мышь) и полоски внизу фото — сколько фото и какое сейчас (вместо счётчика «1 / 5»)."""
+    bars = ''
+    if count and count > 1:
+        bars = ('<span class="rail__bars js-only" aria-hidden="true">'
+                + ''.join('<i class="is-on"></i>' if i == 0 else '<i></i>' for i in range(count)) + '</span>')
+    return bars + (f'<button class="rail__arr rail__arr--prev js-only" type="button" data-step="-1" aria-label="{e(tx("prev", lang))}">{ARR_ICON}</button>'
+                   f'<button class="rail__arr rail__arr--next js-only" type="button" data-step="1" aria-label="{e(tx("next", lang))}">{ARR_ICON}</button>')
 
 
 # ——— Каркас страницы ———
@@ -333,6 +336,12 @@ SIZES = {   # те же значения повторяет v4.js при пер�
 }
 
 
+def swatch(key, cls=''):
+    hexv = COLORS[key]['hex']
+    style = f' style="background:{hexv}"' if hexv else ''
+    return f'<span class="sw sw--{key}{cls}"{style} aria-hidden="true"></span>'
+
+
 def card(p, lang, kind, *, h='h2', load='lazy', hidden=False):
     """kind: 'w' — крупно на всю ширину, 'h' / 'h2' — половина ряда (h2 — правая), 'row' — карточка ленты;
     ' r' в конце — на компьютере крупная карточка стоит справа (ряды идут «ёлочкой»).
@@ -354,18 +363,23 @@ def card(p, lang, kind, *, h='h2', load='lazy', hidden=False):
     if gal:   # полоски — сколько фото и какое сейчас; стрелки — только мышь (для клавиатуры есть страница товара)
         bars = ''.join('<i class="is-on"></i>' if i == 0 else '<i></i>' for i in range(len(shots)))
         extra = (f'<span class="vc__bars js-only" aria-hidden="true">{bars}</span>'
-                 f'<button class="vc__arr vc__arr--prev js-only" type="button" data-vstep="-1" tabindex="-1" aria-hidden="true" hidden>{CHEV}</button>'
-                 f'<button class="vc__arr vc__arr--next js-only" type="button" data-vstep="1" tabindex="-1" aria-hidden="true">{CHEV}</button>')
+                 f'<button class="vc__arr vc__arr--prev js-only" type="button" data-vstep="-1" tabindex="-1" aria-hidden="true" hidden>{ARR_ICON}</button>'
+                 f'<button class="vc__arr vc__arr--next js-only" type="button" data-vstep="1" tabindex="-1" aria-hidden="true">{ARR_ICON}</button>')
     cls = 'vc' + {'row': ' vc--row'}.get(kind, '') + (' vc--w' if wide else '') + (' vc--2' if kind == 'h2' else '')
     cls += (' vc--r' if kind.endswith(' r') else '') + (' vc--gal' if gal else ' vc--one') + (' vc--sold' if sold(p) else '')
     data = (f' data-slug="{p["slug"]}" data-id="{e(p["id"])}" data-name="{e(p["name"][lang])}"'
             f' data-mat="{" ".join(p["materials"])}" data-col="{" ".join(p["colors"])}" data-price="{p["price"] or ""}"'
             + (' data-new' if p['is_new'] else '') + (' data-pop' if p['popular'] else '')
             + (' data-sold' if sold(p) else '') + (' hidden' if hidden else ''))
-    meta = meta_line(p, lang)
+    meta = p['type'][lang] if p['colors'] else meta_line(p, lang)
+    dots = ''
+    if p['colors']:
+        names = ', '.join(COLORS[c][lang] for c in p['colors'])
+        dots = (f'<p class="vc__sw" title="{e(names)}"><span class="sr-only">{e(t("f_col", lang))}: {e(names)}</span>'
+                + ''.join(swatch(c, ' sw--s') for c in p['colors']) + '</p>')
     return f'''<li class="{cls}"{data}>
 <div class="vc__media"><a class="vc__ph" href="{url_p}" tabindex="-1" aria-hidden="true"><span class="vc__track">{pics}</span></a>{extra}</div>
-<a class="vc__a" href="{url_p}"><div class="vc__cap">{tag(p, lang)}<{h} class="vc__name">{e(p['name'][lang])}</{h}>{f'<p class="vc__meta">{e(meta)}</p>' if meta and kind != 'row' else ''}<p class="vc__price tnum">{e(price_text(p, lang))}</p></div></a>
+<a class="vc__a" href="{url_p}"><div class="vc__cap">{tag(p, lang)}<{h} class="vc__name">{e(p['name'][lang])}</{h}>{f'<p class="vc__meta">{e(meta)}</p>' if meta and kind != 'row' else ''}<p class="vc__price tnum">{e(price_text(p, lang))}</p>{dots}</div></a>
 {fav_btn(p, lang)}</li>'''
 
 
@@ -407,12 +421,6 @@ def shelf(sid, title, link, link_label, items, lang):
 
 
 # ——— Каталог: категории строкой, фильтр и сортировка в нижнем листе ———
-
-def swatch(key):
-    hexv = COLORS[key]['hex']
-    style = f' style="background:{hexv}"' if hexv else ''
-    return f'<span class="sw sw--{key}"{style} aria-hidden="true"></span>'
-
 
 def filter_sheet(items, lang):
     mats = [m for m in MATS if any(m in p['materials'] for p in items)]
