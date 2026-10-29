@@ -22,6 +22,13 @@
   // Цена как в core.money(): 24 900 ₸ (по-английски 24,900 ₸) — фильтр каталога и корзина
   var money = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, T.sep || ' ') + ' ₸'; };
 
+  // ——— Низ страницы: пока голубая плашка подвала на экране, холст под страницей тоже голубой —
+  // пружинящая прокрутка iPhone не показывает белое под плашкой; сверху страницы холст остаётся белым ———
+  var brand = d.querySelector('.ftr__brand');
+  if (brand && hasIO) {
+    new IntersectionObserver(function (es) { root.classList.toggle('at-end', es[es.length - 1].isIntersecting); }).observe(brand);
+  }
+
   // ——— Меню и нижние листы: открыт один, подложка общая ———
   var scrim = d.createElement('div');
   scrim.className = 'scrim';

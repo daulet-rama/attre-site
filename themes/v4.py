@@ -254,8 +254,10 @@ def footer(lang, suffix):
 {seller_lines(lang)}
 {proto}
 </div>
+<div class="ftr__brand">
 <a class="ftr__logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="300" height="116" loading="lazy" decoding="async"></a>
 <p class="ftr__slogan">{slogan(lang)}</p>
+</div>
 </footer>'''
 
 
