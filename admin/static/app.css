@@ -650,6 +650,21 @@ html.is-dragging, html.is-dragging * { cursor: grabbing !important; -webkit-user
 .dlg-wrap--form .dlg { max-height: 100%; }
 .dlg--form .fld { margin-top: 18px; }
 .dlg__err { margin-top: 18px; padding: 12px 14px; background: var(--red-soft); color: var(--red); font-size: 15px; line-height: 1.45; }
+/* Кнопки окна с полями — липкие внизу: окно ниже своего содержимого (на телефоне — над клавиатурой) прокручивается,
+   а «Сменить пароль» всегда на виду. Отрицательные поля — на отступы окна (фон кнопок до краёв и до низа окна);
+   в окне, которому хватает высоты, всё на прежних местах: 12 + 12 — прежние 24px над кнопками. */
+.dlg--form .dlg__btns {
+  position: sticky; bottom: -20px; z-index: 1;
+  margin: 12px -20px -20px; padding: 12px 20px 20px; background: #fff;
+}
+/* Видимая часть низкая (открыта клавиатура, ui.js formDialog → is-low): кнопки в одну строку, как в панели
+   сохранения — «Отмена» слева, главная справа и шире; линия отделяет их от прокрученных под них полей */
+.dlg-wrap--form.is-low .dlg__btns { grid-template-columns: auto minmax(0, 1fr); border-top: 1px solid var(--line); }
+.dlg-wrap--form.is-low .dlg__btns .btn--line { order: -1; padding: 0 16px; }
+.dlg-wrap--form.is-low .dlg__btns .btn--ink { padding: 0 12px; }
+/* Совсем низкая (телефон боком с клавиатурой, ui.js → is-tiny): липкие кнопки закрыли бы само поле с курсором —
+   тогда они в конце окна, как без липкости */
+.dlg-wrap--form.is-tiny .dlg__btns { position: static; }
 
 .sheet-wrap {
   position: fixed; inset: 0; z-index: 160;
@@ -912,6 +927,7 @@ html.is-dragging, html.is-dragging * { cursor: grabbing !important; -webkit-user
   .dl__i { padding: 18px 20px 20px; }
   .dlg-wrap { align-items: center; }
   .dlg { padding: 28px 28px 24px; }
+  .dlg--form .dlg__btns { bottom: -24px; margin: 12px -28px -24px; padding: 12px 28px 24px; }
   .sheet-wrap { align-items: center; padding: 24px; }
   .sheet { max-width: 560px; max-height: calc(100vh - 48px); opacity: 0; transform: translateY(16px); transition: transform .25s var(--ease), opacity .2s ease; }
   .sheet-wrap.is-open .sheet { opacity: 1; transform: none; }

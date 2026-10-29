@@ -8,6 +8,7 @@ import hashlib
 import hmac
 import json
 import logging
+import re
 import threading
 import time
 from datetime import datetime
@@ -27,6 +28,9 @@ from fake_github import TOKEN, FakeGitHub
 NEW = 'новый-пароль-Дамиры'
 NEW_Z = 'zhanna-new-pass'
 CHANGED = {'error': MSG_CHANGED, 'reason': 'password'}     # 401: вход был, но пароль с тех пор сменили
+WRONG_TEXT = 'Текущий пароль не подошёл. Проверьте раскладку (русская или английская) и большие буквы.'
+# 429 при смене пароля: «неудачных попыток», а не «неверных паролей» — блокировку видит и та, кто не ошибалась
+TOO_MANY_RE = re.compile(r'Слишком много неудачных попыток ввести пароль\. Попробуйте через \d+ минут[уы]?\.')
 
 
 # ——————————————————————————— помощники ———————————————————————————
@@ -287,12 +291,52 @@ def test_wrong_current_counted_and_blocked(repo, tmp_path):
         assert login(c, **{'X-Real-IP': '203.0.113.9'}).status_code == 200
         for i in range(10):
             r = change(c, f'неверный-{i}', NEW, **{'X-Real-IP': '198.51.100.7'})
-            assert r.status_code == 400 and r.json() == {'error': 'Текущий пароль неверный.', 'field': 'current'}
+            assert r.status_code == 400 and r.json() == {'error': WRONG_TEXT, 'field': 'current'}
         r = change(c, PASSWORDS['Дамира'], NEW, **{'X-Real-IP': '198.51.100.7'})
         assert r.status_code == 429 and int(r.headers['retry-after']) > 0
-        assert r.json()['error'].startswith('Слишком много неверных паролей. Попробуйте через ') and 'минут' in r.text
+        assert TOO_MANY_RE.fullmatch(r.json()['error']) and r.json()['error'].endswith('через 15 минут.'), r.json()
         assert login(c, **{'X-Real-IP': '198.51.100.7'}).status_code == 429            # и вход с этого адреса
         assert change(c, PASSWORDS['Дамира'], NEW, **{'X-Real-IP': '203.0.113.9'}).status_code == 200
+
+
+def test_wrong_current_text_like_login():
+    """Неверный текущий пароль — тем же тоном, что неверный пароль при входе: что проверить, а не «неверный»."""
+    assert MSG_WRONG == WRONG_TEXT
+    assert MSG_WRONG.removeprefix('Текущий пароль не подошёл. ') == MSG_BAD_PASSWORD.removeprefix('Пароль не подошёл. ')
+
+
+def test_too_many_text_neutral_for_who_did_not_err(repo, tmp_path):
+    """«Медленный режим» (больше 30 неудач со всех адресов — подбор): смена пароля с другого адреса, откуда ни одной
+    ошибки не было, тоже ждёт. Текст — без «неверных паролей»: она-то ничего неверного не вводила."""
+    cfg = make_config(repo, tmp_path, TRUST_PROXY='railway')
+    app = mk_app(cfg, tmp_path)
+    with client(app) as c:
+        assert login(c, **{'X-Real-IP': '203.0.113.9'}).status_code == 200
+        bot = client(app)
+        for i in range(31):
+            assert login(bot, password='подбор', **{'X-Real-IP': f'192.0.2.{i + 1}'}).status_code == 401
+        r = change(c, PASSWORDS['Дамира'], NEW, **{'X-Real-IP': '203.0.113.9'})
+        assert r.status_code == 429 and 0 < int(r.headers['retry-after']) <= 61
+        assert TOO_MANY_RE.fullmatch(r.json()['error']) and 'неверн' not in r.text, r.json()
+        assert set(r.json()) == {'error'}                      # общая ошибка в окне, не у поля «Текущий пароль»
+        assert c.get('/api/session').status_code == 200       # работать в админке это не мешает
+
+
+def test_too_many_while_waiting_for_check(app, dam, monkeypatch):
+    """Адрес закрыли, пока запрос ждал очереди на проверку (Auth.change_password → 'wait'): тот же текст, минуты —
+    по Retry-After."""
+    calls = []
+
+    def retry_after(ip):
+        calls.append(ip)
+        return 0 if len(calls) == 1 else 600                    # первая проверка (до очереди) — ещё можно
+
+    monkeypatch.setattr(app.state.auth.limiter, 'retry_after', retry_after)
+    r = change(dam, PASSWORDS['Дамира'], NEW)
+    assert len(calls) >= 2 and r.status_code == 429 and r.headers['retry-after'] == '600'
+    assert r.json() == {'error': 'Слишком много неудачных попыток ввести пароль. Попробуйте через 10 минут.'}
+    monkeypatch.undo()
+    assert login(client(app), 'Дамира', NEW).status_code == 401       # пароль не сменился
 
 
 @pytest.mark.parametrize('payload, field, words', [
@@ -604,7 +648,7 @@ def test_two_people_change_at_once(app, dam, repo, monkeypatch):
 def test_same_person_two_devices_at_once(app, dam, repo, monkeypatch):
     """Одна и та же — с двух устройств одновременно: смены идут по очереди, первая не перезаписывается молча.
     Второе устройство видит, что его вход уже не действует (пароль только что сменили на первом), — 401 «пароль
-    сменили» и окно входа, а не «Текущий пароль неверный» (он был введён верно), и попытка не идёт в счётчик."""
+    сменили» и окно входа, а не «Текущий пароль не подошёл» (он был введён верно), и попытка не идёт в счётчик."""
     second = client(app)
     assert login(second).status_code == 200
     r1, r2 = _together(app, monkeypatch, lambda: change(dam, PASSWORDS['Дамира'], NEW),
@@ -624,7 +668,7 @@ def test_same_person_two_devices_at_once(app, dam, repo, monkeypatch):
 
 def test_change_after_reset_not_yet_reread(app, dam, repo):
     """Даулет сбросил пароль (удалил запись на GitHub), а админка ещё не перечитала файл: смена со старым входом —
-    401 «пароль сменили» (окно входа), а не «Текущий пароль неверный» и не попытка в счётчике."""
+    401 «пароль сменили» (окно входа), а не «Текущий пароль не подошёл» и не попытка в счётчике."""
     assert change(dam, PASSWORDS['Дамира'], NEW).status_code == 200
     doc = users_doc(repo)
     del doc['users']['Дамира']

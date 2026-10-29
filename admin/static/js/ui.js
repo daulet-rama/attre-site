@@ -98,12 +98,20 @@ export function dialog({ title, text, body, buttons, dismiss = null, focus = nul
   });
 }
 
+// Видимая часть экрана ниже этого (на телефоне — открыта клавиатура): окно с полями целиком не помещается,
+// кнопки в нём — в одну строку, чтобы полям осталось больше места (app.css, .dlg-wrap--form.is-low)
+const LOW = 560;
+// А ниже этого (телефон боком, открыта клавиатура) липкие кнопки закрыли бы само поле с курсором: тогда они
+// не липкие, а в конце окна — отправить можно клавишей «Готово» или прокрутив окно (app.css, .is-tiny)
+const TINY = 260;
+
 /**
  * Окно с полями (смена пароля): слои, Tab, Esc и возврат фокуса — как у dialog(). Отправка — кнопкой submitLabel
  * или Enter: onSubmit(ctl) → true — закрыть окно, false — оставить (ошибки показаны у полей; ctl.error(текст) —
  * общая ошибка над кнопками, ctl.close() — закрыть без отправки). Пока идёт отправка, окно не закрывается.
  * Нажатие мимо окна закрывает его, только пока поля пустые: на телефоне мимо нажимают, чтобы спрятать клавиатуру.
- * На телефоне окно держится над экранной клавиатурой (visualViewport). → Promise: true — отправлено, false — нет.
+ * На телефоне окно держится над экранной клавиатурой (visualViewport); не помещается — прокручивается, а кнопки
+ * в нём липкие внизу, и поле с курсором — над ними. → Promise: true — отправлено, false — нет.
  */
 export function formDialog({ title, text, body, submitLabel, busyLabel, cancelLabel = 'Отмена', onSubmit, focus = null, cls = '' }) {
   return new Promise((resolve) => {
@@ -115,6 +123,7 @@ export function formDialog({ title, text, body, submitLabel, busyLabel, cancelLa
     const submit = h('button', { type: 'submit', class: 'btn btn--ink' }, submitLabel);
     const cancel = h('button', { type: 'button', class: 'btn btn--line', onclick: () => done(false) }, cancelLabel);
     const general = h('p', { class: 'dlg__err', role: 'alert', hidden: true });
+    const btns = h('div', { class: 'dlg__btns' }, submit, cancel);
     const panel = h('form', {
       class: `dlg dlg--form ${cls}`, role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': tid, 'aria-describedby': did,
       tabindex: '-1', novalidate: true, onsubmit: (e) => { e.preventDefault(); send(); },
@@ -123,7 +132,7 @@ export function formDialog({ title, text, body, submitLabel, busyLabel, cancelLa
     text && h('p', { class: 'dlg__text', id: did }, text),
     body,
     general,
-    h('div', { class: 'dlg__btns' }, submit, cancel));
+    btns);
     const wrap = h('div', { class: 'dlg-wrap dlg-wrap--form' }, panel);
     const empty = () => Array.from(panel.querySelectorAll('input')).every((i) => i.tabIndex < 0 || !i.value);
     wrap.addEventListener('click', (e) => {
@@ -137,14 +146,33 @@ export function formDialog({ title, text, body, submitLabel, busyLabel, cancelLa
       },
       close: () => done(false),
     };
+    // Поле (с подписью и ошибкой) или общую ошибку — целиком на виду, над липкими кнопками: scrollIntoView их не
+    // учитывает, и поле с курсором осталось бы под ними. Не помещается целиком — видно его начало. 12px — просвет
+    // до края окна и до кнопок (столько же, сколько над кнопками в прокрученном до конца окне).
+    function reveal(el) {
+      if (!el || el === panel || !panel.contains(el) || btns.contains(el)) return;
+      const box = (el.closest('.fld') || el).getBoundingClientRect();
+      const p = panel.getBoundingClientRect();
+      const top = p.top + 12;
+      const bottom = Math.min(btns.getBoundingClientRect().top, p.bottom) - 12;
+      if (box.top < top || box.height > bottom - top) panel.scrollTop += box.top - top;
+      else if (box.bottom > bottom) panel.scrollTop += box.bottom - bottom;
+    }
+    // Курсор перешёл в другое поле (Enter, Tab, нажатие) — и его на виду. Только поле ввода: «глаз» получает фокус
+    // в момент касания, и прокрутка тут же увела бы его из-под пальца — нажатие бы пропало (он сам вернёт курсор
+    // в поле, тогда и прокрутится)
+    panel.addEventListener('focusin', (e) => {
+      if (e.target.tagName === 'INPUT') reveal(e.target);
+    });
     // Экранная клавиатура на телефоне закрывает низ экрана: окно — в видимой части, поле с курсором — на виду
     const vv = window.visualViewport;
     const fit = () => {
       wrap.style.top = `${vv.offsetTop}px`;
       wrap.style.height = `${vv.height}px`;
       wrap.style.bottom = 'auto';
-      const a = document.activeElement;
-      if (a && panel.contains(a) && a !== panel) (a.closest('.fld') || a).scrollIntoView({ block: 'nearest' });
+      wrap.classList.toggle('is-low', vv.height < LOW);
+      wrap.classList.toggle('is-tiny', vv.height < TINY);
+      reveal(document.activeElement);
     };
     if (vv) {
       vv.addEventListener('resize', fit);
@@ -177,7 +205,14 @@ export function formDialog({ title, text, body, submitLabel, busyLabel, cancelLa
       submit.disabled = false;
       cancel.disabled = false;
       submit.textContent = submitLabel;
-      if (ok) done(true);
+      if (ok) {
+        done(true);
+      } else if (!closed) {
+        // На время отправки кнопка была выключена, и фокус с неё ушёл на <body> (Tab и Enter — мимо окна): вернуть
+        // на кнопку — общая ошибка как раз над ней. Ошибка у поля — фокус уже в поле (onSubmit).
+        if (!panel.contains(document.activeElement)) submit.focus({ preventScroll: true });
+        reveal(general.hidden ? document.activeElement : general);
+      }
     }
     function done(v) {
       if (closed) return;

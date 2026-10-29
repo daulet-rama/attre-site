@@ -52,6 +52,9 @@ MSG_BAD_REQUEST = 'Что-то не так с данными на страниц
 MSG_LOGIN = 'Войдите, чтобы продолжить.'
 MSG_CHANGED = 'Пароль сменили — войдите с новым паролем.'
 MSG_BAD_PASSWORD = 'Пароль не подошёл. Проверьте раскладку (русская или английская) и большие буквы.'
+# 429 при смене пароля. Без «неверных»: счётчик общий на адрес (одна сеть Wi-Fi на двоих) и на всех сразу
+# («медленный режим») — блокировку видит и та, кто сама не ошибалась. Дальше — «. Попробуйте через N минут.»
+TOO_MANY_PASSWORD = 'Слишком много неудачных попыток ввести пароль'
 
 
 class RequestTooLarge(Exception):
@@ -369,7 +372,7 @@ def create_app(cfg: Config, store: Store | None = None, *, static_dir: Path | No
         ip = ip_of(request)
         wait = auth.limiter.retry_after(ip)
         if wait:
-            return _too_many(wait, 'Слишком много неверных паролей')
+            return _too_many(wait, TOO_MANY_PASSWORD)
         current, new = payload.get('current'), payload.get('new')
         if not isinstance(current, str) or not current:
             return _json(400, {'error': 'Впишите текущий пароль.', 'field': 'current'})
@@ -379,10 +382,10 @@ def create_app(cfg: Config, store: Store | None = None, *, static_dir: Path | No
         result, wait = await run_in_threadpool(auth.change_password, user, current, new, ip,
                                                request.cookies.get(COOKIE))
         if result == 'wait':
-            return _too_many(wait, 'Слишком много неверных паролей')
+            return _too_many(wait, TOO_MANY_PASSWORD)
         if result == 'stale':
             # пока шёл запрос, пароль этого человека сменили на другом устройстве (или сбросили): этот вход уже
-            # не действует — окно входа, а не «текущий пароль неверный» и не попытка в счётчике
+            # не действует — окно входа, а не «текущий пароль не подошёл» и не попытка в счётчике
             return _json(401, _login_needed(CHANGED))
         if result == 'wrong':
             log.info('смена пароля: неверный текущий пароль (%s, с %s)', user, ip)
