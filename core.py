@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parent
 ORIGIN = os.environ.get('ATTRE_ORIGIN', 'https://daulet-rama.github.io').rstrip('/')
 ROOT_BASE = os.environ.get('ATTRE_BASE', '/attre-site/')  # корень сайта: общие фото, шрифты, стили
 OUT_ROOT = ROOT / 'site'
-CTX = {'base': ROOT_BASE, 'out': OUT_ROOT, 'theme': 'gallery'}  # текущая тема: адрес и папка её страниц
+CTX = {'base': ROOT_BASE, 'out': OUT_ROOT, 'theme': 'v4'}  # текущая тема: адрес и папка её страниц
 PROTOTYPE = True  # noindex + пометка в подвале; снять перед боевым запуском
 MEDIA = ROOT / 'media' / 'products'
 HOME_MEDIA = ROOT / 'media' / 'home'
@@ -271,10 +271,6 @@ def asset_version(*paths):
 # Значок WhatsApp — Simple Icons (CC0), https://simpleicons.org/?q=whatsapp
 WA_ICON = ('<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
            '<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>')
-ARROW_LEFT = ('<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">'
-              '<path d="M7.5 2L3.5 6l4 4"/></svg>')
-CROSS = ('<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">'
-         '<path d="M1 1l12 12M13 1L1 13"/></svg>')
 
 
 def sold(p):
@@ -443,14 +439,6 @@ def home_srcset(item):
     return ', '.join(f"{asset(f'assets/img/home/{item['_stem']}-{w}.webp')} {w}w" for w in item['_widths'])
 
 
-def lang_row(lang, suffix):
-    return '<div class="lang-row">' + ''.join(
-        f'<a href="{e(url(l["code"] + "/" + suffix))}" hreflang="{l["html"]}" lang="{l["html"]}"'
-        f'{" aria-current=\"true\"" if l["code"] == lang else ""}>'
-        f'<span aria-hidden="true">{e(l["label"])}</span><span class="sr-only">{e(l["name"])}</span></a>'
-        for l in LANGS) + '</div>'
-
-
 def in_cat(p, c):
     """Вещь в категории c — напрямую или через подкатегорию (кардхолдер ∈ аксессуары)."""
     return p['cat'] == c or PARENT.get(p['cat']) == c
@@ -485,11 +473,6 @@ def leaf_cats():
 def cat_pages():
     """Все страницы категорий: верхние и подкатегории."""
     return present_cats() + [k for c in present_cats() for k in subcats(c)]
-
-
-def flat_cats(products):
-    """Те же вещи, но кардхолдеры и брелоки — просто «аксессуары»: для вариантов, где подкатегорий нет."""
-    return [dict(p, cat=top_cat(p['cat'])) for p in products]
 
 
 def ordered(items):
@@ -531,9 +514,11 @@ def root_redirect():
 '''
 
 
-def not_found():
+def not_found(css):
+    """Страница 404 — по любому неверному адресу, поэтому все адреса в ней от корня сайта. css — стили темы
+    с ?v=, тот же адрес, что у её страниц (браузер берёт их из кэша); оформление — .nf в стилях темы."""
     rows = ''.join(
-        f'<p lang="{l["html"]}">{e(t("nf_title", l["code"]))} <a class="link" href="{ROOT_BASE}{l["code"]}/">{e(t("nf_link", l["code"]))}</a></p>'
+        f'<p lang="{l["html"]}">{e(t("nf_title", l["code"]))} <a class="ulink" href="{ROOT_BASE}{l["code"]}/catalog/">{e(t("nf_link", l["code"]))}</a></p>'
         for l in LANGS)
     return f'''<!doctype html>
 <html lang="ru">
@@ -542,11 +527,11 @@ def not_found():
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>404 — attré</title>
-<link rel="stylesheet" href="{ROOT_BASE}assets/css/site.css">
+<link rel="stylesheet" href="{e(css)}">
 </head>
 <body>
 <main class="nf">
-<img src="{ROOT_BASE}assets/img/brand/logo-black.png" alt="attré" width="62" height="24" style="margin:0 auto 32px">
+<img src="{ROOT_BASE}assets/img/brand/logo-black.svg" alt="attré" width="62" height="24">
 <h1>404</h1>
 {rows}
 </main>

@@ -17,7 +17,6 @@ from core import asset_version
 
 CSS = 'v4.css'
 VER = asset_version('src/css/v4.css', 'src/js/v4.js')
-NESTED_CATS = True                 # кардхолдеры и брелоки — подкатегории аксессуаров (см. build.py)
 PRICE_RANGE = (12450, 98000)       # бегунок цены по заказчику; раздвигается, если цены выйдут за края
 PRICE_STEP = 50
 
