@@ -289,6 +289,9 @@ ul, ol { padding: 0; list-style: none; }
 .top__site { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 8px; font-size: 15px; text-decoration: none; }
 .top__site .i { width: 18px; height: 18px; }
 .top__site-l { display: none; }
+/* «Как пользоваться ↗» — инструкция; на телефоне в строке тесно — она в меню под кружком с буквой */
+.top__help { display: none; align-items: center; gap: 4px; min-height: 44px; padding: 0 8px; font-size: 15px; text-decoration: none; white-space: nowrap; }
+.top__help .i { width: 18px; height: 18px; }
 .top__u { position: relative; }
 .top__user { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 6px; }
 .top__ava {
@@ -309,10 +312,12 @@ ul, ol { padding: 0; list-style: none; }
 .umenu__who { padding: 10px 10px 12px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--mute); }
 .umenu__who b { font-weight: 600; color: var(--ink); }
 .umenu__out { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 50px; padding: 0 10px; font-size: 16px; }
+.umenu__help { display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 10px; font-size: 16px; text-decoration: none; white-space: nowrap; }
+.umenu__help .i:last-child { width: 18px; height: 18px; margin-left: -6px; }
 @media (hover: hover) and (pointer: fine) {
   .tabs__a:hover { color: var(--ink); }
-  .top__site:hover, .top__user:hover, .top__out:hover { opacity: .65; }
-  .umenu__out:hover { background: var(--pad); }
+  .top__site:hover, .top__help:hover, .top__user:hover, .top__out:hover { opacity: .65; }
+  .umenu__help:hover, .umenu__out:hover { background: var(--pad); }
 }
 
 .pub { border-bottom: 1px solid var(--line); background: var(--pad); }
@@ -915,16 +920,12 @@ html.is-dragging, html.is-dragging * { cursor: grabbing !important; -webkit-user
   .row2 { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; align-items: start; }
 }
 
-/* ——— Шапка в одну строку ——— */
+/* ——— Шапка: справа «Открыть сайт ↗ · Как пользоваться ↗ · имя · Выйти»; вкладки — второй строкой до 1100px ——— */
 @media (min-width: 760px) {
-  .top__in { grid-template-areas: "brand tabs right"; column-gap: 32px; }
-  .brand { min-height: 60px; }
-  .tabs { align-self: stretch; gap: 4px; margin: 0; border-top: 0; }
-  .tabs__a { flex: none; min-height: 60px; padding: 0 14px; }
   .top__site-l { display: inline; }
   .top__site-s { display: none; }
   .top__u { display: none; }
-  .top__who, .top__out { display: inline-flex; }
+  .top__who, .top__out, .top__help { display: inline-flex; }
   .list__head { flex-wrap: nowrap; }
   .list__add { width: auto; }
 }
@@ -967,6 +968,14 @@ html.is-dragging, html.is-dragging * { cursor: grabbing !important; -webkit-user
   .st .savebar { max-width: 760px; }
   .obar, .olist, .list .savebar--order { max-width: 900px; }
   .sheet--pv { max-width: 460px; }
+}
+/* ——— Шапка в одну строку: логотип, вкладки, справа ссылки и имя — ей нужно около 1030px
+   (уже — вкладки наезжали бы на «Открыть сайт ↗», поэтому до 1100px они второй строкой) ——— */
+@media (min-width: 1100px) {
+  .top__in { grid-template-areas: "brand tabs right"; column-gap: 32px; }
+  .brand { min-height: 60px; }
+  .tabs { align-self: stretch; gap: 4px; margin: 0; border-top: 0; }
+  .tabs__a { flex: none; min-height: 60px; padding: 0 14px; }
 }
 @media (min-width: 1200px) {
   .ed__cols { grid-template-columns: minmax(0, 740px) 400px; justify-content: space-between; gap: 64px; }

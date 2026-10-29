@@ -1,8 +1,11 @@
-// Шапка на всех экранах: «attré · админка», вкладки «Товары» / «Магазин и доставка», «Открыть сайт ↗», имя и выход.
-// Под шапкой — полоса публикации (status.js).
+// Шапка на всех экранах: «attré · админка», вкладки «Товары» / «Магазин и доставка», «Открыть сайт ↗»,
+// «Как пользоваться ↗» (инструкция GUIDE.md на GitHub), имя и выход. Под шапкой — полоса публикации (status.js).
 
 import { h, icon } from './dom.js';
 import { I, LOGO } from './icons.js';
+
+// Инструкция для основательниц — admin/GUIDE.md в репозитории сайта (GitHub показывает её с картинками)
+const GUIDE_URL = 'https://github.com/daulet-rama/attre-site/blob/main/admin/GUIDE.md';
 
 export function mountShell(root, { user, siteUrl, onLogout }) {
   const tabs = [
@@ -11,8 +14,9 @@ export function mountShell(root, { user, siteUrl, onLogout }) {
   ];
   const tabEls = tabs.map((t) => h('a', { class: 'tabs__a', href: t.href, 'data-link': '', 'data-tab': t.key }, t.label));
 
-  // Телефон: кружок с буквой открывает меню «Вы вошли как … · Выйти». Компьютер: имя и «Выйти» прямо в шапке —
-  // выпадающее меню там ложилось ровно на «+ Добавить товар», и нажатие мимо выходило из админки.
+  // Телефон: кружок с буквой открывает меню «Вы вошли как … · Как пользоваться · Выйти» (в строке шапки тесно).
+  // Компьютер: «Как пользоваться», имя и «Выйти» прямо в шапке — выпадающее меню там ложилось ровно
+  // на «+ Добавить товар», и нажатие мимо выходило из админки.
   const letter = (name) => (name || '?').trim().charAt(0).toUpperCase();
   const initial = h('span', { class: 'top__ava', 'aria-hidden': 'true' }, letter(user));
   const userBtn = h('button', {
@@ -25,12 +29,16 @@ export function mountShell(root, { user, siteUrl, onLogout }) {
   const outDesk = h('button', { type: 'button', class: 'top__out', onclick: () => onLogout() }, icon(I.logout), 'Выйти');
   const who = h('b', null, user);
   const outBtn = h('button', { type: 'button', class: 'umenu__out', onclick: () => { toggleMenu(false); onLogout(); } }, icon(I.logout), 'Выйти');
+  const helpMenu = h('a', { class: 'umenu__help', href: GUIDE_URL, target: '_blank', rel: 'noopener', onclick: () => toggleMenu(false) },
+    icon(I.help), h('span', null, 'Как пользоваться'), icon(I.ext));
   const menu = h('div', { class: 'umenu', hidden: true },
     h('p', { class: 'umenu__who' }, 'Вы вошли как ', who),
+    helpMenu,
     outBtn);
 
   const site = h('a', { class: 'top__site', href: siteUrl || '#', target: '_blank', rel: 'noopener', hidden: !siteUrl },
     h('span', { class: 'top__site-l' }, 'Открыть сайт'), h('span', { class: 'top__site-s' }, 'Сайт'), icon(I.ext));
+  const help = h('a', { class: 'top__help', href: GUIDE_URL, target: '_blank', rel: 'noopener' }, 'Как пользоваться', icon(I.ext));
 
   const header = h('header', { class: 'top' },
     h('div', { class: 'top__in' },
@@ -38,7 +46,7 @@ export function mountShell(root, { user, siteUrl, onLogout }) {
         h('span', { class: 'brand__logo', html: LOGO }), h('span', { class: 'brand__dot', 'aria-hidden': 'true' }, '·'),
         h('span', { class: 'brand__sub' }, 'админка')),
       h('nav', { class: 'tabs', 'aria-label': 'Разделы админки' }, tabEls),
-      h('div', { class: 'top__r' }, site, h('div', { class: 'top__u' }, userBtn, menu), whoDesk, outDesk)));
+      h('div', { class: 'top__r' }, site, help, h('div', { class: 'top__u' }, userBtn, menu), whoDesk, outDesk)));
   const pub = h('div', { class: 'pub', role: 'status', 'aria-live': 'polite', hidden: true });
   const main = h('main', { class: 'main', id: 'main', tabindex: '-1' });
   const chrome = h('div', { class: 'chrome' }, header, pub);
@@ -58,7 +66,7 @@ export function mountShell(root, { user, siteUrl, onLogout }) {
     if (open) {
       setTimeout(() => {
         document.addEventListener('click', outside, { once: true });
-        outBtn.focus({ preventScroll: true });   // фокус — в меню: Esc и Tab работают сразу
+        helpMenu.focus({ preventScroll: true });   // фокус — в меню (на первый пункт, не на «Выйти»): Esc и Tab работают сразу
       }, 0);
       document.addEventListener('keydown', onKey);
       window.addEventListener('scroll', onScroll, { passive: true });

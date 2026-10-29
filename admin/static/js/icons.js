@@ -24,6 +24,7 @@ export const I = {
   trash: line('<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 12.5h9l1-12.5"/>'),
   alert: line('<path d="M12 4 21 19.5H3z"/><path d="M12 10v4.5M12 17v.5"/>'),
   info: line('<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8v.4"/>'),
+  help: line('<circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.6a2.4 2.4 0 1 1 3.3 2.2c-.6.3-1 .8-1 1.5v.5M12 16.4v.4"/>'),
   user: line('<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.3-3.6 4.2-5.6 7.5-5.6s6.2 2 7.5 5.6"/>'),
   logout: line('<path d="M14.5 4.5h5v15h-5M10 8l-4 4 4 4M6 12h10"/>'),
   move: line('<path d="M12 3.5v17M8.5 7 12 3.5 15.5 7M8.5 17l3.5 3.5 3.5-3.5"/>'),

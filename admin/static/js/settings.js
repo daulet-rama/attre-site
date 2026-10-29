@@ -1,6 +1,6 @@
 // «Магазин и доставка»: доставка по Казахстану и по миру, контакты, полоса сверху сайта, продавец (ИП/ТОО, ИИН/БИН).
 // Одна общая кнопка «Сохранить и опубликовать» внизу. Тексты на қаз/eng — в свёрнутых блоках.
-// Под доставкой — «На сайте будет так»: способы, цены (0 ₸ сайт так и пишет) и строка «бесплатно от».
+// Под доставкой — «На сайте будет так»: способы, цены (0 ₸ сайт пишет словом «бесплатно») и строка «бесплатно от».
 // Несохранённое лежит в черновике на этом устройстве (draft.js) — как в редакторе товара.
 
 import { api, humane } from './api.js';
@@ -265,16 +265,15 @@ export function mountSettings(main) {
       const p = parseIntField(o.price);
       return h('li', { class: 'dlvpv__i' },
         h('span', { class: 'dlvpv__n' }, o.name.ru.trim()),
-        h('span', { class: 'dlvpv__p tnum' }, Number.isInteger(p) ? money(p) : '— ₸'),
+        h('span', { class: 'dlvpv__p tnum' }, Number.isInteger(p) ? (p === 0 ? 'бесплатно' : money(p)) : '— ₸'),
         o.days.ru.trim() && h('span', { class: 'dlvpv__d' }, o.days.ru.trim()));
     });
     const free = parseIntField(form.free_from);
-    const zero = form.kz.some((o) => parseIntField(o.price) === 0);
-    refs.dlvPv.replaceChildren(
+    refs.dlvPv.replaceChildren(...[   // пустые значения (false, null) не выводим — иначе браузер пишет их словами
       h('p', { class: 'seller-box__t' }, 'На сайте будет так:'),
       rows.length ? h('ul', { class: 'dlvpv' }, rows) : h('p', { class: 'dlvpv__none' }, 'Способов нет — на сайте будет общий текст про доставку.'),
       Number.isInteger(free) && free > 0 && h('p', { class: 'dlvpv__free' }, `От ${money(free)} доставка по Казахстану бесплатная.`),
-      zero && h('p', { class: 'dlvpv__note' }, 'Цена 0 на сайте так и будет написана: «0 ₸». Хотите слово «бесплатно» — попросите Даулета.'));
+    ].filter(Boolean));
   }
 
   function sellerLine() {
@@ -427,11 +426,12 @@ export function mountSettings(main) {
     formEl.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && e.target.tagName === 'INPUT') e.preventDefault();
     });
-    root.replaceChildren(
+    root.replaceChildren(...[
       h('div', { class: 'st__head' }, h('h1', { class: 'st__h' }, 'Магазин и доставка'),
         h('p', { class: 'st__sub' }, 'Контакты, доставка и строки, которые видны на всех страницах сайта.')),
       refs.draft,
-      formEl);
+      formEl,
+    ].filter(Boolean));
     placeToasts();
     renderMethods();
     changed();
@@ -466,7 +466,7 @@ export function mountSettings(main) {
       h('p', { class: 'fld__err', hidden: true }),
       name.field,
       h('div', { class: 'row2' },
-        field({ name: `delivery.kz.${i}.price`, label: 'Цена', req: true, control: withUnit(price, '₸'), hint: 'Бесплатно — впишите 0 (на сайте будет «0 ₸»).' }),
+        field({ name: `delivery.kz.${i}.price`, label: 'Цена', req: true, control: withUnit(price, '₸'), hint: 'Бесплатно — впишите 0 (на сайте будет «бесплатно»).' }),
         days.field),
       trFold([name.tr, days.tr], 'fold--card'));
   }

@@ -174,11 +174,12 @@ export function mountList(main) {
       shown.hidden = !shown.textContent;
       empty.hidden = !!list.length;
       if (!list.length) {
-        empty.replaceChildren(
+        empty.replaceChildren(...[
           h('p', { class: 'list__empty-t' }, items.length ? (q ? `По запросу «${keep.q.trim()}» ничего не нашли.` : emptyText(f.key)) : 'Товаров пока нет.'),
           items.length
             ? (q || keep.f !== 'all') && h('button', { type: 'button', class: 'btn btn--line', onclick: () => { keep.q = ''; keep.f = 'all'; search.value = ''; draw(); } }, 'Показать все товары')
-            : h('a', { class: 'btn btn--ink', href: '/product/new', 'data-link': '' }, icon(I.plus), 'Добавить первый товар'));
+            : h('a', { class: 'btn btn--ink', href: '/product/new', 'data-link': '' }, icon(I.plus), 'Добавить первый товар'),
+        ].filter(Boolean));
       }
     }
 
