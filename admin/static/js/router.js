@@ -21,6 +21,11 @@ export function clearLeaveGuard(g) {
   if (!g || guard === g) guard = null;
 }
 
+/** Есть ли на экране несохранённые правки (без вопросов человеку). */
+export function hasUnsaved() {
+  return !!(guard && guard.dirty());
+}
+
 /** Можно ли уйти с текущего экрана: если есть несохранённое — спросить. Согласились потерять правки —
  *  guard.discard() (убрать черновик: человек сам решил, что правки не нужны). */
 export async function canLeave() {

@@ -24,9 +24,12 @@ def test_git_blob_sha_matches_git(repo):
                                  'data/./x', '', 'build.py', 'core.py', '.github/workflows/pages.yml',
                                  'data/colors.json', 'data/home.json', 'data/categories/bags.json', 'media/home/a.jpg',
                                  'data/products/ALTEA.json', 'data/products/x/y.json', 'media/products/a.gif',
-                                 'media/products/../../build.py'])
+                                 'media/products/../../build.py', '.admin/other.json', '.admin/users.json.bak',
+                                 '.admin/../build.py', '.admin/x/users.json', 'admin/users.json', '.ADMIN/users.json',
+                                 '.admin/users.JSON', '.admin', './.admin/users.json'])
 def test_check_path_rejects(bad):
-    """Только товары, настройки, тексты сайта и фото товаров — палитру, главную и код сайта админка не пишет."""
+    """Только товары, настройки, тексты сайта, фото товаров и файл сменённых паролей — палитру, главную и код
+    сайта админка не пишет."""
     with pytest.raises(ValueError):
         check_path(bad)
 
@@ -34,7 +37,7 @@ def test_check_path_rejects(bad):
 def test_check_path_ok():
     assert check_path('data/products/altea.json') == 'data/products/altea.json'
     for ok in ('media/products/a-b-1.jpg', 'media/products/IMG_1.JPG', 'data/settings.json', 'data/i18n.json',
-               'data/products/siena-mini-2.json'):
+               'data/products/siena-mini-2.json', '.admin/users.json'):
         assert check_path(ok) == ok
 
 
@@ -77,6 +80,15 @@ def test_local_commit_only_given_paths(repo):
     st.commit({'data/products/zz.json': b'{}\n'}, 'тест', 'Жанна')
     assert git(repo, 'show', '--name-only', '--format=', 'HEAD') == 'data/products/zz.json'
     assert 'README.md' in git(repo, 'status', '--porcelain')
+
+
+def test_commit_without_publish_not_tracked(repo):
+    """Смена пароля сайт не меняет: такой коммит полоса публикации не ждёт — last_commit остаётся прежним."""
+    st = LocalStore(repo)
+    sha = st.commit({'data/products/zz.json': b'{}\n'}, 'Админка: новый товар (Дамира)', 'Дамира')
+    pw = st.commit({'.admin/users.json': b'{}\n'}, 'Админка: смена пароля (Дамира)', 'Дамира', publish=False)
+    assert pw == st.head() != sha and st.last_commit == sha
+    assert git(repo, 'show', '--name-only', '--format=', 'HEAD') == '.admin/users.json'
 
 
 def test_local_noop_and_expect(repo):

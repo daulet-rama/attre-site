@@ -1,4 +1,4 @@
-// Окна поверх экрана: подтверждение (dialog), нижний лист (sheet), короткие сообщения (toast).
+// Окна поверх экрана: подтверждение (dialog), окно с полями (formDialog), нижний лист (sheet), сообщения (toast).
 
 import { h, icon } from './dom.js';
 import { I } from './icons.js';
@@ -8,6 +8,12 @@ let locks = 0;
 function lock(on) {
   locks = Math.max(0, locks + (on ? 1 : -1));
   document.documentElement.classList.toggle('is-locked', locks > 0);
+}
+
+/** Тот же счётчик для окон, которые строятся не здесь (вход поверх экрана, app.js): закрытое под ним окно
+ *  не должно снимать блокировку прокрутки, пока вход ещё открыт. */
+export function lockScroll(on) {
+  lock(on);
 }
 
 // ——— Слои: клавиши Esc и Tab обрабатывает только верхнее окно ———
@@ -21,7 +27,8 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
     top.dismiss();
   } else if (e.key === 'Tab') {
-    const list = Array.from(top.panel.querySelectorAll(FOCUSABLE)).filter((el) => el.offsetParent !== null);
+    // tabIndex < 0 — не по Tab: например, скрытое поле с именем для менеджера паролей
+    const list = Array.from(top.panel.querySelectorAll(FOCUSABLE)).filter((el) => el.offsetParent !== null && el.tabIndex >= 0);
     if (!list.length) {
       e.preventDefault();
       return;
@@ -83,6 +90,103 @@ export function dialog({ title, text, body, buttons, dismiss = null, focus = nul
       if (closed) return;
       closed = true;
       layers.splice(layers.indexOf(layer), 1);
+      wrap.remove();
+      lock(false);
+      if (prev && document.contains(prev)) prev.focus({ preventScroll: true });
+      resolve(v);
+    }
+  });
+}
+
+/**
+ * Окно с полями (смена пароля): слои, Tab, Esc и возврат фокуса — как у dialog(). Отправка — кнопкой submitLabel
+ * или Enter: onSubmit(ctl) → true — закрыть окно, false — оставить (ошибки показаны у полей; ctl.error(текст) —
+ * общая ошибка над кнопками, ctl.close() — закрыть без отправки). Пока идёт отправка, окно не закрывается.
+ * Нажатие мимо окна закрывает его, только пока поля пустые: на телефоне мимо нажимают, чтобы спрятать клавиатуру.
+ * На телефоне окно держится над экранной клавиатурой (visualViewport). → Promise: true — отправлено, false — нет.
+ */
+export function formDialog({ title, text, body, submitLabel, busyLabel, cancelLabel = 'Отмена', onSubmit, focus = null, cls = '' }) {
+  return new Promise((resolve) => {
+    const prev = document.activeElement;
+    let busy = false;          // идёт отправка — окно не закрывается
+    let closed = false;
+    const tid = nextId('dlg');
+    const did = text ? `${tid}-text` : null;
+    const submit = h('button', { type: 'submit', class: 'btn btn--ink' }, submitLabel);
+    const cancel = h('button', { type: 'button', class: 'btn btn--line', onclick: () => done(false) }, cancelLabel);
+    const general = h('p', { class: 'dlg__err', role: 'alert', hidden: true });
+    const panel = h('form', {
+      class: `dlg dlg--form ${cls}`, role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': tid, 'aria-describedby': did,
+      tabindex: '-1', novalidate: true, onsubmit: (e) => { e.preventDefault(); send(); },
+    },
+    h('h2', { class: 'dlg__t', id: tid }, title),
+    text && h('p', { class: 'dlg__text', id: did }, text),
+    body,
+    general,
+    h('div', { class: 'dlg__btns' }, submit, cancel));
+    const wrap = h('div', { class: 'dlg-wrap dlg-wrap--form' }, panel);
+    const empty = () => Array.from(panel.querySelectorAll('input')).every((i) => i.tabIndex < 0 || !i.value);
+    wrap.addEventListener('click', (e) => {
+      if (e.target === wrap && !busy && empty()) done(false);
+    });
+    const layer = { panel, dismiss: () => { if (!busy) done(false); } };
+    const ctl = {
+      error(msg) {
+        general.textContent = msg || '';
+        general.hidden = !msg;
+      },
+      close: () => done(false),
+    };
+    // Экранная клавиатура на телефоне закрывает низ экрана: окно — в видимой части, поле с курсором — на виду
+    const vv = window.visualViewport;
+    const fit = () => {
+      wrap.style.top = `${vv.offsetTop}px`;
+      wrap.style.height = `${vv.height}px`;
+      wrap.style.bottom = 'auto';
+      const a = document.activeElement;
+      if (a && panel.contains(a) && a !== panel) (a.closest('.fld') || a).scrollIntoView({ block: 'nearest' });
+    };
+    if (vv) {
+      vv.addEventListener('resize', fit);
+      vv.addEventListener('scroll', fit);
+    }
+    layers.push(layer);
+    clearToasts();
+    document.body.append(wrap);
+    lock(true);
+    if (vv) fit();
+    requestAnimationFrame(() => {
+      wrap.classList.add('is-open');
+      (focus || panel).focus();
+    });
+    async function send() {
+      if (busy || closed) return;
+      busy = true;
+      ctl.error('');
+      submit.disabled = true;
+      cancel.disabled = true;
+      if (busyLabel) submit.textContent = busyLabel;
+      let ok = false;
+      try {
+        ok = await onSubmit(ctl);
+      } catch (e) {
+        console.error(e);
+        ctl.error('На странице что-то сломалось. Обновите её — если не поможет, сообщите Даулету.');
+      }
+      busy = false;
+      submit.disabled = false;
+      cancel.disabled = false;
+      submit.textContent = submitLabel;
+      if (ok) done(true);
+    }
+    function done(v) {
+      if (closed) return;
+      closed = true;
+      layers.splice(layers.indexOf(layer), 1);
+      if (vv) {
+        vv.removeEventListener('resize', fit);
+        vv.removeEventListener('scroll', fit);
+      }
       wrap.remove();
       lock(false);
       if (prev && document.contains(prev)) prev.focus({ preventScroll: true });

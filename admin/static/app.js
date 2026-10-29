@@ -1,16 +1,16 @@
 // Админка attré — вход в приложение. Без сборщиков: ES-модули из ./js/.
 // Порядок: есть ли вход (/api/session) → справочники (/api/meta) → шапка и полоса публикации → экран по адресу.
 
-import { api, onAuthLost, humane } from './js/api.js';
+import { api, onAuthLost, humane, renewed } from './js/api.js';
 import { h, icon } from './js/dom.js';
 import { I } from './js/icons.js';
 import { mountLogin } from './js/login.js';
 import { loadMeta, getMeta, usersFrom } from './js/meta.js';
-import { setRenderer, interceptLinks, parse, canLeave, replaceUrl } from './js/router.js';
+import { setRenderer, interceptLinks, parse, canLeave, replaceUrl, hasUnsaved } from './js/router.js';
 import { cleanupDrafts } from './js/draft.js';
 import { mountShell } from './js/shell.js';
 import * as status from './js/status.js';
-import { toast, clearToasts, onScreen, placeToasts } from './js/ui.js';
+import { toast, clearToasts, onScreen, placeToasts, lockScroll } from './js/ui.js';
 import { store } from './js/util.js';
 import { mountList } from './js/list.js';
 import { mountEditor } from './js/editor.js';
@@ -28,6 +28,11 @@ let relogin = false;
 const SIGNED = 'attre-admin-signed-in';
 let lastPub = null;
 
+// Сервер отказал во входе, потому что пароль с тех пор сменили (на другом устройстве или Даулет сбросил):
+// так и говорим, иначе телефон подставит старый пароль и человек не поймёт, почему «не подошёл»
+const CHANGED = 'Пароль сменили — войдите с новым паролем.';
+const changed = (e) => !!(e && e.data && e.data.reason === 'password');
+
 async function boot() {
   if (store(SIGNED) !== '1') {
     users = await usersFromMeta();
@@ -41,7 +46,7 @@ async function boot() {
       store(SIGNED, null);
       users = usersFrom(e.data && e.data.users);
       if (!users.length) users = await usersFromMeta();
-      return showLogin('');
+      return showLogin(changed(e) ? CHANGED : '');
     }
     return fatal(e);
   }
@@ -78,7 +83,7 @@ async function start() {
   try {
     await loadMeta();
   } catch (e) {
-    if (e.status === 401) return showLogin('');
+    if (e.status === 401) return showLogin(changed(e) ? CHANGED : '');
     return fatal(e);
   }
   const meta = getMeta();
@@ -135,25 +140,53 @@ async function logout() {
 }
 
 /** Вход истёк посреди работы: окно входа поверх экрана, всё введённое остаётся на месте. */
-function showRelogin() {
-  if (relogin || !shell) {
-    if (!shell && !relogin) showLogin('');
+async function showRelogin(err) {
+  if (relogin) return;
+  if (!shell) {
+    showLogin(changed(err) ? CHANGED : '');
     return;
   }
   relogin = true;
+  let why = err;
+  // 401 мог прийти на запрос, ушедший со старой cookie за миг до того, как это устройство получило новую
+  // (сменило пароль): дождёмся смены, если она идёт, и спросим сервер ещё раз — вход на месте, окно не нужно
+  await renewed();
+  try {
+    const s = await api('/api/session', { auth: false });
+    relogin = false;
+    if (s && s.user && s.user !== user && shell) {
+      user = s.user;
+      shell.setUser(user);
+    }
+    return;
+  } catch (e) {
+    if (e.status === 401) why = e;
+  }
+  // имена — заново: их могли поменять, пока страница открыта (например, вместо общего пароля — у каждой свой)
+  try {
+    const list = usersFrom((await api('/api/login', { auth: false })).users);
+    if (list.length) users = list;
+  } catch {
+    // нет связи — остаются прежние
+  }
+  if (!shell) {                     // пока спрашивали сервер, человек вышел сам — там уже экран входа
+    relogin = false;
+    return;
+  }
   clearToasts();
   const layer = h('div', { class: 'relogin', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Вход' });
   document.body.append(layer);
-  document.documentElement.classList.add('is-locked');
+  lockScroll(true);                 // через общий счётчик: окно, закрытое под входом, прокрутку не вернёт
+  const text = changed(why) ? CHANGED : 'Вход истёк — войдите снова.';
   mountLogin(layer, {
     users, overlay: true,
-    message: 'Вход истёк — войдите снова. Всё, что вы ввели, останется на экране.',
+    message: hasUnsaved() ? `${text} Всё, что вы ввели, останется на экране.` : text,
     onDone: (u) => {
       user = u;
       store(SIGNED, '1');
       relogin = false;
       layer.remove();
-      document.documentElement.classList.remove('is-locked');
+      lockScroll(false);
       if (shell) shell.setUser(u);
       status.refresh();
       // экран не загрузился из-за истёкшего входа (а не форма с правками) — просто открываем его заново

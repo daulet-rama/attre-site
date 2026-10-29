@@ -24,17 +24,19 @@ from starlette.datastructures import Headers, MutableHeaders, UploadFile
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.requests import cookie_parser
 
-from .auth import COOKIE, Auth, NeedName, client_ip, is_local_host
+from .auth import CHANGED, COOKIE, Auth, NeedName, client_ip, is_local_host
 from .catalog import MEDIA, MEDIA_NAME_RE, Catalog, CatalogError
 from .config import Config, ConfigError, load_config
 from .images import MAX_BYTES, PREVIEW_VERSION, ImageError, Uploads, preview, preview_width, process_upload
-from .store import GitHubStore, LocalStore, Store, StoreError
+from .passwords import MSG_WRONG, Passwords, new_password_problem, pepper_for
+from .store import MSG_DOWN, GitHubStore, LocalStore, Store, StoreError
 
 log = logging.getLogger('attre.main')
 
 STATIC_DIR = Path(__file__).resolve().parent.parent / 'static'
 JSON_LIMIT = 1024 * 1024                       # JSON-запросы: товар, настройки, порядок — это килобайты
-LOGIN_LIMIT = 4 * 1024                         # вход: имя и пароль
+LOGIN_LIMIT = 4 * 1024                         # вход и смена пароля: имя и пароли
+PASSWORD_API = ('/api/login', '/api/password')
 UPLOAD_LIMIT = MAX_BYTES + 512 * 1024          # фото до 30 МБ + служебные байты multipart
 CSRF_HEADER, CSRF_VALUE = 'x-requested-with', 'attre-admin'
 OPEN_API = ('/api/health', '/api/login', '/api/logout')   # остальное /api/* — только с действующей сессией
@@ -48,6 +50,7 @@ CSP = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';
 MSG_SERVER = 'Что-то пошло не так. Попробуйте ещё раз, а если не получится — сообщите Даулету.'
 MSG_BAD_REQUEST = 'Что-то не так с данными на странице. Обновите страницу и попробуйте ещё раз.'
 MSG_LOGIN = 'Войдите, чтобы продолжить.'
+MSG_CHANGED = 'Пароль сменили — войдите с новым паролем.'
 MSG_BAD_PASSWORD = 'Пароль не подошёл. Проверьте раскладку (русская или английская) и большие буквы.'
 
 
@@ -61,6 +64,14 @@ class Unauthorized(Exception):
 
 def _json(status: int, body: dict, headers: dict | None = None) -> JSONResponse:
     return JSONResponse(body, status_code=status, headers=headers)
+
+
+def _login_needed(reason: str | None) -> dict:
+    """Тело ответа 401. reason «password» — вход был, но пароль с тех пор сменили (на другом устройстве или сбросили):
+    окно входа так и скажет, а не «вход истёк» (имена для экрана входа — только в GET /api/login)."""
+    if reason == CHANGED:
+        return {'error': MSG_CHANGED, 'reason': CHANGED}
+    return {'error': MSG_LOGIN}
 
 
 class Guard:
@@ -102,8 +113,18 @@ class Guard:
             await JSONResponse(body, status_code=status)(scope, receive, send_secure)
 
         if api and self.auth is not None and path not in OPEN_API:
-            if not self.auth.read_cookie(cookie_parser(headers.get('cookie', '')).get(COOKIE)):
-                return await reply(401, {'error': MSG_LOGIN})
+            cookie = cookie_parser(headers.get('cookie', '')).get(COOKIE)
+            pw = self.auth.passwords
+            if cookie and pw is not None and pw.needs_check():
+                # сменённые пароли — не старше минуты: отпечаток в cookie сверяется с ними (чтение — в потоке)
+                if not await anyio.to_thread.run_sync(pw.ensure):
+                    # файл паролей после запуска ещё ни разу не прочитан (GitHub не ответил): сверить не с чем —
+                    # не пускаем, как и вход паролем. Иначе снова прошли бы входы, выданные по стартовому паролю
+                    # до его смены (например, с потерянного телефона, из-за которого пароль и меняли)
+                    return await reply(503, {'error': pw.error.message if pw.error else MSG_DOWN})
+            session, reason = self.auth.check_cookie(cookie)
+            if not session:
+                return await reply(401, _login_needed(reason))
 
         if api and method in ('POST', 'PUT', 'PATCH', 'DELETE'):
             if headers.get(CSRF_HEADER) != CSRF_VALUE:
@@ -114,7 +135,7 @@ class Guard:
                 return await reply(415, {'error': 'Фото нужно отправлять файлом. Обновите страницу.', 'field': 'file'})
             if not upload and has_body and ctype != 'application/json':
                 return await reply(415, {'error': MSG_BAD_REQUEST})
-        limit = UPLOAD_LIMIT if upload else LOGIN_LIMIT if path == '/api/login' else JSON_LIMIT
+        limit = UPLOAD_LIMIT if upload else LOGIN_LIMIT if path in PASSWORD_API else JSON_LIMIT
         too_big = {'error': 'Фото больше 30 МБ. Выберите фото поменьше.', 'field': 'file'} if upload else {
             'error': 'Слишком большой запрос.'}
         try:
@@ -154,6 +175,10 @@ def _minutes(seconds: int) -> str:
     return f'{m} {word}'
 
 
+def _too_many(wait: int, what: str = 'Слишком много попыток входа') -> JSONResponse:
+    return _json(429, {'error': f'{what}. Попробуйте через {_minutes(wait)}.'}, headers={'Retry-After': str(wait)})
+
+
 def make_store(cfg: Config) -> Store:
     if cfg.store == 'local':
         return LocalStore(cfg.local_repo)
@@ -165,7 +190,8 @@ def create_app(cfg: Config, store: Store | None = None, *, static_dir: Path | No
     store = store or make_store(cfg)
     uploads = Uploads(cfg.tmp_dir)
     catalog = Catalog(store, uploads, cfg.site_url)
-    auth = Auth(cfg.users, cfg.session_secret, fail_delay=login_delay)
+    passwords = Passwords(store, pepper_for(cfg.session_secret, cfg.password_pepper), list(cfg.users))
+    auth = Auth(cfg.users, cfg.session_secret, fail_delay=login_delay, passwords=passwords)
     static = (static_dir or STATIC_DIR).resolve()
     # Фото обрабатываются по одному: пик памяти большого фото — до 0,5–1 ГБ (README → «Стоимость»), а само
     # фото обрабатывается около секунды — очереди из двух-трёх фото не видно.
@@ -188,7 +214,9 @@ def create_app(cfg: Config, store: Store | None = None, *, static_dir: Path | No
             return uploads.store_preview(sha, width, preview(data, width))
 
     def warm():
-        """После старта: проверяем доступ к хранилищу и готовим превью главных фото (первый заход быстрее)."""
+        """После старта: читаем файл сменённых паролей, проверяем доступ к хранилищу и готовим превью главных фото
+        (первый заход быстрее)."""
+        passwords.ensure()          # не прочитался — ensure() сам пишет в журнал; повтор — при первом запросе
         try:
             snap = store.snapshot()
             for item in catalog.products():
@@ -216,6 +244,7 @@ def create_app(cfg: Config, store: Store | None = None, *, static_dir: Path | No
     app = FastAPI(title='attré admin', docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.cfg, app.state.store, app.state.catalog, app.state.auth, app.state.uploads = (
         cfg, store, catalog, auth, uploads)
+    app.state.passwords = passwords
     app.add_middleware(Guard, auth=auth)
 
     # ——— ошибки → {"error": "...", "field"?: "..."} ———
@@ -232,8 +261,8 @@ def create_app(cfg: Config, store: Store | None = None, *, static_dir: Path | No
         return _json(400, {'error': ex.message, 'field': 'file'})
 
     @app.exception_handler(Unauthorized)
-    async def _unauthorized(_req, _ex):
-        return _json(401, {'error': MSG_LOGIN})          # имена для экрана входа — только в GET /api/login
+    async def _unauthorized(req, _ex):
+        return _json(401, _login_needed(auth.check_cookie(req.cookies.get(COOKIE))[1]))
 
     @app.exception_handler(RequestTooLarge)
     async def _too_large(req, _ex):
@@ -283,33 +312,45 @@ def create_app(cfg: Config, store: Store | None = None, *, static_dir: Path | No
         """Для экрана входа: какие имена показать (пароли, понятно, не отдаём)."""
         return {'users': auth.names}
 
-    @app.post('/api/login')
-    async def login(request: Request):
-        # async: пауза после неверного пароля (asyncio.sleep) не занимает поток; проверка пароля — микросекунды
+    async def json_body(request: Request) -> dict | None:
         try:
             payload = await request.json()
         except RequestTooLarge:
             raise
         except Exception:   # noqa: BLE001 — не JSON
+            return None
+        return payload if isinstance(payload, dict) else None
+
+    def ip_of(request: Request) -> str:
+        return client_ip(request.headers, request.client.host if request.client else None, cfg.trust_proxy)
+
+    @app.post('/api/login')
+    async def login(request: Request):
+        # async: пауза после неверного пароля (asyncio.sleep) не занимает поток; сама проверка — в потоке
+        # (у сменённого пароля это scrypt, десятки миллисекунд)
+        payload = await json_body(request)
+        if payload is None:
             return _json(400, {'error': MSG_BAD_REQUEST})
-        if not isinstance(payload, dict):
-            return _json(400, {'error': MSG_BAD_REQUEST})
-        ip = client_ip(request.headers, request.client.host if request.client else None, cfg.trust_proxy)
+        ip = ip_of(request)
         wait = auth.limiter.retry_after(ip)
         if wait:
-            return _json(429, {'error': f'Слишком много попыток входа. Попробуйте через {_minutes(wait)}.'},
-                         headers={'Retry-After': str(wait)})
+            return _too_many(wait)
         name, password = payload.get('name'), payload.get('password')
         if name is not None and not isinstance(name, str):
             return _json(400, {'error': 'Выберите своё имя.', 'field': 'name'})
         if not isinstance(password, str) or not password:
             return _json(400, {'error': 'Введите пароль.', 'field': 'password'})
+        if not await run_in_threadpool(passwords.ensure):
+            # файл сменённых паролей ещё ни разу не прочитался (GitHub не ответил после запуска): по старым
+            # паролям из переменных не пускаем — их могли сменить как раз потому, что они кому-то известны
+            return _json(503, {'error': passwords.error.message if passwords.error else MSG_DOWN})
         try:
-            user = auth.check(name, password)
+            user, wait = await run_in_threadpool(auth.attempt, ip, name, password)
         except NeedName:
             return _json(400, {'error': 'Выберите своё имя.', 'field': 'name'})
+        if wait:
+            return _too_many(wait)
         if not user:
-            auth.limiter.fail(ip)
             log.info('неудачный вход с %s', ip)
             if auth.fail_delay:
                 await asyncio.sleep(auth.fail_delay)
@@ -317,6 +358,40 @@ def create_app(cfg: Config, store: Store | None = None, *, static_dir: Path | No
         response = _json(200, {'user': user})
         set_session(response, request, user)
         log.info('вход: %s', user)
+        return response
+
+    @app.post('/api/password')
+    async def change_password(request: Request, user: str = Depends(current_user)):
+        """Смена своего пароля: {current, new} → {} и новая cookie этого устройства (старые входы — недействительны)."""
+        payload = await json_body(request)
+        if payload is None:
+            return _json(400, {'error': MSG_BAD_REQUEST})
+        ip = ip_of(request)
+        wait = auth.limiter.retry_after(ip)
+        if wait:
+            return _too_many(wait, 'Слишком много неверных паролей')
+        current, new = payload.get('current'), payload.get('new')
+        if not isinstance(current, str) or not current:
+            return _json(400, {'error': 'Впишите текущий пароль.', 'field': 'current'})
+        problem = new_password_problem(new, user, current)
+        if problem:
+            return _json(400, {'error': problem, 'field': 'new'})
+        result, wait = await run_in_threadpool(auth.change_password, user, current, new, ip,
+                                               request.cookies.get(COOKIE))
+        if result == 'wait':
+            return _too_many(wait, 'Слишком много неверных паролей')
+        if result == 'stale':
+            # пока шёл запрос, пароль этого человека сменили на другом устройстве (или сбросили): этот вход уже
+            # не действует — окно входа, а не «текущий пароль неверный» и не попытка в счётчике
+            return _json(401, _login_needed(CHANGED))
+        if result == 'wrong':
+            log.info('смена пароля: неверный текущий пароль (%s, с %s)', user, ip)
+            if auth.fail_delay:
+                await asyncio.sleep(auth.fail_delay)
+            return _json(400, {'error': MSG_WRONG, 'field': 'current'})
+        response = _json(200, {})
+        set_session(response, request, user)        # это устройство остаётся в админке — уже с новым паролем
+        log.info('смена пароля: %s', user)
         return response
 
     @app.post('/api/logout')

@@ -19,6 +19,27 @@ export function onAuthLost(fn) {
   authLost = fn;
 }
 
+/** Показать вход поверх экрана самим — для запросов с auth: false, которым сначала нужно закрыть своё окно. */
+export function reportAuthLost(err) {
+  if (authLost) authLost(err);
+}
+
+// Запрос, ответ на который выдаст этому устройству новый вход (смена пароля). Пока он идёт, ответ 401 на другой
+// запрос мог прийти со старой cookie — окно входа сначала дождётся его (app.js → showRelogin).
+let renewing = null;
+export function whileRenewing(promise) {
+  const settled = promise.then(() => {}, () => {});
+  renewing = settled;
+  settled.then(() => {
+    if (renewing === settled) renewing = null;
+  });
+  return promise;
+}
+/** → Promise, который выполнится, когда такого запроса нет (или он закончился). */
+export function renewed() {
+  return renewing || Promise.resolve();
+}
+
 /** Текст ошибки для человека: ответ сервера — как есть, сбой в самой странице — общими словами (подробности — в консоль). */
 export function humane(e) {
   if (e instanceof ApiError) return e.message;

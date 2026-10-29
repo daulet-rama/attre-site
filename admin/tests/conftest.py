@@ -126,7 +126,7 @@ def make_config(repo: Path, tmp: Path, **extra):
     env = {
         'STORE': 'local', 'LOCAL_REPO': str(repo), 'TMP_DIR': str(tmp / 'tmp'),
         'ADMIN_USERS': ';'.join(f'{n}:{p}' for n, p in PASSWORDS.items()),
-        'SESSION_SECRET': 'test-secret-' + 'x' * 40, 'SITE_URL': 'https://example.test/attre-site/v4/',
+        'SESSION_SECRET': 'test-secret-0123456789-' + 'x' * 30, 'SITE_URL': 'https://example.test/attre-site/v4/',
         **extra,
     }
     return load_config(env)

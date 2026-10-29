@@ -30,6 +30,7 @@ export const I = {
   move: line('<path d="M12 3.5v17M8.5 7 12 3.5 15.5 7M8.5 17l3.5 3.5 3.5-3.5"/>'),
   drag: '<svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>',
   chevron: line('<path d="m6.5 9.5 5.5 5.5 5.5-5.5"/>'),
+  key: line('<circle cx="8" cy="16" r="3.8"/><path d="m10.7 13.3 9-9M16.5 6.5l2.5 2.5M13.8 9.2l2 2"/>'),
 };
 
 // Значки сайта для превью — один в один как в themes/v4.py (HEART, ARR_ICON, WA_ICON)

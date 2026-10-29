@@ -6,7 +6,8 @@
   когда ветка на месте — защита ветки и т. п.). Ответ на PATCH потерялся (таймаут, обрыв, перезапуск при деплое) —
   ветку перечитываем: если она уже на нашем коммите, сохранение удалось. Голову ветки спрашивает один запрос
   на всех (кэш 15 с); если GitHub не ответил, чтение получает последнюю известную голову, запись — ошибку.
-* Писать можно только товары, настройки, тексты сайта и фото товаров (WRITABLE_RE).
+* Писать можно только товары, настройки, тексты сайта, фото товаров и файл сменённых паролей админки
+  .admin/users.json (WRITABLE_RE).
 
 Оба читают закоммиченное состояние ветки: путь → blob sha (sha как у git, по нему же — защита от одновременной правки).
 Все записи идут через одну блокировку на процесс (`write_lock`, reentrant: каталог держит её на всё
@@ -34,10 +35,12 @@ log = logging.getLogger('attre.store')
 
 AUTHOR_EMAIL = 'admin@attre.local'
 COMMITTER = 'Админка attré'
-# Админка пишет только эти файлы: товары, настройки магазина, тексты сайта и фото товаров. Токен GitHub может
-# писать и build.py / core.py (их выполняет GitHub Actions) — узкий список ограничивает вред от ошибки в коде админки.
+# Админка пишет только эти файлы: товары, настройки магазина, тексты сайта, фото товаров и сменённые пароли
+# (.admin/users.json, passwords.py). Токен GitHub может писать и build.py / core.py (их выполняет GitHub Actions) —
+# узкий список ограничивает вред от ошибки в коде админки.
 WRITABLE_RE = re.compile(r'data/products/[a-z0-9][a-z0-9_-]{0,79}\.json|data/settings\.json|data/i18n\.json'
-                         r'|media/products/[A-Za-z0-9][A-Za-z0-9._-]{0,150}\.(?i:jpe?g|png|webp)')
+                         r'|media/products/[A-Za-z0-9][A-Za-z0-9._-]{0,150}\.(?i:jpe?g|png|webp)'
+                         r'|\.admin/users\.json')
 
 
 class StoreError(Exception):
@@ -70,7 +73,7 @@ def check_path(path: str) -> str:
     if any(p in ('', '.', '..') for p in parts) or PurePosixPath(path).as_posix() != path:
         raise ValueError(f'недопустимый путь: {path!r}')
     if not WRITABLE_RE.fullmatch(path):
-        raise ValueError(f'админка пишет только товары, настройки, тексты и фото товаров: {path!r}')
+        raise ValueError(f'админка пишет только товары, настройки, тексты, фото товаров и свои пароли: {path!r}')
     return path
 
 
@@ -188,10 +191,11 @@ class Store:
         return {s: self.read_blob(s) for s in dict.fromkeys(shas)}
 
     def commit(self, changes: dict[str, bytes | None], message: str, author: str,
-               expect: dict[str, str | None] | None = None) -> str:
+               expect: dict[str, str | None] | None = None, *, publish: bool = True) -> str:
         """Один коммит: путь → новое содержимое (None — удалить). → sha коммита.
         expect: путь → какой blob sha должен быть у файла сейчас (None — файла быть не должно);
-        если хоть один не совпал — ConflictError, ничего не записано."""
+        если хоть один не совпал — ConflictError, ничего не записано.
+        publish=False — коммит не меняет сайт (смена пароля): полоса публикации его не ждёт."""
         for p in list(changes) + list(expect or {}):
             check_path(p)
         for p, v in changes.items():
@@ -199,7 +203,7 @@ class Store:
                 raise TypeError(f'{p}: содержимое должно быть bytes')
         with self.write_lock:
             sha, created = self._commit(dict(changes), message, clean_author(author), dict(expect or {}))
-            if created:
+            if created and publish:
                 self.last_commit, self.last_commit_at = sha, time.time()
             return sha
 

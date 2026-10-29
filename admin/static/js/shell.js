@@ -1,8 +1,10 @@
 // Шапка на всех экранах: «attré · админка», вкладки «Товары» / «Магазин и доставка», «Открыть сайт ↗»,
-// «Как пользоваться ↗» (инструкция GUIDE.md на GitHub), имя и выход. Под шапкой — полоса публикации (status.js).
+// «Как пользоваться ↗» (инструкция GUIDE.md на GitHub), имя («Сменить пароль») и выход. Под шапкой — полоса
+// публикации (status.js).
 
 import { h, icon } from './dom.js';
 import { I, LOGO } from './icons.js';
+import { changePassword } from './password.js';
 
 // Инструкция для основательниц — admin/GUIDE.md в репозитории сайта (GitHub показывает её с картинками)
 const GUIDE_URL = 'https://github.com/daulet-rama/attre-site/blob/main/admin/GUIDE.md';
@@ -14,9 +16,11 @@ export function mountShell(root, { user, siteUrl, onLogout }) {
   ];
   const tabEls = tabs.map((t) => h('a', { class: 'tabs__a', href: t.href, 'data-link': '', 'data-tab': t.key }, t.label));
 
-  // Телефон: кружок с буквой открывает меню «Вы вошли как … · Как пользоваться · Выйти» (в строке шапки тесно).
-  // Компьютер: «Как пользоваться», имя и «Выйти» прямо в шапке — выпадающее меню там ложилось ровно
-  // на «+ Добавить товар», и нажатие мимо выходило из админки.
+  // Телефон: кружок с буквой открывает меню «Вы вошли как … · Как пользоваться · Сменить пароль · Выйти»
+  // (в строке шапки тесно). Компьютер: «Как пользоваться», имя и «Выйти» прямо в шапке; под именем — меню с одним
+  // пунктом «Сменить пароль». «Выйти» в выпадающее меню не кладём: оно ложилось ровно на «+ Добавить товар»,
+  // и нажатие мимо выходило из админки (а мимо «Сменить пароль» — лишь откроет окно, его можно закрыть).
+  let current = user;
   const letter = (name) => (name || '?').trim().charAt(0).toUpperCase();
   const initial = h('span', { class: 'top__ava', 'aria-hidden': 'true' }, letter(user));
   const userBtn = h('button', {
@@ -25,16 +29,31 @@ export function mountShell(root, { user, siteUrl, onLogout }) {
   }, initial, icon(I.chevron));
   const initial2 = h('span', { class: 'top__ava', 'aria-hidden': 'true' }, letter(user));
   const uname = h('span', { class: 'top__uname' }, user);
-  const whoDesk = h('span', { class: 'top__who' }, initial2, uname);
+  const whoDesk = h('button', {
+    type: 'button', class: 'top__who', 'aria-haspopup': 'true', 'aria-expanded': 'false',
+    'aria-label': `${user} — меню`, onclick: () => toggleDesk(),
+  }, initial2, uname, icon(I.chevron));
   const outDesk = h('button', { type: 'button', class: 'top__out', onclick: () => onLogout() }, icon(I.logout), 'Выйти');
   const who = h('b', null, user);
   const outBtn = h('button', { type: 'button', class: 'umenu__out', onclick: () => { toggleMenu(false); onLogout(); } }, icon(I.logout), 'Выйти');
   const helpMenu = h('a', { class: 'umenu__help', href: GUIDE_URL, target: '_blank', rel: 'noopener', onclick: () => toggleMenu(false) },
     icon(I.help), h('span', null, 'Как пользоваться'), icon(I.ext));
+  // Окно смены пароля: меню закрываем, фокус — на кнопку меню (на неё он вернётся, когда окно закроется)
+  const openPassword = (toggle, btn) => {
+    toggle(false);
+    btn.focus({ preventScroll: true });
+    changePassword({ user: current });
+  };
+  const pwMenu = h('button', { type: 'button', class: 'umenu__item', onclick: () => openPassword(toggleMenu, userBtn) },
+    icon(I.key), 'Сменить пароль');
+  const pwDesk = h('button', { type: 'button', class: 'umenu__item', onclick: () => openPassword(toggleDesk, whoDesk) },
+    icon(I.key), 'Сменить пароль');
   const menu = h('div', { class: 'umenu', hidden: true },
     h('p', { class: 'umenu__who' }, 'Вы вошли как ', who),
     helpMenu,
+    pwMenu,
     outBtn);
+  const deskMenu = h('div', { class: 'umenu umenu--desk', hidden: true }, pwDesk);
 
   const site = h('a', { class: 'top__site', href: siteUrl || '#', target: '_blank', rel: 'noopener', hidden: !siteUrl },
     h('span', { class: 'top__site-l' }, 'Открыть сайт'), h('span', { class: 'top__site-s' }, 'Сайт'), icon(I.ext));
@@ -46,7 +65,8 @@ export function mountShell(root, { user, siteUrl, onLogout }) {
         h('span', { class: 'brand__logo', html: LOGO }), h('span', { class: 'brand__dot', 'aria-hidden': 'true' }, '·'),
         h('span', { class: 'brand__sub' }, 'админка')),
       h('nav', { class: 'tabs', 'aria-label': 'Разделы админки' }, tabEls),
-      h('div', { class: 'top__r' }, site, help, h('div', { class: 'top__u' }, userBtn, menu), whoDesk, outDesk)));
+      h('div', { class: 'top__r' }, site, help, h('div', { class: 'top__u' }, userBtn, menu),
+        h('div', { class: 'top__wd' }, whoDesk, deskMenu), outDesk)));
   const pub = h('div', { class: 'pub', role: 'status', 'aria-live': 'polite', hidden: true });
   const main = h('main', { class: 'main', id: 'main', tabindex: '-1' });
   const chrome = h('div', { class: 'chrome' }, header, pub);
@@ -58,39 +78,47 @@ export function mountShell(root, { user, siteUrl, onLogout }) {
   root.classList.remove('boot');
   root.removeAttribute('aria-busy');
 
-  function toggleMenu(force) {
-    const open = force ?? menu.hidden;
-    if (open === !menu.hidden) return;
-    menu.hidden = !open;
-    userBtn.setAttribute('aria-expanded', String(open));
-    if (open) {
-      setTimeout(() => {
-        document.addEventListener('click', outside, { once: true });
-        helpMenu.focus({ preventScroll: true });   // фокус — в меню (на первый пункт, не на «Выйти»): Esc и Tab работают сразу
-      }, 0);
-      document.addEventListener('keydown', onKey);
-      window.addEventListener('scroll', onScroll, { passive: true });
-    } else {
-      document.removeEventListener('click', outside);
-      document.removeEventListener('keydown', onKey);
-      window.removeEventListener('scroll', onScroll);
+  // фокус — в меню (на первый пункт, не на «Выйти»): Esc и Tab работают сразу
+  const toggleMenu = dropdown(userBtn, menu, helpMenu);
+  const toggleDesk = dropdown(whoDesk, deskMenu, pwDesk);
+
+  /** Выпадающее меню под кнопкой: закрывается нажатием мимо, Esc (фокус — обратно на кнопку) и прокруткой. */
+  function dropdown(btn, box, first) {
+    function toggle(force) {
+      const open = force ?? box.hidden;
+      if (open === !box.hidden) return;
+      box.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+      if (open) {
+        setTimeout(() => {
+          document.addEventListener('click', outside, { once: true });
+          first.focus({ preventScroll: true });
+        }, 0);
+        document.addEventListener('keydown', onKey);
+        window.addEventListener('scroll', onScroll, { passive: true });
+      } else {
+        document.removeEventListener('click', outside);
+        document.removeEventListener('keydown', onKey);
+        window.removeEventListener('scroll', onScroll);
+      }
     }
-  }
-  function outside(e) {
-    if (menu.contains(e.target) || userBtn.contains(e.target)) {
-      if (!menu.hidden) document.addEventListener('click', outside, { once: true });
-      return;
+    function outside(e) {
+      if (box.contains(e.target) || btn.contains(e.target)) {
+        if (!box.hidden) document.addEventListener('click', outside, { once: true });
+        return;
+      }
+      toggle(false);
     }
-    toggleMenu(false);
-  }
-  function onKey(e) {
-    if (e.key !== 'Escape' || menu.hidden) return;
-    e.preventDefault();
-    toggleMenu(false);
-    userBtn.focus();
-  }
-  function onScroll() {
-    toggleMenu(false);
+    function onKey(e) {
+      if (e.key !== 'Escape' || box.hidden) return;
+      e.preventDefault();
+      toggle(false);
+      btn.focus();
+    }
+    function onScroll() {
+      toggle(false);
+    }
+    return toggle;
   }
 
   return {
@@ -103,11 +131,13 @@ export function mountShell(root, { user, siteUrl, onLogout }) {
       }
     },
     setUser(name) {
+      current = name;
       uname.textContent = name;
       who.textContent = name;
       initial.textContent = letter(name);
       initial2.textContent = letter(name);
       userBtn.setAttribute('aria-label', `${name} — меню`);
+      whoDesk.setAttribute('aria-label', `${name} — меню`);
     },
     setSite(url) {
       if (!url) return;

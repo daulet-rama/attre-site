@@ -3,7 +3,7 @@ name: pages
 on:
   push:
     branches: [main]
-    paths-ignore: ['admin/**']   # правки кода админки сайт не пересобирают (сохранения товаров — пересобирают)
+    paths-ignore: ['admin/**', '.admin/**']   # код админки и её пароли сайт не пересобирают (сохранения товаров — пересобирают)
   workflow_dispatch:
 
 permissions:

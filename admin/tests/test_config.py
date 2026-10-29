@@ -5,7 +5,7 @@ import pytest
 
 from app.config import ConfigError, load_config, parse_users
 
-SECRET = 's' * 40
+SECRET = 'test-session-secret-0123456789-abcdefgh'
 
 
 def gh_env(**kw):
@@ -47,6 +47,33 @@ def test_weak_passwords_refused_in_production(env, words):
         load_config(gh_env(**env))
     assert words in str(ex.value)
     assert '1234' not in str(ex.value) and 'attre2024' not in str(ex.value)   # сам пароль не печатаем
+
+
+@pytest.mark.parametrize('env, words', [
+    ({'SESSION_SECRET': 'x' * 48}, 'SESSION_SECRET похож на заглушку'),
+    ({'SESSION_SECRET': 'secret' * 8}, 'SESSION_SECRET похож на заглушку'),
+    ({'PASSWORD_PEPPER': 'p' * 40}, 'PASSWORD_PEPPER похож на заглушку'),
+])
+def test_placeholder_keys_refused_in_production(env, words):
+    """По pepper_id в публичном .admin/users.json догадку о ключе можно проверить — заглушка вместо случайного
+    ключа в боевом режиме не запустится (сам ключ не печатаем)."""
+    with pytest.raises(ConfigError) as ex:
+        load_config(gh_env(**env))
+    assert words in str(ex.value) and next(iter(env.values())) not in str(ex.value)
+
+
+def test_generated_keys_ok():
+    """Сгенерированные ключи проходят: hex (16 возможных символов), uuid, token_urlsafe."""
+    import secrets
+    import uuid
+    for key in (secrets.token_hex(16), secrets.token_hex(32), f'{uuid.uuid4()}', secrets.token_urlsafe(48)):
+        assert load_config(gh_env(SESSION_SECRET=key, PASSWORD_PEPPER=key[::-1])).password_pepper == key[::-1]
+
+
+def test_placeholder_keys_ok_locally(repo):
+    cfg = load_config({'STORE': 'local', 'LOCAL_REPO': str(repo), 'ADMIN_USERS': 'Дамира:тест',
+                       'SESSION_SECRET': 'x' * 40, 'PASSWORD_PEPPER': 'p' * 40})
+    assert cfg.password_pepper == 'p' * 40
 
 
 def test_short_password_ok_locally(repo):

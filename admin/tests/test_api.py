@@ -222,7 +222,8 @@ def test_bad_cookie_and_password_change(app, repo, tmp_path, static):
 
 @pytest.mark.parametrize('method, path', [('post', '/api/products'), ('put', '/api/products/altea'),
                                           ('delete', '/api/products/altea'), ('post', '/api/products/order'),
-                                          ('put', '/api/settings'), ('post', '/api/login'), ('post', '/api/uploads')])
+                                          ('put', '/api/settings'), ('post', '/api/login'), ('post', '/api/uploads'),
+                                          ('post', '/api/password')])
 def test_csrf_header_required(client, method, path):
     r = client.request(method.upper(), path, json={})
     assert r.status_code == 403 and 'Обновите страницу' in r.json()['error']

@@ -300,8 +300,10 @@ ul, ol { padding: 0; list-style: none; }
 }
 .top__uname { font-size: 15px; }
 .top__user .i { width: 16px; height: 16px; }
-.top__who, .top__out { display: none; }   /* на компьютере — имя и «Выйти» прямо в шапке (ниже, ≥760px) */
-.top__who { align-items: center; gap: 8px; padding: 0 4px 0 8px; }
+.top__wd, .top__out { display: none; }   /* на компьютере — имя (меню «Сменить пароль») и «Выйти» прямо в шапке (≥760px) */
+.top__wd { position: relative; }
+.top__who { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 6px 0 8px; }
+.top__who .i { width: 16px; height: 16px; }
 .top__out { align-items: center; gap: 6px; min-height: 44px; padding: 0 8px; font-size: 15px; }
 .top__out .i { width: 18px; height: 18px; }
 .umenu {
@@ -311,13 +313,14 @@ ul, ol { padding: 0; list-style: none; }
 }
 .umenu__who { padding: 10px 10px 12px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--mute); }
 .umenu__who b { font-weight: 600; color: var(--ink); }
-.umenu__out { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 50px; padding: 0 10px; font-size: 16px; }
+.umenu__out, .umenu__item { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 50px; padding: 0 10px; font-size: 16px; white-space: nowrap; }
+.umenu--desk { min-width: 220px; }
 .umenu__help { display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 10px; font-size: 16px; text-decoration: none; white-space: nowrap; }
 .umenu__help .i:last-child { width: 18px; height: 18px; margin-left: -6px; }
 @media (hover: hover) and (pointer: fine) {
   .tabs__a:hover { color: var(--ink); }
-  .top__site:hover, .top__help:hover, .top__user:hover, .top__out:hover { opacity: .65; }
-  .umenu__help:hover, .umenu__out:hover { background: var(--pad); }
+  .top__site:hover, .top__help:hover, .top__user:hover, .top__who:hover, .top__out:hover { opacity: .65; }
+  .umenu__help:hover, .umenu__out:hover, .umenu__item:hover { background: var(--pad); }
 }
 
 .pub { border-bottom: 1px solid var(--line); background: var(--pad); }
@@ -643,6 +646,10 @@ html.is-dragging, html.is-dragging * { cursor: grabbing !important; -webkit-user
 .dlg__text { margin-top: 10px; line-height: 1.5; color: #333; }
 .dlg__btns { display: grid; gap: 8px; margin-top: 24px; }
 .dlg__btns .btn { width: 100%; }
+/* Окно с полями (смена пароля): по высоте — в видимой части экрана над клавиатурой (ui.js formDialog) */
+.dlg-wrap--form .dlg { max-height: 100%; }
+.dlg--form .fld { margin-top: 18px; }
+.dlg__err { margin-top: 18px; padding: 12px 14px; background: var(--red-soft); color: var(--red); font-size: 15px; line-height: 1.45; }
 
 .sheet-wrap {
   position: fixed; inset: 0; z-index: 160;
@@ -925,7 +932,8 @@ html.is-dragging, html.is-dragging * { cursor: grabbing !important; -webkit-user
   .top__site-l { display: inline; }
   .top__site-s { display: none; }
   .top__u { display: none; }
-  .top__who, .top__out, .top__help { display: inline-flex; }
+  .top__wd { display: block; }
+  .top__out, .top__help { display: inline-flex; }
   .list__head { flex-wrap: nowrap; }
   .list__add { width: auto; }
 }

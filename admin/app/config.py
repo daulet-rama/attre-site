@@ -17,6 +17,11 @@ class ConfigError(Exception):
 
 
 MIN_PASSWORD = 12      # в боевом режиме (STORE=github): за формой входа — токен с правом записи в репозиторий сайта
+# Разных символов в ключе (SESSION_SECRET, PASSWORD_PEPPER) в боевом режиме — не меньше: отсекает заглушки вроде
+# «xxxx…» или «secretsecret…». В сгенерированном ключе из 32+ символов их практически всегда больше — даже в hex
+# (16 возможных) их в среднем 14, а меньше 8 — реже раза на миллион. Придуманную фразу так не распознать — поэтому
+# в README ключи только генерируются: по pepper_id в публичном .admin/users.json догадку о ключе можно проверить.
+MIN_DISTINCT = 8
 
 
 @dataclass(frozen=True)
@@ -32,6 +37,8 @@ class Config:
     github_branch: str = 'main'
     local_repo: Path | None = None
     trust_proxy: bool = False      # адрес посетителя — из X-Real-IP / X-Forwarded-For прокси Railway (auth.client_ip)
+    # ключ к файлу сменённых паролей .admin/users.json; не задан — производный от SESSION_SECRET (passwords.py)
+    password_pepper: str | None = field(default=None, repr=False)
 
     @property
     def user_names(self) -> list[str]:
@@ -92,6 +99,16 @@ def load_config(env: Mapping[str, str] | None = None) -> Config:
     if len(secret) < 32:
         problems.append('SESSION_SECRET — не короче 32 случайных символов (например: python -c '
                         '"import secrets; print(secrets.token_urlsafe(48))")')
+    elif store == 'github' and not looks_random(secret):
+        problems.append(f'SESSION_SECRET похож на заглушку, а не на случайный ключ (меньше {MIN_DISTINCT} разных '
+                        'символов) — сгенерируйте: python3 -c "import secrets; print(secrets.token_urlsafe(48))"')
+    pepper = get('PASSWORD_PEPPER') or None
+    if pepper and len(pepper) < 32:
+        problems.append('PASSWORD_PEPPER — не короче 32 случайных символов (или не задавайте: тогда ключ к файлу '
+                        'паролей берётся из SESSION_SECRET)')
+    elif pepper and store == 'github' and not looks_random(pepper):
+        problems.append(f'PASSWORD_PEPPER похож на заглушку, а не на случайный ключ (меньше {MIN_DISTINCT} разных '
+                        'символов) — сгенерируйте так же, как SESSION_SECRET')
 
     token, repo, branch, local_repo = None, '', get('GITHUB_BRANCH', 'main'), None
     if store == 'github':
@@ -150,8 +167,13 @@ def load_config(env: Mapping[str, str] | None = None) -> Config:
         store=store, users=users, session_secret=secret, site_url=site_url,
         tmp_dir=Path(get('TMP_DIR') or Path(tempfile.gettempdir()) / 'attre-admin'),
         port=port, github_token=token, github_repo=repo, github_branch=branch, local_repo=local_repo,
-        trust_proxy=trust_proxy,
+        trust_proxy=trust_proxy, password_pepper=pepper,
     )
+
+
+def looks_random(key: str) -> bool:
+    """Не заглушка ли ключ: разных символов не меньше MIN_DISTINCT (сам ключ не печатаем)."""
+    return len(set(key)) >= MIN_DISTINCT
 
 
 def weak_passwords(users: dict[str, str], source: str = 'ADMIN_USERS') -> list[str]:
