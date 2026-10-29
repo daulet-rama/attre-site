@@ -840,23 +840,21 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
   .vc__cap, .vc--w .vc__cap { padding: 12px 16px 0; }
   .vc__sw, .vc--w .vc__sw { padding: 0 16px; }
 
-  /* Товар: фото — по одному (просьба заказчицы), целиком в первом экране; сведения справа и липнут под шапкой.
-     Поля равные (просьба заказчиц): слева = между фото и колонкой = справа; колонка — 360px текста, фото не шире,
-     чем оставляет место для трёх полей ≥ --g */
+  /* Товар: сведения справа и липнут под шапкой */
+  /* Фото — по одному (просьба заказчицы), целиком в первом экране; сведения справа; пара — по центру страницы
+     (равные поля слева, между фото и колонкой и справа пробовали 29.10 — заказчицы вернули так) */
   .pp {
-    display: grid; align-items: start; justify-content: space-evenly;
-    grid-template-columns: min(calc((100vh - var(--promo) - var(--hdr)) * .75), calc(100% - 360px - 3 * var(--g))) 360px;
-    grid-template-columns: min(calc((100svh - var(--promo) - var(--hdr)) * .75), calc(100% - 360px - 3 * var(--g))) 360px;
+    display: grid; align-items: start; justify-content: center;
+    grid-template-columns: min(calc((100vh - var(--promo) - var(--hdr)) * .75), calc(100% - 440px)) 440px;
+    grid-template-columns: min(calc((100svh - var(--promo) - var(--hdr)) * .75), calc(100% - 440px)) 440px;
   }
   .pg { grid-column: 1; grid-row: 1; }
-  /* Поле 12px по бокам, съеденное отрицательным margin, — запас внутри колонки с прокруткой: иначе срезаются кольцо
-     выбранного цвета и рамка фокуса у кнопок */
   .pp__side {
     display: flex; flex-direction: column;
     grid-column: 2; grid-row: 1;
     position: sticky; top: var(--hdr);
     max-height: calc(100vh - var(--hdr)); overflow-y: auto;
-    padding: 40px 12px; margin: 0 -12px;
+    padding: 40px var(--g) 40px 48px;
   }
   .pp__bar { order: 0; position: static; padding: 0; border: 0; }
   .pp__head { flex-direction: column; align-items: flex-start; gap: 8px; }
