@@ -285,7 +285,9 @@ def rail_nav(lang, count=None):
 def footer(lang, suffix):
     info = url(f'{lang}/info/')
     cats = ''.join(f'<li><a href="{h}">{e(label)}</a></li>' for _, label, h, _ in cat_rows(lang))
-    proto = f'<p>{e(t("f_proto", lang))}</p>' if PROTOTYPE else ''
+    docs = (f'<p class="ftr__docs"><a href="{asset("assets/docs/publichnaya-oferta.pdf")}" target="_blank" rel="noopener">'
+            f'{e(t("f_offer", lang))}</a><a href="{asset("assets/docs/politika-konfidencialnosti.pdf")}" target="_blank" '
+            f'rel="noopener">{e(t("f_privacy", lang))}</a></p>')   # PDF заказчиц (только по-русски) — src/docs/
     return f'''<footer class="ftr">
 <div class="ftr__accs">
 {acc(t('dock_catalog', lang), f'<ul class="flist">{cats}</ul>', ' acc--f')}
@@ -313,7 +315,7 @@ def footer(lang, suffix):
 <div class="ftr__row">{langs(lang, suffix, 'ftr__langs')}<p class="ftr__copy">© {datetime.date.today().year} attré</p></div>
 <div class="ftr__legal">
 {seller_lines(lang)}
-{proto}
+{docs}
 </div>
 <div class="ftr__brand">
 <a class="ftr__logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="300" height="116" loading="lazy" decoding="async"></a>

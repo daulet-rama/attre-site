@@ -724,6 +724,9 @@ html.js .pp__acts--cart .btn--wa svg { width: 16px; height: 16px; }
 .ftr__copy { font-size: 11px; color: var(--mute); }
 .ftr__legal { margin-top: 16px; font-size: 11px; line-height: 1.55; color: var(--mute); }
 .ftr__legal p + p { margin-top: 6px; }
+.ftr__docs { display: flex; flex-wrap: wrap; gap: 4px 20px; }   /* оферта и политика (PDF заказчиц) */
+.ftr__docs a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .ftr__docs a:hover { color: var(--ink); } }
 .ftr__brand {   /* голубая плашка с логотипом и слоганом: на всю ширину, до самого низа экрана (просьба заказчиц) */
   margin: 40px calc(-1 * var(--g)) 0; padding: 40px var(--g) calc(28px + env(safe-area-inset-bottom));
   background: var(--foot);
