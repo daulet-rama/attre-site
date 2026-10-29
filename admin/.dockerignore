@@ -1,0 +1,29 @@
+# В образ попадают только requirements.txt, app/ и static/ (см. Dockerfile).
+# Всё остальное не отправляем в сборку — прежде всего .env с паролями и токеном.
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+
+# Локальные окружения и кэши
+**/.venv
+**/venv
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.coverage
+**/htmlcov
+**/node_modules
+**/.DS_Store
+**/*.swp
+
+# Не нужно для работы админки
+tests
+*.md
+Dockerfile
+.dockerignore
+railway.json
+.gitignore
+.git

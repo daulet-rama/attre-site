@@ -1,0 +1,15 @@
+# Репозиторий публичный: файлы с паролями и токеном в git не попадают
+.env
+.env.*
+!.env.example
+
+# Локальные окружения и кэши
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/

@@ -1,0 +1,5 @@
+# Для тестов и запуска на своём компьютере: pip install -r requirements-dev.txt && python -m pytest
+-r requirements.txt
+pytest==9.2.0
+# uvicorn --env-file .env читает .env через python-dotenv (в образе не нужен: Railway задаёт переменные сам)
+python-dotenv==1.2.4

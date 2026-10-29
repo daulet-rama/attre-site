@@ -1,0 +1,325 @@
+{
+  "altea": {
+    "id": "001",
+    "published": true,
+    "order": 10,
+    "cat": "bags",
+    "name": {
+      "ru": "Altea",
+      "kz": "Altea",
+      "en": "Altea"
+    },
+    "type": {
+      "ru": "сумка-ведро",
+      "kz": "шелек сөмке",
+      "en": "bucket bag"
+    },
+    "color": {
+      "ru": "молочный, чёрный, красный",
+      "kz": "сүт түсті, қара, қызыл",
+      "en": "cream, black, red"
+    },
+    "materials": [
+      "leather"
+    ],
+    "colors": [
+      "white",
+      "black",
+      "red"
+    ],
+    "new": true,
+    "popular": false,
+    "soon": false,
+    "desc": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "strap": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "size": {
+      "w": null,
+      "h": null,
+      "d": null
+    },
+    "price": null,
+    "stock": null,
+    "images": [
+      "media/products/altea-1.jpg",
+      "media/products/altea-2.jpg",
+      "media/products/altea-3.jpg",
+      "media/products/altea-4.jpg",
+      "media/products/altea-5.jpg"
+    ]
+  },
+  "monbasa": {
+    "id": "033",
+    "published": true,
+    "order": 330,
+    "cat": "bags",
+    "name": {
+      "ru": "Monbasa",
+      "kz": "Monbasa",
+      "en": "Monbasa"
+    },
+    "type": {
+      "ru": "боулер",
+      "kz": "боулер сөмке",
+      "en": "bowler bag"
+    },
+    "color": {
+      "ru": "чёрно-белый (далматин), молочный с коричневыми пятнами",
+      "kz": "қара-ақ (далматин), қоңыр дақты ақ",
+      "en": "black-and-white dalmatian print, cream with brown spots"
+    },
+    "materials": [
+      "pony"
+    ],
+    "colors": [
+      "animal"
+    ],
+    "new": false,
+    "popular": false,
+    "soon": false,
+    "desc": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "strap": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "size": {
+      "w": null,
+      "h": null,
+      "d": null
+    },
+    "price": null,
+    "stock": null,
+    "images": [
+      "media/products/monbasa-1.jpg",
+      "media/products/monbasa-2.jpg"
+    ]
+  },
+  "tokyo": {
+    "id": "011",
+    "published": true,
+    "order": 110,
+    "cat": "bags",
+    "name": {
+      "ru": "Tokyo",
+      "kz": "Tokyo",
+      "en": "Tokyo"
+    },
+    "type": {
+      "ru": "хобо",
+      "kz": "хобо сөмке",
+      "en": "hobo bag"
+    },
+    "color": {
+      "ru": "розовый, жёлтый, красный",
+      "kz": "қызғылт, сары, қызыл",
+      "en": "pink, yellow, red"
+    },
+    "materials": [
+      "leather"
+    ],
+    "colors": [
+      "mustard",
+      "pink",
+      "red",
+      "brown",
+      "blue"
+    ],
+    "new": true,
+    "popular": false,
+    "soon": false,
+    "desc": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "strap": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "size": {
+      "w": null,
+      "h": null,
+      "d": null
+    },
+    "price": null,
+    "stock": null,
+    "images": [
+      "media/products/tokyo-1.jpg",
+      "media/products/tokyo-2.jpg",
+      "media/products/tokyo-3.jpg",
+      "media/products/tokyo-4.jpg",
+      "media/products/tokyo-5.jpg"
+    ]
+  },
+  "innsbruck": {
+    "id": "028",
+    "published": true,
+    "order": 280,
+    "cat": "bags",
+    "name": {
+      "ru": "Innsbruck",
+      "kz": "Innsbruck",
+      "en": "Innsbruck"
+    },
+    "type": {
+      "ru": "хобо",
+      "kz": "хобо сөмке",
+      "en": "hobo bag"
+    },
+    "color": {
+      "ru": "бордовый, тёмно-коричневый",
+      "kz": "бордо, қою қоңыр",
+      "en": "burgundy, dark brown"
+    },
+    "materials": [
+      "leather"
+    ],
+    "colors": [
+      "red",
+      "brown",
+      "black"
+    ],
+    "new": false,
+    "popular": false,
+    "soon": false,
+    "desc": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "strap": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "size": {
+      "w": null,
+      "h": null,
+      "d": null
+    },
+    "price": null,
+    "stock": null,
+    "images": [
+      "media/products/innsbruck-1.jpg",
+      "media/products/innsbruck-2.jpg"
+    ]
+  },
+  "london": {
+    "id": "029",
+    "published": true,
+    "order": 290,
+    "cat": "bags",
+    "name": {
+      "ru": "London",
+      "kz": "London",
+      "en": "London"
+    },
+    "type": {
+      "ru": "тоут",
+      "kz": "тоут",
+      "en": "tote"
+    },
+    "color": {
+      "ru": "жёлтый, коричневый, чёрный",
+      "kz": "сары, қоңыр, қара",
+      "en": "yellow, brown, black"
+    },
+    "materials": [
+      "suede",
+      "leather"
+    ],
+    "colors": [
+      "mustard",
+      "brown",
+      "black"
+    ],
+    "new": false,
+    "popular": false,
+    "soon": false,
+    "desc": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "strap": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "size": {
+      "w": null,
+      "h": null,
+      "d": null
+    },
+    "price": null,
+    "stock": null,
+    "images": [
+      "media/products/london-1.jpg",
+      "media/products/london-2.jpg"
+    ]
+  },
+  "seattle": {
+    "id": "039",
+    "published": true,
+    "order": 390,
+    "cat": "bags",
+    "name": {
+      "ru": "Seattle",
+      "kz": "Seattle",
+      "en": "Seattle"
+    },
+    "type": {
+      "ru": "тоут",
+      "kz": "тоут",
+      "en": "tote"
+    },
+    "color": {
+      "ru": "чёрный",
+      "kz": "қара",
+      "en": "black"
+    },
+    "materials": [
+      "leather"
+    ],
+    "colors": [
+      "black"
+    ],
+    "new": true,
+    "popular": false,
+    "soon": false,
+    "desc": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "strap": {
+      "ru": "",
+      "kz": "",
+      "en": ""
+    },
+    "size": {
+      "w": null,
+      "h": null,
+      "d": null
+    },
+    "price": null,
+    "stock": null,
+    "images": [
+      "media/products/seattle-1.jpg",
+      "media/products/seattle-2.jpg"
+    ]
+  }
+}
