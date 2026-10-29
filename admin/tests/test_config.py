@@ -17,12 +17,21 @@ def test_github_ok_and_defaults():
     cfg = load_config(gh_env())
     assert cfg.store == 'github' and cfg.github_branch == 'main' and cfg.port == 8000
     assert cfg.users == {'Дамира': 'pw-damira-77', 'Жанна': 'два:с:двоеточием'}
-    assert cfg.site_url == 'https://daulet-rama.github.io/attre-site/v4/'     # по умолчанию — из GITHUB_REPO
+    assert cfg.site_url == 'https://attre.pages.dev/'      # по умолчанию — боевой адрес «Витрины», без /v4/
     assert 'tok-123' not in repr(cfg) and SECRET not in repr(cfg) and 'pw-damira-77' not in repr(cfg)
 
 
 def test_site_url_slash_added():
-    assert load_config(gh_env(SITE_URL='https://attre.kz/v4')).site_url == 'https://attre.kz/v4/'
+    assert load_config(gh_env(SITE_URL='https://attre.kz')).site_url == 'https://attre.kz/'
+    assert load_config(gh_env(SITE_URL=' https://attre.pages.dev ')).site_url == 'https://attre.pages.dev/'
+
+
+def test_site_url_default_only_in_production(repo):
+    """Локально (STORE=local) ссылок на боевой сайт по умолчанию нет: в копии бывают товары, которых там нет."""
+    env = {'STORE': 'local', 'LOCAL_REPO': str(repo), 'ADMIN_USERS': 'Дамира:тест', 'SESSION_SECRET': SECRET}
+    assert load_config(env).site_url == ''
+    assert load_config({**env, 'SITE_URL': 'http://localhost:8001'}).site_url == 'http://localhost:8001/'
+    assert load_config(gh_env(GITHUB_REPO='someone/fork')).site_url == 'https://attre.pages.dev/'   # не из репозитория
 
 
 def test_store_defaults_to_github():

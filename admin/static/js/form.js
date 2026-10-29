@@ -67,7 +67,8 @@ export function textarea({ id, value = '', placeholder = '', rows = 3, oninput, 
   return el;
 }
 
-/** Поле с подписью справа внутри рамки: «₸», «см», «шт.». */
+/** Поле с подписью справа внутри рамки: «₸», «см», «шт.». Рядом с ним что-то ещё (живая подсказка «скидка 20 %») —
+ *  обернуть в h('div', {class: 'fld__row'}, …): ошибка подсветит и такое поле. */
 export function withUnit(inp, unit) {
   return h('div', { class: 'unit' }, inp, h('span', { class: 'unit__u', 'aria-hidden': 'true' }, unit));
 }
@@ -244,7 +245,7 @@ export function setError(root, path, msg) {
     e.hidden = false;
   }
   w.classList.add('is-err');
-  for (const inp of w.querySelectorAll(':scope > input, :scope > textarea, :scope > .unit > input, :scope > .pw > input')) inp.setAttribute('aria-invalid', 'true');
+  for (const inp of w.querySelectorAll(':scope > input, :scope > textarea, :scope > .unit > input, :scope > .fld__row > .unit > input, :scope > .pw > input')) inp.setAttribute('aria-invalid', 'true');
   return w;
 }
 

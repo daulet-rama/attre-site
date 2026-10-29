@@ -1,4 +1,5 @@
-// Товары: «+ Добавить товар», поиск по названию и артикулу, фильтры-чипы, сетка карточек с бейджами.
+// Товары: «+ Добавить товар», поиск по названию и артикулу, фильтры-чипы, сетка карточек с бейджами
+// (у товара со скидкой — «Скидка −20 %», старая цена зачёркнута, новая красным).
 // «Изменить порядок» → список с перетаскиванием (за ⋮⋮) и стрелками ↑ ↓ → «Сохранить порядок».
 
 import { api, humane } from './api.js';
@@ -10,7 +11,7 @@ import { sortable } from './sortable.js';
 import * as status from './status.js';
 import { swatch } from './swatch.js';
 import { dialog, toast, placeToasts } from './ui.js';
-import { txt, norm, money, plural } from './util.js';
+import { txt, norm, money, plural, NBSP } from './util.js';
 
 // Поиск, фильтр и прокрутка помнятся, пока открыта вкладка: вернулись из товара — всё на месте
 const keep = { q: '', f: 'all', y: 0 };
@@ -39,6 +40,8 @@ function noImg(e) {
 
 function normItem(p) {
   const num = (x) => (typeof x === 'number' && Number.isFinite(x) ? x : null);
+  const price = num(p.price);
+  const sale = num(p.sale_price);
   return {
     slug: String(p.slug || ''),
     id: p.id == null ? '' : String(p.id),
@@ -46,7 +49,8 @@ function normItem(p) {
     names: p.name && typeof p.name === 'object' ? [p.name.ru, p.name.kz, p.name.en].filter(Boolean).join(' ') : txt(p.name),
     type: txt(p.type).trim(),
     cat: p.cat || '',
-    price: num(p.price),
+    price,
+    sale: price && sale > 0 && sale < price ? sale : null,      // как на сайте: иначе скидки нет
     stock: num(p.stock),
     soon: !!p.soon,
     isNew: !!p.new,
@@ -86,6 +90,7 @@ export function mountList(main) {
       ...meta.leafCats.map((c) => ({ key: `cat:${c.key}`, label: catLabel(c), test: (p) => p.cat === c.key })),
       { key: 'hidden', label: 'Скрытые', test: (p) => !p.published },
       { key: 'noprice', label: 'Без цены', test: (p) => !p.price },
+      { key: 'sale', label: 'Со скидкой', test: (p) => !!p.sale },
       { key: 'soon', label: 'Скоро в наличии', test: (p) => p.soon && p.stock !== 0 },
       { key: 'sold', label: 'Проданные', test: (p) => p.stock === 0 },
     ];
@@ -213,6 +218,7 @@ export function mountList(main) {
     return {
       hidden: 'Скрытых товаров нет — все видны на сайте.',
       noprice: 'У всех товаров есть цена.',
+      sale: 'Товаров со скидкой нет.',
       soon: 'Товаров «скоро в наличии» нет.',
       sold: 'Проданных товаров нет.',
     }[key] || 'В этом разделе пока нет товаров.';
@@ -224,9 +230,23 @@ export function mountList(main) {
     if (p.photos === 0) out.push(['Нет фото', 'warn']);
     if (p.stock === 0) out.push(['Продано', 'sold']);
     else if (p.soon) out.push(['Скоро', '']);
+    if (p.sale) out.push([saleLabel(p), 'sale']);
     if (p.isNew) out.push(['Новинка', 'new']);
     if (p.popular) out.push(['Популярное', '']);
     return out;
+  }
+
+  /** «Скидка −20 %» — проценты считаются так же, как подсказка в форме (45 000 → 36 000 — 20 %). */
+  function saleLabel(p) {
+    const pct = Math.min(99, Math.round((1 - p.sale / p.price) * 100));
+    return pct < 1 ? 'Скидка' : `Скидка −${pct}${NBSP}%`;
+  }
+
+  function priceLine(p) {
+    if (!p.price) return 'цена по запросу';
+    if (!p.sale) return money(p.price);
+    return [h('span', { class: 'sr-only' }, 'было '), h('s', { class: 'pc__old' }, money(p.price)),
+      h('span', { class: 'sr-only' }, ', сейчас '), h('span', { class: 'pc__new' }, money(p.sale))];
   }
 
   function dots(p) {
@@ -250,7 +270,7 @@ export function mountList(main) {
         h('span', { class: 'pc__cap' },
           h('span', { class: 'pc__name' }, p.name),
           h('span', { class: 'pc__meta' }, [p.id && `арт. ${p.id}`, p.type].filter(Boolean).join(' · ')),
-          h('span', { class: `pc__price tnum${p.price ? '' : ' mute'}` }, p.price ? money(p.price) : 'цена по запросу'),
+          h('span', { class: `pc__price tnum${p.price ? '' : ' mute'}` }, priceLine(p)),
           dots(p))));
   }
 

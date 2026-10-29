@@ -9,8 +9,8 @@ import pytest
 import threading
 
 from app import catalog as catalog_mod
-from app.catalog import (MEDIA, MSG_CONFLICT_DATA, PRODUCTS, Catalog, CatalogError, Conflict, NotFound, dumps, int_in,
-                         media_path, site_order, size_in, small_json, translit, tri_in)
+from app.catalog import (MEDIA, MSG_CONFLICT_DATA, MSG_SALE, PRODUCTS, Catalog, CatalogError, Conflict, NotFound, dumps,
+                         int_in, media_path, sale_of, site_order, size_in, small_json, translit, tri_in)
 from app.images import Uploads, process_upload
 from app.store import LocalStore
 from conftest import first_photo, git, jpeg_bytes, product_doc, product_photos
@@ -18,7 +18,7 @@ from conftest import first_photo, git, jpeg_bytes, product_doc, product_photos
 
 @pytest.fixture
 def cat(repo, tmp_path):
-    return Catalog(LocalStore(repo), Uploads(tmp_path / 'up'), 'https://example.test/v4/')
+    return Catalog(LocalStore(repo), Uploads(tmp_path / 'up'), 'https://example.test/')
 
 
 def upload(cat, size=(900, 1200)):
@@ -162,7 +162,7 @@ def test_meta(cat):
     assert cats['acc']['count'] == cats['cardholder']['count'] + cats['charms']['count']
     assert [x['key'] for x in m['materials']] == ['leather', 'suede', 'pony', 'textile', 'eco-leather']
     assert {'ru': 'сумка-ведро', 'kz': 'шелек сөмке', 'en': 'bucket bag'} in m['types']
-    assert m['users'] == ['Дамира', 'Жанна'] and m['site_url'] == 'https://example.test/v4/'
+    assert m['users'] == ['Дамира', 'Жанна'] and m['site_url'] == 'https://example.test/'
 
 
 # ——— проверки ———
@@ -219,7 +219,7 @@ def test_create_product(cat, repo):
                     'slug': 'hack', 'id': '999', 'order': -5, 'evil': 'x',
                     'variants': [{'color': 'yellow', 'material': 'pony', 'images': [up1, up2, up1]},
                                  {'color': 'milky', 'images': [p0, up2]}]}, 'Жанна')
-    assert r['slug'] == 'zheltaya-shuba' and r['url'] == 'https://example.test/v4/ru/p/zheltaya-shuba/'
+    assert r['slug'] == 'zheltaya-shuba' and r['url'] == 'https://example.test/ru/p/zheltaya-shuba/'
     assert r['commit'] == git(repo, 'rev-parse', 'HEAD') != before
     raw = (repo / PRODUCTS / 'zheltaya-shuba.json').read_bytes()
     doc = json.loads(raw)
@@ -416,6 +416,127 @@ def test_unknown_variant_keys_only_known_ones_kept(cat, repo):
     cat.update('verona', p, got['sha'], 'Дамира')
     v = read(repo, 'verona')['variants'][0]
     assert v['hex'] == '#123456' and 'uid' not in v and '_ui' not in v
+
+
+# ——— скидка (sale_price) ———
+
+def diff_lines(repo) -> list[str]:
+    diff = git(repo, 'show', '--format=', '--unified=0', 'HEAD').splitlines()
+    return [x for x in diff if x[:1] in '+-' and not x.startswith(('+++', '---'))]
+
+
+def test_sale_of_like_site():
+    """Скидка есть, только если цена задана и 0 < sale_price < price — иначе на сайте обычная цена. Числа — как их
+    читает сайт (core.clean_product): float(), копейки отбрасываются, «45 000» с пробелом — не число."""
+    assert sale_of(45000, 36000) == 36000 and sale_of(45000.0, 36000.0) == 36000 and sale_of(45000, 44999) == 44999
+    assert sale_of('45000', '36000') == 36000 and sale_of(45000.9, 36000.7) == 36000      # файл исправили руками
+    assert sale_of(45000, 44999.5) == 44999 and sale_of(45000, 1.5) == 1
+    for price, sale in ((None, 36000), (0, 1), (0.5, 0.2), (45000, 45000), (45000, 45000.4), (45000, 50000),
+                        (45000, 0), (45000, 0.9), (45000, -1), (45000, None), (45000, 'дёшево'), ('45 000', 36000),
+                        (45000, '36 000'), (45000, float('nan')), (float('inf'), 36000), (45000, [36000]),
+                        (45000, 10 ** 400)):
+        assert sale_of(price, sale) is None, (price, sale)
+
+
+def test_sale_price_create_list_and_form(cat, repo):
+    r = cat.create(new_product(price='45 000', sale_price='36 000 ₸', variants=[{'color': 'black', 'images': pool(repo)[:1]}]),
+                   'Дамира')
+    doc = read(repo, r['slug'])
+    assert doc['price'] == 45000 and doc['sale_price'] == 36000
+    keys = list(doc)
+    assert keys[keys.index('price') + 1] == 'sale_price' and keys[keys.index('sale_price') + 1] == 'stock'
+    assert cat.product(r['slug'])['product']['sale_price'] == 36000
+    item = next(x for x in cat.products() if x['slug'] == r['slug'])
+    assert item['price'] == 45000 and item['sale_price'] == 36000
+    other = next(x for x in cat.products() if x['slug'] == 'altea')
+    assert other['sale_price'] is None and cat.product('altea')['product']['sale_price'] is None
+
+
+def test_sale_price_not_written_without_discount(cat, repo):
+    for empty in (None, ''):
+        r = cat.create(new_product(name={'ru': f'Без скидки {empty!r}'}, price=45000, sale_price=empty,
+                                   variants=[{'color': 'black', 'images': pool(repo)[:1]}]), 'Дамира')
+        assert 'sale_price' not in read(repo, r['slug'])
+
+
+@pytest.mark.parametrize('price, sale, words', [
+    (45000, 45000, 'Цена со скидкой должна быть меньше обычной (45 000 ₸).'),     # равна цене
+    (45000, '50 000', 'Цена со скидкой должна быть меньше обычной (45 000 ₸).'),  # больше цены
+    (None, 36000, 'Сначала укажите обычную цену'),
+    ('', '36 000', 'Сначала укажите обычную цену'),
+    (0, 36000, 'Сначала укажите обычную цену'),                     # 0 на сайте — тоже «цена по запросу»
+    (45000, -1, MSG_SALE), (45000, '-36000', MSG_SALE), (45000, 0, MSG_SALE),
+    (45000, 'дёшево', MSG_SALE), (45000, 1.5, MSG_SALE), (45000, '36 000,50', MSG_SALE), (45000, True, MSG_SALE),
+    (45000, [36000], MSG_SALE), (45000, 10_000_001, MSG_SALE), (45000, 10 ** 30, MSG_SALE), (45000, '9' * 50, MSG_SALE),
+    (45000, float('inf'), MSG_SALE), (45000, float('nan'), MSG_SALE),             # Infinity / NaN в JSON запроса
+])
+def test_sale_price_validation(cat, repo, price, sale, words):
+    got = cat.product('bergen')
+    head = git(repo, 'rev-parse', 'HEAD')
+    with pytest.raises(CatalogError) as ex:
+        cat.update('bergen', {**got['product'], 'price': price, 'sale_price': sale}, got['sha'], 'Дамира')
+    assert ex.value.field == 'sale_price' and ex.value.status == 400 and ex.value.message.startswith(words)
+    assert git(repo, 'rev-parse', 'HEAD') == head
+    with pytest.raises(CatalogError) as ex:                                 # и у нового товара — то же
+        cat.create(new_product(price=price, sale_price=sale, variants=[{'color': 'black', 'images': pool(repo)[:1]}]),
+                   'Дамира')
+    assert ex.value.field == 'sale_price' and ex.value.message.startswith(words)
+
+
+def test_sale_price_on_change_off(cat, repo):
+    """Включили скидку — одна новая строка сразу после цены; поменяли — одна строка; выключили — строки нет."""
+    before = read(repo, 'bergen')
+    got = cat.product('bergen')
+    cat.update('bergen', {**got['product'], 'price': 52000, 'sale_price': 41600}, got['sha'], 'Дамира')
+    assert diff_lines(repo) == ['-  "price": null,', '+  "price": 52000,', '+  "sale_price": 41600,']
+    got = cat.product('bergen')
+    assert got['product']['sale_price'] == 41600
+    cat.update('bergen', {**got['product'], 'sale_price': '39 000'}, got['sha'], 'Жанна')
+    assert diff_lines(repo) == ['-  "sale_price": 41600,', '+  "sale_price": 39000,']
+    got = cat.product('bergen')
+    cat.update('bergen', {**got['product'], 'sale_price': None}, got['sha'], 'Дамира')   # выключили скидку
+    assert diff_lines(repo) == ['-  "sale_price": 39000,']
+    after = read(repo, 'bergen')
+    assert 'sale_price' not in after and after == {**before, 'price': 52000} and list(after) == list(before)
+    got = cat.product('bergen')
+    assert cat.update('bergen', got['product'], got['sha'], 'Дамира')['unchanged']   # без скидки — без изменений
+
+
+def test_sale_price_from_file_shown_as_is(cat, repo):
+    """Неправильную скидку (вписали в файл руками) сайт не показывает — и список тоже; форма показывает её как есть,
+    а при сохранении проверка объясняет, что не так."""
+    doc = read(repo, 'bergen')
+    (repo / PRODUCTS / 'bergen.json').write_bytes(dumps({**doc, 'price': 45000, 'sale_price': 60000}))
+    git(repo, 'commit', '-qam', 'скидка руками')
+    got = cat.product('bergen')
+    assert got['product']['price'] == 45000 and got['product']['sale_price'] == 60000
+    assert next(x for x in cat.products() if x['slug'] == 'bergen')['sale_price'] is None
+    with pytest.raises(CatalogError) as ex:
+        cat.update('bergen', got['product'], got['sha'], 'Дамира')
+    assert ex.value.field == 'sale_price' and 'меньше обычной' in ex.value.message
+
+
+def test_sale_price_legacy_product(cat, repo, legacy):
+    """Старый товар (без variants) со скидкой: переходит на variants, а sale_price — сразу после price."""
+    got = cat.product('altea')
+    p = {**got['product'], 'price': 45000, 'sale_price': 36000}
+    p['variants'][0]['color'] = 'milky'
+    cat.update('altea', p, got['sha'], 'Дамира')
+    new = read(repo, 'altea')
+    keys = list(new)
+    assert new['sale_price'] == 36000 and keys[keys.index('price') + 1] == 'sale_price'
+    assert 'images' not in new and new['variants'][0]['color'] == 'milky'
+
+
+@pytest.mark.parametrize('price, sale, shown', [
+    ('45000', 36000.5, 36000),        # строкой и с копейками — сайт берёт 36 000, и список тоже
+    (45000, '36 000', None),          # «36 000» с пробелом сайт числом не считает — скидки на сайте нет
+])
+def test_sale_price_list_like_site_for_hand_edited(cat, repo, price, sale, shown):
+    doc = read(repo, 'bergen')
+    (repo / PRODUCTS / 'bergen.json').write_bytes(dumps({**doc, 'price': price, 'sale_price': sale}))
+    git(repo, 'commit', '-qam', 'скидка руками')
+    assert next(x for x in cat.products() if x['slug'] == 'bergen')['sale_price'] == shown
 
 
 # ——— удаление и порядок ———

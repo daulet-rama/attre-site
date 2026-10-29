@@ -1,6 +1,7 @@
 // Живое превью «Так будет на сайте»: карточка каталога и блок товара — та же разметка и те же правила,
 // что в themes/v4.py (card, product, tag, vswatch): бирка «продано → скоро в наличии → остался 1 → новинка»,
-// «цена по запросу» без цены, кружочки цветов меняют фото, «цвет: молочный», кнопка «в корзину».
+// «цена по запросу» без цены, скидка (старая цена зачёркнута, рядом новая красным), кружочки цветов меняют фото,
+// «цвет: молочный», кнопка «в корзину».
 // Перерисовываются только изменившиеся части: фото не мигают, пока человек печатает.
 
 import { esc } from './dom.js';
@@ -14,9 +15,17 @@ const T = {
   cart_add: 'в корзину', wa_btn_soon: 'узнать о поступлении', wa_btn_sold: 'спросить о похожих', p_color: 'цвет',
   p_type: 'тип', p_material: 'материал', p_size: 'размеры', p_strap: 'ручки и ремни', p_made: 'производство',
   made_in: 'Гуанчжоу, Китай', todo: 'уточняется', details: 'характеристики', ref: 'арт.',
+  price_old: 'старая цена', price_sale: 'цена со скидкой',
 };
 
 const priceText = (m) => (m.price ? money(m.price) : T.price_request);
+
+/** Цена для карточки и страницы: со скидкой — старая зачёркнута, рядом новая красным, без процента
+ *  (та же разметка, что price_html в themes/v4.py). */
+const priceHtml = (m) => (m.price && m.sale
+  ? `<span class="sr-only">${T.price_old}:</span><s class="price__was">${esc(money(m.price))}</s> `
+    + `<span class="sr-only">${T.price_sale}:</span><span class="price__now">${esc(money(m.sale))}</span>`
+  : esc(priceText(m)));
 
 function tag(m) {
   if (m.sold) return `<p class="tag">${T.sold}</p>`;
@@ -37,9 +46,9 @@ const SKELETON = `<div data-part="notes"></div>
 <div class="pv__page"><article class="pp"><div class="pg" data-part="pimg"></div><div data-part="ptext" class="pp__side"></div></article></div></section>`;
 
 /**
- * Модель готовит editor.js: {name, type, id, price, stock, sold, soon, isNew, published, wasPublished (true | false |
- *   null — новый товар), desc, strap, size: [w,h,d] | null, variants: [{key, name, hex, pattern, mats, images: [url]}],
- *   skipped: 'текст' | ''}
+ * Модель готовит editor.js: {name, type, id, price, sale (цена со скидкой | null), stock, sold, soon, isNew, published,
+ *   wasPublished (true | false | null — новый товар), desc, strap, size: [w,h,d] | null,
+ *   variants: [{key, name, hex, pattern, mats, images: [url]}], skipped: 'текст' | ''}
  */
 export function createPreview() {
   const el = document.createElement('div');
@@ -99,7 +108,7 @@ export function createPreview() {
     const dots = multi
       ? `<div class="vc__sw vc__sw--pick">${vs.map((x, i) => `<button class="vc__c" type="button" data-pv-c="${i}" aria-pressed="${i === cv}" title="${esc(x.name)}">${swatchHtml(x, 'sw--s')}</button>`).join('')}</div>`
       : `<p class="vc__sw" title="${esc(vs.map((x) => x.name).join(', '))}">${vs.map((x) => swatchHtml(x, 'sw--s')).join('')}</p>`;
-    set('ctext', `<div class="vc__cap">${tag(m)}<h4 class="vc__name">${esc(m.name)}</h4>${m.type ? `<p class="vc__meta">${esc(m.type)}</p>` : ''}<p class="vc__price tnum">${esc(priceText(m))}</p></div>${dots}<span class="fav" aria-hidden="true">${SITE.heart}</span>`);
+    set('ctext', `<div class="vc__cap">${tag(m)}<h4 class="vc__name">${esc(m.name)}</h4>${m.type ? `<p class="vc__meta">${esc(m.type)}</p>` : ''}<p class="vc__price tnum">${priceHtml(m)}</p></div>${dots}<span class="fav" aria-hidden="true">${SITE.heart}</span>`);
 
     // Страница товара: фото выбранного цвета листаются стрелками, полоски — сколько фото и какое сейчас
     const cur = vs[st.pv];
@@ -124,7 +133,7 @@ export function createPreview() {
       [T.p_strap, m.strap ? esc(m.strap) : todo],
       [T.p_made, T.made_in],
     ].map(([a, b]) => `<div><dt>${a}</dt><dd>${b}</dd></div>`).join('');
-    set('ptext', `<div class="pp__bar"><div class="pp__head"><h4 class="pp__name">${esc(m.name)}</h4><p class="pp__price tnum">${esc(priceText(m))}</p></div>
+    set('ptext', `<div class="pp__bar"><div class="pp__head"><h4 class="pp__name">${esc(m.name)}</h4><p class="pp__price tnum">${priceHtml(m)}</p></div>
 <div class="pp__acts">${acts}<span class="fav fav--box" aria-hidden="true">${SITE.heart}</span></div></div>
 <div class="pp__info"><div class="pcol"><p class="pcol__t">${T.p_color}: <span>${esc(cur.name)}</span></p>
 <div class="pcol__opts">${vs.map((x, i) => `<button class="pcol__o" type="button" data-pv-p="${i}" aria-pressed="${i === st.pv}" title="${esc(x.name)}">${swatchHtml(x)}</button>`).join('')}</div></div>

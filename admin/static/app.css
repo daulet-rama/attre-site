@@ -164,8 +164,8 @@ ul, ol { padding: 0; list-style: none; }
 .inp::placeholder { color: #767676; opacity: 1; }   /* 4.5:1 на белом */
 .inp:focus, .inp:focus-visible { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px var(--accent); }
 .inp--area { min-height: 96px; resize: none; overflow: hidden; }
-.is-err > .inp, .is-err > .unit > .inp, .is-err > .pw > .inp, .size__c.is-err > .inp { border-color: var(--red); background: #fffafa; }
-.is-err > .inp:focus, .is-err > .unit > .inp:focus, .size__c.is-err > .inp:focus { box-shadow: 0 0 0 3px #f5c6c6; }
+.is-err > .inp, .is-err > .unit > .inp, .is-err > .fld__row > .unit > .inp, .is-err > .pw > .inp, .size__c.is-err > .inp { border-color: var(--red); background: #fffafa; }
+.is-err > .inp:focus, .is-err > .unit > .inp:focus, .is-err > .fld__row > .unit > .inp:focus, .size__c.is-err > .inp:focus { box-shadow: 0 0 0 3px #f5c6c6; }
 .is-err > .chips .chip, .is-err > .pal, .is-err > .opts3 .opt3 { border-color: var(--red); }
 .is-err > .pal { outline: 1px solid var(--red); outline-offset: 4px; }
 
@@ -175,6 +175,22 @@ ul, ol { padding: 0; list-style: none; }
 .unit--pre { max-width: none; }
 .unit--pre .inp { padding-left: 34px; padding-right: 14px; }
 .unit--pre .unit__u { left: 14px; right: auto; }
+/* Поле и рядом с ним живая подсказка («скидка 20 %»); не помещается — подсказка строкой ниже */
+.fld__row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.fld__row > .unit { flex: 0 1 220px; min-width: 0; }
+
+/* Скидка под ценой: переключатель, включили — «Цена со скидкой» (блок с голубой чертой слева — часть «Скидки») */
+.sale { margin-top: 10px; }
+.sale__box { margin-top: 4px; padding: 2px 0 4px 16px; border-left: 3px solid var(--accent); }
+.sale__box > .fld { margin-top: 0; }
+.sale__pct { font-size: 16px; font-weight: 600; line-height: 1.3; }
+.sale__pct.is-bad { font-size: 15px; font-weight: 500; color: var(--red); }
+.sale__qs { margin-top: 10px; }
+.sale__q { min-width: 80px; font-weight: 500; }
+.sale__q:disabled { opacity: .4; }
+.is-err > .sale__qs .chip { border-color: var(--line-2); }          /* кнопки −10/−20/−30 % — не часть ошибки */
+.is-err > .sale__qs .chip[aria-pressed="true"] { border-color: var(--ink); }
+.is-err .sale__pct.is-bad { display: none; }       /* ошибка под полем уже говорит то же; начали править — вернётся */
 
 .pw { position: relative; }
 .pw .inp { padding-right: 56px; }
@@ -402,10 +418,13 @@ ul, ol { padding: 0; list-style: none; }
 .badge--warn { background: var(--red); color: #fff; }
 .badge--sold { color: var(--red); }
 .badge--new { background: var(--accent); }
+.badge--sale { color: var(--red); }
 .pc__cap { display: flex; flex-direction: column; gap: 1px; padding-top: 10px; }
 .pc__name { overflow: hidden; font-size: 15px; font-weight: 600; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
 .pc__meta { overflow: hidden; font-size: 13px; color: var(--mute); text-overflow: ellipsis; white-space: nowrap; }
 .pc__price { font-size: 14px; }
+.pc__old { margin-right: 6px; color: var(--mute); text-decoration: line-through; }
+.pc__new { color: var(--red); }
 .pc__sw { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 7px; }
 .pc__sw .sw--s { width: 12px; height: 12px; }
 .pc__more { font-size: 12px; color: var(--mute); }
@@ -791,6 +810,9 @@ html.is-dragging, html.is-dragging * { cursor: grabbing !important; -webkit-user
 .pv .vc__name { overflow: hidden; padding-right: 4px; white-space: nowrap; text-overflow: ellipsis; }
 .pv .vc__meta { margin-top: 3px; color: #737373; }
 .pv .vc__price { margin-top: 3px; }
+/* Скидка — как на сайте: старая цена зачёркнута, рядом новая красным (без процента) */
+.pv .price__was { margin-right: .35em; text-decoration-thickness: 1px; }
+.pv .price__now { color: var(--red); }
 .pv .tag { margin-bottom: 4px; font-size: 10px; color: #737373; }
 .pv .tag--on { color: #000; }
 .pv .vc__sw { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding: 0 12px; }

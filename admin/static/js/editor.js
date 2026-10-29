@@ -1,6 +1,6 @@
 // Редактор товара: основное · цена и наличие · цвета и фото · описание и размеры (+ переводы, свёрнуто).
-// Цена и наличие — сразу после «Основного»: их меняют чаще всего, а цвета с фото длинные (у сохранённого товара
-// они свёрнуты в строки «● молочный · кожа · 4 фото — Изменить»). Под названием — строка-оглавление.
+// Цена и наличие (и скидка) — сразу после «Основного»: их меняют чаще всего, а цвета с фото длинные (у сохранённого
+// товара они свёрнуты в строки «● молочный · кожа · 4 фото — Изменить»). Под названием — строка-оглавление.
 // Справа (на телефоне — по кнопке) живое превью «Так будет на сайте». Внизу липкая панель «Сохранить и опубликовать».
 // Всё введённое и не сохранённое лежит в черновике на этом устройстве (draft.js): Safari на iPhone не переспрашивает
 // при закрытии вкладки и сам перезагружает её после «Камеры». Неизвестные поля товара сохраняются как были;
@@ -22,18 +22,20 @@ import * as status from './status.js';
 import { swatch } from './swatch.js';
 import { dialog, sheet, toast, clearToasts, onScreen, placeToasts } from './ui.js';
 import {
-  clone, tri, triTrim, uid, cap, norm, groupDigits, parseIntField, parseNumField, numToField, plural, LANGS, txt, money,
+  clone, tri, triTrim, uid, cap, norm, groupDigits, parseIntField, parseNumField, numToField, plural, LANGS, txt, money, NBSP,
 } from './util.js';
 
 const LEGACY_FIELDS = ['images', 'colors', 'color', 'materials'];
 const PATTERN_KEYS = new Set(['leopard', 'zebra', 'cow', 'dalmatian']);   // узоры кружочков сайта (themes/v4.py vswatch)
 const LANG_NAME = { kz: 'Қазақша', en: 'English' };
+const SALE_STEPS = [10, 20, 30];      // быстрые кнопки скидки, % от обычной цены
 
 // Перечень в сообщении внизу: «Проверьте: название, категорию, фото.» (винительный падеж)
 const WHAT = [
   [/^name(\.ru)?$/, 'название'], [/^name\./, 'перевод названия'], [/^cat$/, 'категорию'], [/^type/, 'тип'],
   [/^variants\.\d+\.color$/, 'цвет'], [/^variants\.\d+\.name/, 'название цвета'], [/^variants\.\d+\.images$/, 'фото'],
-  [/^variants\.\d+\.material/, 'материал'], [/^variants/, 'цвета'], [/^price$/, 'цену'], [/^stock$/, 'остаток'],
+  [/^variants\.\d+\.material/, 'материал'], [/^variants/, 'цвета'], [/^price$/, 'цену'], [/^sale_price$/, 'цену со скидкой'],
+  [/^stock$/, 'остаток'],
   [/^size/, 'размер'], [/^desc/, 'описание'], [/^strap/, 'ручки и ремни'],
 ];
 const what = (f) => (WHAT.find(([re]) => re.test(String(f || ''))) || [null, null])[1];
@@ -77,6 +79,11 @@ export function mountEditor(main, { slug: startSlug }) {
       show: (f) => ({ in: 'в наличии', soon: 'скоро в наличии', sold: 'продано' }[f.avail] + (f.avail === 'in' && f.stock.trim() ? `, остаток ${f.stock.trim()}` : '')),
     },
     { key: 'price', label: 'Цена', get: (f) => normInt(f.price), show: (f) => (Number.isInteger(parseIntField(f.price)) ? money(parseIntField(f.price)) : 'пусто (цена по запросу)') },
+    // выключенная скидка — «нет», что бы ни лежало в поле (его помним, чтобы вернуть, но не сохраняем)
+    {
+      key: 'sale', label: 'Скидка', fields: ['sale', 'salePrice'], get: (f) => (f.sale ? normInt(f.salePrice) : null),
+      show: (f) => (!f.sale ? 'нет' : Number.isInteger(parseIntField(f.salePrice)) ? `цена со скидкой ${money(parseIntField(f.salePrice))}` : f.salePrice.trim() || 'пусто'),
+    },
     { key: 'desc', label: 'Описание', get: (f) => triTrim(f.desc), show: (f) => f.desc.ru.trim() },
     { key: 'strap', label: 'Ручки и ремни', get: (f) => triTrim(f.strap), show: (f) => f.strap.ru.trim() },
     { key: 'size', label: 'Размер', get: (f) => ['w', 'h', 'd'].map((k) => normNum(f.size[k])), show: (f) => ['w', 'h', 'd'].map((k) => f.size[k].trim() || '—').join(' × ') },
@@ -188,10 +195,12 @@ export function mountEditor(main, { slug: startSlug }) {
     if (!p) {
       return {
         published: true, name: tri(), type: tri(), cat: meta.leafCats.length === 1 ? meta.leafCats[0].key : '',
-        isNew: false, popular: false, avail: 'in', price: '', stock: '', desc: tri(), strap: tri(),
+        isNew: false, popular: false, avail: 'in', price: '', sale: false, salePrice: '', stock: '', desc: tri(), strap: tri(),
         size: { w: '', h: '', d: '' }, variants: [newVariant()],
       };
     }
+    // скидка из файла — как есть (даже больше цены: проверка перед сохранением объяснит); 0 и минус — «скидки нет»
+    const sale = typeof p.sale_price === 'number' && p.sale_price > 0;
     let variants = Array.isArray(p.variants) && p.variants.length ? p.variants.filter((v) => v && typeof v === 'object').map(fromVariant) : null;
     if (!variants || !variants.length) {
       legacy = true;
@@ -207,6 +216,7 @@ export function mountEditor(main, { slug: startSlug }) {
       isNew: !!p.new, popular: !!p.popular,
       avail: stock === 0 ? 'sold' : p.soon ? 'soon' : 'in',
       price: typeof p.price === 'number' ? groupDigits(p.price) : '',
+      sale, salePrice: sale ? groupDigits(p.sale_price) : '',
       stock: stock && stock > 0 ? String(stock) : '',
       desc: tri(p.desc), strap: tri(p.strap),
       size: { w: numToField(size.w), h: numToField(size.h), d: numToField(size.d) },
@@ -263,6 +273,8 @@ export function mountEditor(main, { slug: startSlug }) {
     p.soon = form.avail === 'soon';
     const pr = parseIntField(form.price);
     p.price = Number.isInteger(pr) ? pr : null;
+    const sp = parseIntField(form.salePrice);
+    p.sale_price = form.sale && Number.isInteger(sp) ? sp : null;     // null — скидки нет, сервер уберёт поле из файла
     if (form.avail === 'sold') p.stock = 0;
     else {
       const st = parseIntField(form.stock);
@@ -301,7 +313,7 @@ export function mountEditor(main, { slug: startSlug }) {
   function draftShape(f) {
     return {
       published: f.published, name: f.name, type: f.type, cat: f.cat, isNew: f.isNew, popular: f.popular, avail: f.avail,
-      price: f.price, stock: f.stock, desc: f.desc, strap: f.strap, size: f.size,
+      price: f.price, sale: f.sale, salePrice: f.salePrice, stock: f.stock, desc: f.desc, strap: f.strap, size: f.size,
       variants: f.variants.map((v) => ({
         color: v.color, name: v.name, mats: v.mats, extra: v.extra, open: !!v.open,
         // фото, которые ещё грузятся или не подошли, в черновик не попадают: файла с телефона в нём не сохранить
@@ -329,7 +341,8 @@ export function mountEditor(main, { slug: startSlug }) {
     for (const v of vs) if (!meta.pal[v.color] || !v.images.length) v.open = true;
     return {
       published: f.published !== false, name: tri(f.name), type: tri(f.type), cat: s(f.cat), isNew: !!f.isNew, popular: !!f.popular,
-      avail: ['in', 'soon', 'sold'].includes(f.avail) ? f.avail : 'in', price: s(f.price), stock: s(f.stock),
+      avail: ['in', 'soon', 'sold'].includes(f.avail) ? f.avail : 'in', price: s(f.price),
+      sale: f.sale === true, salePrice: s(f.salePrice), stock: s(f.stock),
       desc: tri(f.desc), strap: tri(f.strap), size: { w: s(size.w), h: s(size.h), d: s(size.d) },
       variants: vs.length ? vs : [newVariant()],
     };
@@ -915,6 +928,8 @@ export function mountEditor(main, { slug: startSlug }) {
       id: 'f-price', value: form.price, inputmode: 'numeric', placeholder: 'например, 45 000', enterkeyhint: 'done',
       oninput: (v) => {
         form.price = v;
+        clearSaleErr();               // «сначала укажите обычную цену», «меньше обычной (…)» — правят и здесь
+        updSale();
         changed();
       },
       onblur: (v, el) => {
@@ -925,7 +940,7 @@ export function mountEditor(main, { slug: startSlug }) {
         }
       },
     });
-    const big = (t, s) => [h('span', { class: 'opt3__dot', 'aria-hidden': 'true' }), h('span', { class: 'opt3__txt' }, h('span', { class: 'opt3__t' }, t), h('span', { class: 'opt3__s' }, s))];
+    const big =(t, s) => [h('span', { class: 'opt3__dot', 'aria-hidden': 'true' }), h('span', { class: 'opt3__txt' }, h('span', { class: 'opt3__t' }, t), h('span', { class: 'opt3__s' }, s))];
     const avail = radios({
       options: [
         { value: 'in', render: () => big('В наличии', 'можно купить: кнопка «в корзину»') },
@@ -956,9 +971,116 @@ export function mountEditor(main, { slug: startSlug }) {
       check({ id: 'f-pop', checked: form.popular, label: 'Популярное', hint: 'в блоке «популярное» на главной', onchange: (v) => { form.popular = v; changed(); } }));
     return section({ title: 'Цена и наличие', id: 'sec-price' },
       field({ name: 'price', label: 'Цена', control: withUnit(price, '₸'), hint: 'Только цифры. Пусто — на сайте будет «цена по запросу».' }),
+      buildSale(),
       field({ name: 'availability', label: 'Наличие', control: avail, id: 'f-avail' }),
       refs.stockF,
       field({ label: 'Метки', opt: true, control: marks, group: true }));
+  }
+
+  // ——— Скидка: переключатель под ценой; включили — «Цена со скидкой», рядом живое «скидка 20 %», кнопки −10/−20/−30 %.
+  // Выключили — поле прячется, но набранное помним (включите снова — вернётся); сохраняется только включённая скидка.
+
+  function buildSale() {
+    refs.saleSw = switcher({
+      id: 'f-sale', checked: form.sale, label: 'Скидка', hint: saleHint,
+      onchange: (v) => {
+        form.sale = v;
+        refs.saleBox.hidden = !v;
+        if (!v) clearSaleErr();         // скидку выключили — её ошибка больше не нужна
+        updSale();
+        changed();
+      },
+    });
+    refs.saleInp = input({
+      id: 'f-sale-price', value: form.salePrice, inputmode: 'numeric', placeholder: 'например, 36 000', enterkeyhint: 'done',
+      oninput: (v) => {
+        form.salePrice = v;
+        updSale();
+        changed();
+      },
+      onblur: (v, el) => {
+        const n = parseIntField(v);
+        if (Number.isInteger(n)) {
+          el.value = groupDigits(n);
+          form.salePrice = el.value;
+        }
+      },
+    });
+    refs.salePct = h('p', { class: 'sale__pct tnum', id: 'f-sale-pct' });
+    refs.saleBtns = SALE_STEPS.map((pct) => h('button', { type: 'button', class: 'chip sale__q tnum', 'aria-pressed': 'false', onclick: () => quickSale(pct) }, `−${pct}${NBSP}%`));
+    refs.saleF = field({
+      name: 'sale_price', label: 'Цена со скидкой', control: h('div', { class: 'fld__row' }, withUnit(refs.saleInp, '₸'), refs.salePct),
+      after: h('div', { class: 'chips sale__qs', role: 'group', 'aria-label': 'Скидка от обычной цены' }, refs.saleBtns),
+      hint: 'Нажмите −10 %, −20 % или −30 % — цена посчитается сама. Или впишите свою.',
+    });
+    refs.saleInp.setAttribute('aria-describedby', `${refs.salePct.id} ${refs.saleInp.getAttribute('aria-describedby') || ''}`.trim());
+    refs.saleBox = h('div', { class: 'sale__box', hidden: !form.sale }, refs.saleF);
+    updSale();
+    return h('div', { class: 'sale' }, refs.saleSw, refs.saleBox);
+  }
+
+  /** Подсказка под «Скидкой» — по сохранённому товару: пока не сохранили, на сайте всё по-прежнему. */
+  function saleHint(on) {
+    if (on) return 'На сайте старая цена будет зачёркнута, а новая — красным.';
+    const keep = parseIntField(form.salePrice);
+    const back = Number.isInteger(keep) && keep > 0 ? ` Включите снова — вернётся ${money(keep)}.` : '';
+    if (original && typeof original.sale_price === 'number' && original.sale_price > 0) return `После сохранения скидка пропадёт — на сайте будет обычная цена.${back}`;
+    return back ? `Скидка выключена.${back}` : 'Включите, если вещь продаётся дешевле обычной цены.';
+  }
+
+  /** Цена со скидкой pct % от обычной, вниз до 10 ₸ (45 990 −30 % → 32 190); обычной цены нет — null. */
+  function saleBy(pct) {
+    const pr = parseIntField(form.price);
+    if (!Number.isInteger(pr) || pr <= 0) return null;
+    const v = Math.floor((pr * (100 - pct)) / 1000) * 10;
+    return v > 0 ? v : null;
+  }
+
+  function quickSale(pct) {
+    const v = saleBy(pct);
+    if (!v) return;
+    form.salePrice = groupDigits(v);
+    refs.saleInp.value = form.salePrice;
+    clearSaleErr();                       // ошибку у поля исправили кнопкой
+    updSale();
+    changed();
+  }
+
+  /** Ошибку у «Цены со скидкой» правят и не в самом поле: кнопкой −N %, обычной ценой, выключив скидку. Убрать её
+   *  и сообщение внизу (как autoClear у поля, которое начали править); что не так сейчас — скажет подсказка рядом. */
+  function clearSaleErr() {
+    if (!refs.saleF || !refs.saleF.classList.contains('is-err')) return;
+    clearError(refs.saleF);
+    clearToasts('err');
+  }
+
+  /** Живая подсказка рядом с полем: «скидка 20 %» или что не так (красным). */
+  function saleNote() {
+    const pr = parseIntField(form.price);
+    const sp = parseIntField(form.salePrice);
+    if (Number.isNaN(pr)) return { text: 'проверьте обычную цену', bad: true };
+    if (!pr) return { text: 'сначала укажите обычную цену', bad: true };
+    if (sp === null) return { text: '', bad: false };
+    if (Number.isNaN(sp)) return { text: 'только цифры', bad: true };
+    if (sp === 0) return { text: 'не может быть 0', bad: true };
+    if (sp >= pr) return { text: sp === pr ? 'равна обычной цене' : 'больше обычной цены', bad: true };
+    const pct = Math.min(99, Math.round((1 - sp / pr) * 100));
+    return { text: pct < 1 ? `скидка меньше 1${NBSP}%` : `скидка ${pct}${NBSP}%`, bad: false };
+  }
+
+  function updSale() {
+    if (!refs.salePct) return;
+    const n = saleNote();
+    refs.salePct.textContent = n.text;
+    refs.salePct.hidden = !n.text;
+    refs.salePct.classList.toggle('is-bad', n.bad);
+    const sp = parseIntField(form.salePrice);
+    refs.saleBtns.forEach((b, i) => {
+      const v = saleBy(SALE_STEPS[i]);
+      b.disabled = !v;
+      b.setAttribute('aria-pressed', String(!!v && v === sp));
+      b.title = v ? money(v) : 'Сначала укажите обычную цену';
+    });
   }
 
   function buildDesc() {
@@ -1122,10 +1244,13 @@ export function mountEditor(main, { slug: startSlug }) {
     }
     const size = ['w', 'h', 'd'].map((k) => parseNumField(form.size[k]));
     const price = parseIntField(form.price);
+    const sp = parseIntField(form.salePrice);
     const st = parseIntField(form.stock);
     return {
       name: form.name.ru.trim() || 'Название товара', type: form.type.ru.trim(), id: (original && original.id) || '',
       price: Number.isInteger(price) && price > 0 ? price : null,
+      // как на сайте: скидка есть, только если цена задана и 0 < цена со скидкой < цена
+      sale: form.sale && Number.isInteger(price) && Number.isInteger(sp) && sp > 0 && sp < price ? sp : null,
       stock: form.avail === 'sold' ? 0 : Number.isInteger(st) && st > 0 ? st : null,
       sold: form.avail === 'sold', soon: form.avail === 'soon', isNew: form.isNew,
       published: form.published, wasPublished: wasPublished(),
@@ -1189,6 +1314,15 @@ export function mountEditor(main, { slug: startSlug }) {
     const pr = parseIntField(form.price);
     if (Number.isNaN(pr)) add('price', 'В цене — только цифры, например 45 000.');
     else if (pr > L.price_max) add('price', `Цена больше ${groupDigits(L.price_max)} ₸ — проверьте, нет ли лишнего нуля.`);
+    if (form.sale) {                       // те же правила, что на сервере (catalog.sale_in)
+      const sp = parseIntField(form.salePrice);
+      if (Number.isNaN(sp)) add('sale_price', 'В цене со скидкой — только цифры, например 36 000.');
+      else if (sp === 0) add('sale_price', 'Цена со скидкой не может быть 0. Скидка не нужна — выключите её.');
+      else if (Number.isNaN(pr)) { /* обычная цена с ошибкой — она уже отмечена выше */ }
+      else if (!pr) add('sale_price', 'Сначала укажите обычную цену — скидка считается от неё.');
+      else if (sp === null) add('sale_price', 'Впишите цену со скидкой или нажмите −10 %, −20 %, −30 %. Скидка не нужна — выключите её.');
+      else if (sp >= pr) add('sale_price', `Цена со скидкой должна быть меньше обычной (${money(pr)}).`);
+    }
     if (form.avail === 'in') {
       const st = parseIntField(form.stock);
       if (Number.isNaN(st)) add('stock', 'Остаток — целое число, например 2.');

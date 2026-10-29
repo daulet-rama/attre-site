@@ -330,6 +330,46 @@ def test_product_flow(client, repo):
     assert client.get(f'/api/products/{slug}').status_code == 404
 
 
+def test_sale_price_api(client, repo):
+    """Скидка: сохраняется числом сразу после цены, ошибки — у поля «Цена со скидкой», выключили — поля нет.
+    Ссылка на товар — от корня сайта (/ru/p/<slug>/), без /v4/."""
+    got = client.get('/api/products/bergen').json()
+    p = {**got['product'], 'price': '45 000', 'sale_price': '36 000'}
+    r = client.put('/api/products/bergen', json={'product': p, 'sha': got['sha']}, headers=CSRF)
+    assert r.status_code == 200, r.text
+    assert r.json()['url'] == 'https://example.test/attre-site/ru/p/bergen/'
+    doc = json.loads((repo / 'data/products/bergen.json').read_text())
+    assert (doc['price'], doc['sale_price']) == (45000, 36000)
+    assert client.get('/api/products/bergen').json()['product']['sale_price'] == 36000
+    item = next(x for x in client.get('/api/products').json() if x['slug'] == 'bergen')
+    assert (item['price'], item['sale_price']) == (45000, 36000)
+
+    fresh = client.get('/api/products/bergen').json()
+    for sale, msg in ((50000, 'Цена со скидкой должна быть меньше обычной (45 000 ₸).'),
+                      (-5, 'Цена со скидкой — целое число тенге больше нуля, без копеек и букв, например 36 000.')):
+        r = client.put('/api/products/bergen', json={'product': {**fresh['product'], 'sale_price': sale},
+                                                     'sha': fresh['sha']}, headers=CSRF)
+        assert r.status_code == 400 and r.json() == {'error': msg, 'field': 'sale_price'}
+    r = client.put('/api/products/bergen', json={'product': {**fresh['product'], 'price': None},
+                                                 'sha': fresh['sha']}, headers=CSRF)
+    assert r.status_code == 400 and r.json()['field'] == 'sale_price'
+    assert r.json()['error'].startswith('Сначала укажите обычную цену')
+
+    r = client.put('/api/products/bergen', json={'product': {**fresh['product'], 'sale_price': None},
+                                                 'sha': fresh['sha']}, headers=CSRF)
+    assert r.status_code == 200 and 'sale_price' not in json.loads((repo / 'data/products/bergen.json').read_text())
+    assert next(x for x in client.get('/api/products').json() if x['slug'] == 'bergen')['sale_price'] is None
+
+
+def test_site_links_without_v4(client):
+    assert client.get('/api/meta').json()['site_url'] == 'https://example.test/attre-site/'
+    assert client.get('/api/status').json()['site_url'] == 'https://example.test/attre-site/'
+    got = client.get('/api/products/altea').json()
+    r = client.put('/api/products/altea', json={'product': {**got['product'], 'price': 45000}, 'sha': got['sha']},
+                   headers=CSRF)
+    assert r.status_code == 200 and r.json()['url'] == 'https://example.test/attre-site/ru/p/altea/'
+
+
 def test_reorder_api(client, repo):
     slugs = [x['slug'] for x in client.get('/api/products').json()]
     r = client.post('/api/products/order', json={'slugs': slugs[::-1]}, headers=CSRF)
@@ -401,7 +441,7 @@ def test_settings_api(client, repo):
 
 def test_status_local(client, repo):
     r = client.get('/api/status').json()
-    assert r == {'head': git(repo, 'rev-parse', 'HEAD'), 'site_url': 'https://example.test/attre-site/v4/',
+    assert r == {'head': git(repo, 'rev-parse', 'HEAD'), 'site_url': 'https://example.test/attre-site/',
                  'publish': {'state': 'unknown', 'commit': None, 'url': None, 'started': None, 'finished': None}}
 
 

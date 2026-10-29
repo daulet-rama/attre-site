@@ -1,7 +1,7 @@
 # Админка attré — для разработчика
 
 Админка, в которой Дамира и Жанна сами ведут каталог: добавляют, меняют, скрывают и удаляют товары,
-раскладывают фото по цветам, меняют цены, наличие, доставку и контакты. Работает с телефона.
+раскладывают фото по цветам, меняют цены и скидки, наличие, доставку и контакты. Работает с телефона.
 Договорённости (формат данных, API, интерфейс) — в [DESIGN.md](DESIGN.md), инструкция для основательниц —
 в [GUIDE.md](GUIDE.md).
 
@@ -83,7 +83,7 @@ uvicorn app.main:app --reload --port 8000 --env-file .env
 ```bash
 cd /tmp/attre-test
 ATTRE_BASE=/ ATTRE_ORIGIN=http://localhost:8001 python3 build.py && python3 -m http.server 8001 -d site
-# в .env админки: SITE_URL=http://localhost:8001/v4/   (нужен Pillow — подойдёт python из .venv админки)
+# в .env админки: SITE_URL=http://localhost:8001/   (нужен Pillow — подойдёт python из .venv админки)
 ```
 
 Коммиты админки: `git -C /tmp/attre-test log --oneline`. Начать заново: `git -C /tmp/attre-test reset --hard origin/main`.
@@ -141,7 +141,7 @@ docker run --rm -e PYTHONDONTWRITEBYTECODE=1 -v "$PWD":/repo:ro -w /repo/admin p
 | `ADMIN_PASSWORD` | да* | если `ADMIN_USERS` пуст — один общий пароль, имя «Админ» (те же требования) | секрет |
 | `SESSION_SECRET` | да | 32+ случайных символа для подписи cookie — только сгенерированных (команда ниже), не придуманных: по `pepper_id` в публичном `.admin/users.json` догадку о нём можно проверить. При `STORE=github` заглушку (меньше 8 разных символов, вроде `xxxx…`) админка не примет | секрет |
 | `PASSWORD_PEPPER` | нет | 32+ случайных символа (так же сгенерированных) — ключ к файлу сменённых паролей `.admin/users.json`. Не задан — ключ производный от `SESSION_SECRET` (тогда смена `SESSION_SECRET` сбрасывает и сменённые пароли). Поменять — сбросить сменённые пароли всем ([Пароли и пользователи](#пароли-и-пользователи)) | секрет или не задавать |
-| `SITE_URL` | нет | адрес сайта (тема v4) со слешем на конце; по умолчанию собирается из `GITHUB_REPO` | `https://daulet-rama.github.io/attre-site/v4/` |
+| `SITE_URL` | нет | адрес сайта со слешем на конце: «Открыть сайт ↗» и «Открыть товар на сайте» (`<адрес>ru/p/<товар>/`; «Витрина» — в корне, без `/v4/`). Не задан — при `STORE=github` боевой адрес `https://attre.pages.dev/` (Cloudflare Pages), при `STORE=local` ссылок на сайт нет | `https://attre.pages.dev/` |
 | `TMP_DIR` | нет | временные загрузки фото (24 ч) и кэш превью (14 дней) | `/tmp/attre-admin` |
 | `PORT` | нет | порт; на Railway не задавать — он подставляет свой | `8000` |
 | `TRUST_PROXY` | нет | откуда брать адрес посетителя для счётчика попыток входа: `railway` — из `X-Real-IP` (или первого адреса `X-Forwarded-For`), которые ставит прокси Railway; `0` — адрес соединения. По умолчанию: на Railway (есть `RAILWAY_ENVIRONMENT_NAME`) — `railway`, иначе `0` | не задавать |
@@ -228,14 +228,16 @@ python3 -c "import secrets; print(secrets.token_urlsafe(12))"   # 16 симво�
    GITHUB_BRANCH=main
    ADMIN_USERS=Дамира:<пароль>;Жанна:<пароль>
    SESSION_SECRET=<строка из шага 2>
-   SITE_URL=https://daulet-rama.github.io/attre-site/v4/
+   SITE_URL=https://attre.pages.dev/
    RAILWAY_DEPLOYMENT_DRAINING_SECONDS=60
    ```
 
    `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` — сколько секунд Railway даёт старому контейнеру при деплое (по умолчанию —
    почти 0): uvicorn за это время (`--timeout-graceful-shutdown 50` в Dockerfile) доводит начатое сохранение до
    GitHub, а не обрывает его посередине. Если в панели есть поле Settings → Deploy → **Draining Seconds** — там
-   то же самое. `PORT` не задавайте. Значения — без кавычек. По желанию у `GITHUB_TOKEN` и `SESSION_SECRET` в меню «⋮»
+   то же самое. `SITE_URL` можно и не задавать — по умолчанию он такой же; если в переменных остался старый
+   адрес с `/v4/` (`…github.io/attre-site/v4/`), поменяйте его — «Витрина» теперь в корне сайта.
+   `PORT` не задавайте. Значения — без кавычек. По желанию у `GITHUB_TOKEN` и `SESSION_SECRET` в меню «⋮»
    выберите **Seal**: Railway перестанет показывать их значения в панели и API. Распечатать обратно нельзя,
    менять — только через «⋮» (не через Raw Editor); эти два значения и так меняются целиком. `ADMIN_USERS`
    лучше не запечатывать: чтобы сменить один пароль, пришлось бы заново вписывать и чужой. По желанию —

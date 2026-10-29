@@ -65,6 +65,8 @@ MSG_CONFLICT_SETTINGS = ('Настройки магазина только чт�
                          'Обновите страницу и внесите изменения ещё раз.')
 MSG_CONFLICT_DATA = 'Данные только что изменились. Обновите страницу и попробуйте ещё раз.'
 MSG_RELOAD = 'Обновите страницу и попробуйте ещё раз.'
+MSG_SALE = 'Цена со скидкой — целое число тенге больше нуля, без копеек и букв, например 36 000.'
+MSG_SALE_NO_PRICE = 'Сначала укажите обычную цену — скидка считается от неё.'
 
 
 class CatalogError(Exception):
@@ -150,6 +152,29 @@ def num_out(v: Any) -> int | float | None:
     if not isinstance(v, (int, float)) or not math.isfinite(v):
         return None
     return int(v) if float(v).is_integer() else v
+
+
+def money(n: int) -> str:
+    """45000 → «45 000 ₸» (как в форме и на сайте)."""
+    return f'{n:,}'.replace(',', ' ') + ' ₸'
+
+
+def site_money(v: Any) -> int | None:
+    """Цена так, как её читает сайт (core.clean_product: num() и int()): float(v) без копеек; 0, минус,
+    не число — None. «45000», 45000.7 — 45000; «45 000» с пробелом сайт не понимает — None."""
+    try:
+        f = float(v)
+    except (TypeError, ValueError, OverflowError):
+        return None
+    return int(f) if math.isfinite(f) and f >= 1 else None
+
+
+def sale_of(price: Any, sale: Any) -> int | None:
+    """Скидка так, как её понимает сайт: цена со скидкой — только если цена задана и 0 < sale_price < price,
+    иначе скидки нет (то же правило у сайта и в превью админки). Числа — как их читает сайт: файл, исправленный
+    руками («36000», 36000.5), в списке товаров выглядит так же, как на сайте."""
+    p, s = site_money(price), site_money(sale)
+    return s if p and s and s < p else None
 
 
 def media_path(x: Any) -> str | None:
@@ -239,6 +264,18 @@ def int_in(v: Any, field: str, lo: int, hi: int, msg: str) -> int | None:
     return v
 
 
+def sale_in(v: Any, price: int | None) -> int | None:
+    """Цена со скидкой из формы: пусто — скидки нет; иначе целое, меньше обычной цены (а она должна быть)."""
+    sale = int_in(v, 'sale_price', 1, LIMITS['price_max'], MSG_SALE)
+    if sale is None:
+        return None
+    if not price:                       # цены нет (или 0 — на сайте это тоже «цена по запросу»)
+        raise CatalogError(MSG_SALE_NO_PRICE, 'sale_price')
+    if sale >= price:
+        raise CatalogError(f'Цена со скидкой должна быть меньше обычной ({money(price)}).', 'sale_price')
+    return sale
+
+
 def size_in(v: Any, field: str, label: str) -> int | float | None:
     lo, hi = LIMITS['size_min'], LIMITS['size_max']
     msg = f'{label} — число сантиметров от {lo} до {hi}. Не знаете — оставьте пустым.'
@@ -268,6 +305,21 @@ def bool_in(v: Any) -> bool:
 def _put_at(d: dict, old_key: str, new_key: str, value: Any) -> dict:
     """Заменить ключ old_key на new_key на том же месте (чтобы в истории git был понятный дифф)."""
     return {(new_key if k == old_key else k): (value if k == old_key else v) for k, v in d.items()}
+
+
+def _put_after(d: dict, after: str, key: str, value: Any) -> dict:
+    """Поле key — на своём месте, а новое — сразу после after (в истории git — одна новая строка).
+    value None — поля в файле нет совсем."""
+    if value is None:
+        return {k: v for k, v in d.items() if k != key}
+    if key in d or after not in d:
+        return {**d, key: value}
+    out = {}
+    for k, v in d.items():
+        out[k] = v
+        if k == after:
+            out[key] = value
+    return out
 
 
 def _hash(v: Any) -> str:
@@ -433,7 +485,9 @@ class Catalog:
             'cat': str(raw.get('cat') or ''),
             'name': tri(raw.get('name')), 'type': tri(raw.get('type')),
             'new': bool(raw.get('new')), 'popular': bool(raw.get('popular')), 'soon': bool(raw.get('soon')),
-            'price': num_out(raw.get('price')), 'stock': num_out(raw.get('stock')),
+            # sale_price — как в файле (даже неправильная: форма покажет её, а проверка объяснит, что не так)
+            'price': num_out(raw.get('price')), 'sale_price': num_out(raw.get('sale_price')),
+            'stock': num_out(raw.get('stock')),
             'desc': tri(raw.get('desc')), 'strap': tri(raw.get('strap')),
             'size': {**size, **{k: num_out(size.get(k)) for k in 'whd'}},
             'variants': self._form_variants(raw, ctx),
@@ -453,7 +507,9 @@ class Catalog:
             main = next((v['images'][0] for v in vs if v['images']), None)
             out.append({
                 'slug': slug, 'id': p['id'], 'name': p['name']['ru'], 'cat': p['cat'], 'type': p['type']['ru'],
-                'price': p['price'], 'stock': p['stock'], 'soon': p['soon'], 'new': p['new'],
+                # скидка — как на сайте: из файла как есть (p — уже для формы, там «36 000» стало числом)
+                'price': p['price'], 'sale_price': sale_of(raw.get('price'), raw.get('sale_price')),
+                'stock': p['stock'], 'soon': p['soon'], 'new': p['new'],
                 'popular': p['popular'], 'published': p['published'], 'order': p['order'],
                 'colors': [v['color'] for v in vs if v['color']],
                 'thumb': media_url(main, snap.blob_sha(main)) if main else None,
@@ -591,15 +647,18 @@ class Catalog:
         if size is not None and not isinstance(size, dict):
             raise CatalogError(f'Размер: {MSG_RELOAD.lower()}', 'size')
         size = size or {}
+        type_ = tri_in(data.get('type'), 'type', 'Тип', LIMITS['type_max'])
+        price = int_in(data.get('price'), 'price', 0, LIMITS['price_max'],
+                       'Цена — целое число тенге от 0 до 10 000 000, без копеек и букв. '
+                       'Пусто — на сайте будет «цена по запросу».')
         return {
             'published': bool_in(data.get('published', True)),
             'cat': cat,
             'name': name,
-            'type': tri_in(data.get('type'), 'type', 'Тип', LIMITS['type_max']),
+            'type': type_,
             'new': bool_in(data.get('new')), 'popular': bool_in(data.get('popular')), 'soon': bool_in(data.get('soon')),
-            'price': int_in(data.get('price'), 'price', 0, LIMITS['price_max'],
-                            'Цена — целое число тенге от 0 до 10 000 000, без копеек и букв. '
-                            'Пусто — на сайте будет «цена по запросу».'),
+            'price': price,
+            'sale_price': sale_in(data.get('sale_price'), price),
             'stock': int_in(data.get('stock'), 'stock', 0, LIMITS['stock_max'],
                             'Остаток — целое число штук: 0 или больше. Пусто — просто «в наличии».'),
             'desc': tri_in(data.get('desc'), 'desc', 'Описание', LIMITS['text_max'], multiline=True),
@@ -674,6 +733,7 @@ class Catalog:
             d[k] = {**(d[k] if isinstance(d.get(k), dict) else {}), **clean[k]}
         for k in ('new', 'popular', 'soon', 'price', 'stock'):
             d[k] = clean[k]
+        d = _put_after(d, 'price', 'sale_price', clean['sale_price'])      # без скидки поля нет
         for k in ('desc', 'strap'):
             d[k] = {**(d[k] if isinstance(d.get(k), dict) else {}), **clean[k]}
         d['size'] = {**(d['size'] if isinstance(d.get('size'), dict) else {}), **clean['size']}
@@ -778,6 +838,7 @@ class Catalog:
                 'price': clean['price'], 'stock': clean['stock'],
                 'desc': clean['desc'], 'strap': clean['strap'], 'size': clean['size'], 'variants': variants,
             }
+            doc = _put_after(doc, 'price', 'sale_price', clean['sale_price'])    # без скидки поля нет
             changes: dict[str, bytes | None] = {f'{PRODUCTS}{slug}.json': dumps(doc), **files}
             for other, new_order in renumber.items():
                 changes[f'{PRODUCTS}{other}.json'] = dumps({**raws[other], 'order': new_order})

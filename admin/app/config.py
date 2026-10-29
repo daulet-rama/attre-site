@@ -22,6 +22,8 @@ MIN_PASSWORD = 12      # в боевом режиме (STORE=github): за фо�
 # (16 возможных) их в среднем 14, а меньше 8 — реже раза на миллион. Придуманную фразу так не распознать — поэтому
 # в README ключи только генерируются: по pepper_id в публичном .admin/users.json догадку о ключе можно проверить.
 MIN_DISTINCT = 8
+# Боевой адрес сайта («Витрина» в корне, Cloudflare Pages) — ссылки «Открыть сайт ↗» и «Открыть товар на сайте»
+SITE_URL_DEFAULT = 'https://attre.pages.dev/'
 
 
 @dataclass(frozen=True)
@@ -132,10 +134,8 @@ def load_config(env: Mapping[str, str] | None = None) -> Config:
             elif not (local_repo / 'data' / 'products').is_dir():
                 problems.append(f'LOCAL_REPO: в папке {local_repo} нет data/products — это не репозиторий сайта')
 
-    site_url = get('SITE_URL')
-    if not site_url and repo and '/' in repo:
-        owner, name = repo.split('/', 1)
-        site_url = f'https://{owner.lower()}.github.io/{name}/v4/'
+    # Не задан — в боевом режиме боевой адрес; локально ссылок на сайт нет: в копии бывают товары, которых там нет
+    site_url = get('SITE_URL') or (SITE_URL_DEFAULT if store == 'github' else '')
     if site_url and not re.match(r'https?://', site_url):
         problems.append('SITE_URL — адрес сайта, начинается с https://')
     if site_url and not site_url.endswith('/'):
