@@ -116,7 +116,8 @@ def delivery(lang):
         return f'<p>{e(t("delivery_body", lang))}</p>'
     rows = ''.join(
         f'<li class="dlv__i"><span class="dlv__n">{e(tri(o["name"])[lang])}</span>'
-        f'<span class="dlv__p tnum">{e(money(o["price"], lang))}</span><span class="dlv__d">{e(tri(o["days"])[lang])}</span></li>'
+        f'<span class="dlv__p tnum">{e(money(o["price"], lang) if o.get("price") else t("dlv_free_word", lang))}</span>'
+        f'<span class="dlv__d">{e(tri(o["days"])[lang])}</span></li>'
         for o in dl['kz'])
     free = (f'<p class="dlv__free">{e(t("dlv_free", lang, sum=money(dl["free_from"], lang)))}</p>'
             if dl.get('free_from') else '')

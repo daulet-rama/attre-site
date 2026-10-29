@@ -215,9 +215,9 @@
       "en": "An item of proper quality can be returned or exchanged within 14 days if it is unused and its original condition, tags and receipt are intact. If an item turns out to be defective, your rights under Kazakhstan consumer law apply."
     },
     "store_body": {
-      "ru": "Приходите посмотреть вживую: Алматы, ул. Кабанбай батыра, 96. Перед визитом можно написать в WhatsApp и уточнить наличие.",
-      "kz": "Келіп, өз көзіңізбен көріңіз: Алматы, Қабанбай батыр к-сі, 96. Келер алдында WhatsApp-қа жазып, тауардың бар-жоғын нақтылауға болады.",
-      "en": "Come and see it in person: 96 Kabanbay Batyr St, Almaty. You can message us on WhatsApp beforehand to check availability."
+      "ru": "Приходите посмотреть вживую: {address}. Перед визитом можно написать в WhatsApp и уточнить наличие.",
+      "kz": "Келіп, өз көзіңізбен көріңіз: {address}. Келер алдында WhatsApp-қа жазып, тауардың бар-жоғын нақтылауға болады.",
+      "en": "Come and see it in person: {address}. You can message us on WhatsApp beforehand to check availability."
     },
     "store_title": {
       "ru": "магазин в алматы",
@@ -525,9 +525,9 @@
       "en": "worn by you"
     },
     "wear_note": {
-      "ru": "Отмечайте @attre.studio в Instagram — лучшие фото покажем здесь.",
-      "kz": "Instagram-да @attre.studio белгілеңіз — ең әдемі фотоларды осында көрсетеміз.",
-      "en": "Tag @attre.studio on Instagram and we’ll share our favourite photos here."
+      "ru": "Отмечайте {ig} в Instagram — лучшие фото покажем здесь.",
+      "kz": "Instagram-да {ig} белгілеңіз — ең әдемі фотоларды осында көрсетеміз.",
+      "en": "Tag {ig} on Instagram and we’ll share our favourite photos here."
     },
     "film_title": {
       "ru": "за кадром",
@@ -853,6 +853,11 @@
       "ru": "Магазин: {address}. {hours}.",
       "kz": "Дүкен: {address}. {hours}.",
       "en": "Store: {address}. {hours}."
+    },
+    "dlv_free_word": {
+      "ru": "бесплатно",
+      "kz": "тегін",
+      "en": "free"
     }
   }
 }

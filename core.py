@@ -213,9 +213,15 @@ def e(s):
 
 
 def t(key, lang, **kw):
+    """Текст интерфейса. {address} и {ig} в любом тексте — адрес магазина и ник Instagram из настроек
+    (меняются в админке — и все тексты с ними сразу верные)."""
     s = T[key][lang]
     for k, v in kw.items():
         s = s.replace('{' + k + '}', str(v))
+    if '{address}' in s:
+        s = s.replace('{address}', T['address'][lang])
+    if '{ig}' in s:
+        s = s.replace('{ig}', '@' + str(SETTINGS.get('instagram') or ''))
     return s
 
 
