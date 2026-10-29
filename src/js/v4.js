@@ -1,8 +1,9 @@
 // attré · Вариант 4 «Витрина». Меню и нижние листы (фокус внутри, Esc), строки details, ленты со свайпом
 // (слайдер главной, фото товара, подборки: стрелки для мыши, счётчик «1 / 5»; фото в карточках — с полосками),
 // избранное и корзина (localStorage), цвета (кружочки в карточке и на товаре меняют фото; в корзину идёт выбранный цвет),
-// фильтр и сортировка каталога, видео «за кадром». Анимаций при прокрутке нет: фото просто стоят на местах.
-// Без JS всё видно и листается пальцем; не работают только избранное, корзина, фильтр и сортировка.
+// фильтр и сортировка каталога, поиск по названию (лупа в шапке), видео «за кадром». Анимаций при прокрутке нет:
+// фото просто стоят на местах. Без JS всё видно и листается пальцем; не работают только избранное, корзина, фильтр,
+// сортировка и поиск (лупы без JS нет).
 (function () {
   'use strict';
   var d = document, root = d.documentElement, w = window;
@@ -54,8 +55,11 @@
     scrim.classList.add('is-on');
     root.classList.add('is-locked');
     expanded(p, true);
-    var f = p.querySelector('[data-close]') || p;
-    setTimeout(function () { if (panel === p) f.focus({ preventScroll: true }); }, 50);
+    if (p.__onopen) p.__onopen();
+    // Поле поиска — сразу, в том же нажатии: из setTimeout iPhone клавиатуру не покажет
+    var f = p.querySelector('[data-focus]') || p.querySelector('[data-close]') || p;
+    if (f.hasAttribute('data-focus')) f.focus({ preventScroll: true });
+    setTimeout(function () { if (panel === p && d.activeElement !== f) f.focus({ preventScroll: true }); }, 50);
   }
   function close(back) {
     if (!panel) return;
@@ -65,6 +69,7 @@
     scrim.classList.remove('is-on');
     root.classList.remove('is-locked');
     expanded(p, false);
+    if (p.__onclose) p.__onclose();
     if (back && opener) opener.focus({ preventScroll: true });
     opener = null;
   }
@@ -452,7 +457,12 @@
         var up = b.getAttribute('data-cart-step') === '1';
         b.setAttribute('aria-disabled', (up ? x.qty >= max : x.qty <= 1) ? 'true' : 'false');
       }, li);
-      if (out && price) out.textContent = money(price * x.qty);
+      // цена строки — за всё количество; со скидкой (data-price-old) меняются обе: зачёркнутая и красная
+      var was = out && out.querySelector('.price__was'), now = out && out.querySelector('.price__now');
+      if (was && now) {
+        was.textContent = money((Number(li.getAttribute('data-price-old')) || 0) * x.qty);
+        now.textContent = money(price * x.qty);
+      } else if (out && price) out.textContent = money(price * x.qty);
       if (li.hasAttribute('data-off')) return;   // продано или «скоро в наличии» — в заказ не идёт
       if (price) sum += price * x.qty; else priced = false;
       var a = li.querySelector('a[href]'), col = li.getAttribute('data-color');
@@ -702,6 +712,219 @@
     paint();
     apply(false);
   }
+
+  // ——— Поиск по названию: лупа в шапке → панель со строкой, результаты — по мере ввода. Индекс — маленький JSON
+  // на язык (themes/v4.py → search_index), грузится при первом открытии. Без учёта регистра и диакритики, русские
+  // и казахские буквы — латиницей по звучанию («токио» → Tokyo), мелкие опечатки прощаются; название важнее типа
+  // и цвета. Нашёлся цвет — у вещи его фото и ссылка на товар в этом цвете ———
+  var sp = d.getElementById('search');
+  if (sp) (function () {
+    var form = sp.querySelector('[data-search-form]'), input = form && form.querySelector('input');
+    var box = sp.querySelector('[data-search-res]'), nOut = sp.querySelector('[data-search-n]');
+    var live = sp.querySelector('[data-search-live]'), none = sp.querySelector('[data-search-none]');
+    var body = sp.querySelector('[data-search-body]');
+    if (!input || !box || !nOut) return;
+    var items = null, loading = false, last = null, liveT = 0, rows = [];
+    var CYR = { 'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'i',
+      'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h',
+      'ц': 's', 'ч': 'ch', 'ш': 'sh', 'щ': 'sh', 'ъ': '', 'ы': 'i', 'ь': '', 'э': 'e', 'ю': 'u', 'я': 'ya',
+      'ә': 'a', 'ғ': 'g', 'қ': 'k', 'ң': 'n', 'ө': 'o', 'ұ': 'u', 'ү': 'u', 'һ': 'h', 'і': 'i' };
+    // Слова для сравнения — строчная латиница и цифры. Запрос и индекс упрощаются одинаково: окончания прилагательных
+    // отброшены (чёрная = чёрный), c → k (перед e, i, y → s), ck → k, ch → h, x → ks, w → v, z → s, j и y → i,
+    // двойная буква — одна. Так Tokyo = токио, Ibiza = ибица. «-их» не отбрасываем: «Цюрих» стал бы «цюр» = қаз. «сұр»
+    // (серый) и нашёл бы все серые вещи
+    var ENDS = /([а-яёәғқңөұүһі]{2,}?)(?:ого|его|ому|ему|ыми|ими|ый|ий|ой|ая|яя|ое|ее|ые|ие|ую|юю|ым|им|ых)(?![а-яёәғқңөұүһі])/g;
+    function words(s) {
+      s = String(s || '').toLowerCase().replace(ENDS, '$1');
+      if (s.normalize) s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');   // é → e, ё → е, й → и
+      var out = '';
+      for (var i = 0; i < s.length; i++) { var c = s.charAt(i); out += CYR.hasOwnProperty(c) ? CYR[c] : c; }
+      out = out.replace(/sch/g, 'sh').replace(/ck/g, 'k').replace(/c(?=[eiy])/g, 's').replace(/ch/g, 'h').replace(/c/g, 'k')
+        .replace(/ph/g, 'f').replace(/x/g, 'ks').replace(/q/g, 'k').replace(/w/g, 'v').replace(/z/g, 's')
+        .replace(/[jy]/g, 'i').replace(/([a-z])\1+/g, '$1');
+      return out.split(/[^a-z0-9]+/).filter(Boolean);
+    }
+    // Сколько правок (замена, вставка, удаление, две соседние буквы местами) нужно, чтобы q стало началом слова w.
+    // Гласная вместо гласной — полправки: по-русски и по-английски имя пишут разными гласными (Сиэтл — Seattle)
+    var VOW = /[aeiou]/;
+    function near(q, w, max) {
+      var a = [], b = [], c, i, j, low;
+      for (j = 0; j <= w.length; j++) b[j] = j;
+      for (i = 1; i <= q.length; i++) {
+        c = [i];
+        low = i;
+        for (j = 1; j <= w.length; j++) {
+          var x = q.charAt(i - 1), y = w.charAt(j - 1);
+          var v = Math.min(b[j] + 1, c[j - 1] + 1, b[j - 1] + (x === y ? 0 : VOW.test(x) && VOW.test(y) ? 0.5 : 1));
+          if (i > 1 && j > 1 && q.charAt(i - 1) === w.charAt(j - 2) && q.charAt(i - 2) === w.charAt(j - 1)) v = Math.min(v, a[j - 2] + 1);
+          c[j] = v;
+          if (v < low) low = v;
+        }
+        if (low > max) return max + 1;
+        a = b;
+        b = c;
+      }
+      return Math.min.apply(null, b);   // хвост слова w не считается: q — его начало
+    }
+    // Насколько слово запроса подходит к слову: 1 — то же слово, 0 — никак. how: 2 — название (опечатки и кусок
+    // из середины слова), 1 — тип, материал, раздел (опечатки — в словах от 5 букв: иначе «чёрн» ≈ «через»),
+    // 0 — цвет (без опечаток: иначе «xyz» находит «қызыл»)
+    function fit(q, w, how) {
+      if (w === q) return 1;
+      var q1 = q.replace(/[aeiou]$/, ''), w1 = w.replace(/[aeiou]$/, '');
+      if (q1 === w1 && q1.length > 2) return 0.9;   // другое окончание: сумка — сумки, кожа — кожи
+      if (w.indexOf(q) === 0) return 0.85;   // человек ещё печатает
+      if (w1.length > 3 && q.indexOf(w1) === 0) return 0.6;   // слово от того же корня: кожаный — кожа, замшевая — замша
+      var n = q.length + (how === 2 ? 1 : 0), tol = !how || n < 5 ? 0 : n < 8 ? 1 : 2;
+      var k = tol ? near(q, w, tol) : 1;
+      if (tol && k <= tol) return 0.5 - 0.1 * k;   // ниже точного цвета или типа: «beige» — сперва бежевые, потом Bergen
+      return how === 2 && q.length > 2 && w.indexOf(q) > 0 ? 0.3 : 0;
+    }
+    function top(q, ws, how) {
+      var best = 0;
+      for (var i = 0; i < ws.length && best < 1; i++) best = Math.max(best, fit(q, ws[i], how));
+      return best;
+    }
+    function prep(it) {
+      var j = function (a) { return words((a || []).join(' ')); };
+      return { it: it, f: [j(it.n), j(it.t), j(it.m), j(it.g)], cols: (it.v || []).map(function (v) { return j(v.n); }), off: it.s ? 1 : 0 };
+    }
+    // Каждое слово запроса должно найтись. Вес: название 1, тип 0,5, цвет 0,45, материал 0,4, раздел 0,35 —
+    // названия выше; при равных — в наличии раньше проданных, дальше как в каталоге
+    var WEIGHT = [1, 0.5, 0.4, 0.35];
+    function find(q) {
+      var qs = words(q), out = [];
+      if (!qs.length) return out;
+      items.forEach(function (x, idx) {
+        var sum = 0, pick = -1, sure = true;
+        for (var i = 0; i < qs.length; i++) {
+          var best = 0, via = -1, fw = 0, s, k;
+          for (k = 0; k < WEIGHT.length; k++) {
+            s = top(qs[i], x.f[k], k ? 1 : 2);
+            fw = Math.max(fw, s);
+            best = Math.max(best, s * WEIGHT[k]);
+          }
+          for (k = 0; k < x.cols.length; k++) {
+            s = top(qs[i], x.cols[k], 0);
+            fw = Math.max(fw, s);
+            if (s * 0.45 > best) { best = s * 0.45; via = k; }
+          }
+          if (!best) return;
+          sum += best;
+          if (fw < 0.6 || fw === 0.85) sure = false;   // нашлось лишь началом слова, с опечаткой или куском из середины
+          if (via >= 0 && pick < 0) pick = via;
+        }
+        out.push({ x: x, s: sum, v: pick, i: idx, sure: sure });
+      });
+      out.sort(function (a, b) { return (b.s - a.s) || (a.x.off - b.x.off) || (a.i - b.i); });
+      // слабые совпадения (начало слова, опечатка, кусок) рядом с сильными — шум: остаются не хуже половины лучшего.
+      // Слово целиком, с другим окончанием или от того же корня остаются всегда: «кожа» — кардхолдеры «из кожи»
+      // по названию и все кожаные сумки по материалу
+      return out.filter(function (r) { return r.sure || r.s >= out[0].s / 2 - 1e-9; });
+    }
+    function el(tag, cls, text) {
+      var e = d.createElement(tag);
+      if (cls) e.className = cls;
+      if (text) e.textContent = text;
+      return e;
+    }
+    // Строка результата: фото, бирка «продано», название, тип (и найденный цвет), цена — со скидкой, как на сайте.
+    // Строки делаются один раз на вещь и при наборе только переставляются: фото не грузятся заново
+    function row(r) {
+      var it = r.x.it, v = r.v >= 0 ? it.v[r.v] : null, o = rows[r.i];
+      if (!o) {
+        o = rows[r.i] = { li: el('li'), a: el('a'), img: el('img') };
+        var ph = el('span', 'srch__ph'), tx = el('span', 'srch__t'), pr;
+        o.img.alt = '';
+        o.img.width = 600;
+        o.img.height = 800;
+        o.img.loading = 'lazy';
+        o.img.decoding = 'async';
+        ph.appendChild(o.img);
+        if (it.s) tx.appendChild(el('span', 'tag', it.s));
+        tx.appendChild(el('span', 'srch__name', it.n[0]));
+        o.meta = tx.appendChild(el('span', 'srch__meta'));
+        pr = tx.appendChild(el('span', 'srch__price tnum'));
+        if (it.p && it.o) {
+          pr.appendChild(el('span', 'sr-only', (T.priceOld || '') + ':'));
+          pr.appendChild(el('s', 'price__was', money(it.o)));
+          pr.appendChild(d.createTextNode(' '));
+          pr.appendChild(el('span', 'sr-only', (T.priceSale || '') + ':'));
+          pr.appendChild(el('span', 'price__now', money(it.p)));
+        } else pr.textContent = it.p ? money(it.p) : (T.priceAsk || '');
+        o.a.appendChild(ph);
+        o.a.appendChild(tx);
+        o.li.appendChild(o.a);
+      }
+      var href = v && v.u ? v.u : it.u, src = v && v.i ? v.i : it.i;
+      if (o.a.getAttribute('href') !== href) o.a.setAttribute('href', href);
+      if (o.img.getAttribute('src') !== src) o.img.setAttribute('src', src);
+      o.meta.textContent = [it.t && it.t[0], v && v.n[0]].filter(Boolean).join(' · ');
+      return o.li;
+    }
+    function run(force) {
+      if (!items) { load(); return; }
+      var q = input.value;
+      if (q === last && !force) return;
+      last = q;
+      var list = find(q), has = words(q).length > 0, frag = d.createDocumentFragment();
+      list.forEach(function (r) { frag.appendChild(row(r)); });
+      box.textContent = '';
+      box.appendChild(frag);
+      var msg = !has ? '' : list.length ? fill(T.searchN || '{n}', 'n', list.length) : (T.searchNone || '');
+      nOut.textContent = msg;
+      if (none) none.hidden = !has || list.length > 0;
+      clearTimeout(liveT);   // диктору — число найденных, когда человек перестал печатать, а не на каждую букву
+      liveT = setTimeout(function () { if (live) live.textContent = msg; }, 600);
+    }
+    function load() {
+      if (items || loading) return;
+      loading = true;
+      var x = new XMLHttpRequest();
+      x.open('GET', sp.getAttribute('data-search'));
+      x.timeout = 15000;
+      x.onload = function () {
+        loading = false;
+        var doc = null;
+        try { if (x.status === 200) doc = JSON.parse(x.responseText); } catch (e) { /* битый файл — как без сети */ }
+        if (doc && doc.items) { items = doc.items.map(prep); run(true); } else fail();
+      };
+      x.onerror = x.ontimeout = function () { loading = false; fail(); };
+      x.send();
+    }
+    function fail() {   // следующая буква или следующее открытие — новая попытка
+      nOut.textContent = T.searchErr || '';
+      if (live) live.textContent = T.searchErr || '';
+    }
+    // Клавиатура телефона: панель — ровно видимая часть экрана, результаты листаются над клавиатурой
+    var vv = w.visualViewport;
+    function size() {
+      if (!vv || panel !== sp) return;
+      sp.style.top = vv.offsetTop + 'px';
+      sp.style.bottom = 'auto';
+      sp.style.height = vv.height + 'px';
+    }
+    if (vv) { vv.addEventListener('resize', size); vv.addEventListener('scroll', size); }
+    sp.__onopen = function () { size(); if (body) body.scrollTop = 0; run(true); };
+    sp.__onclose = function () { sp.style.top = sp.style.bottom = sp.style.height = ''; };
+    input.addEventListener('input', function () { run(); });
+    form.addEventListener('submit', function (ev) {   // «Найти» на клавиатуре телефона: она прячется, фокус — на первый результат
+      ev.preventDefault();
+      var a = box.querySelector('a');
+      if (a) a.focus();
+    });
+    sp.addEventListener('keydown', function (ev) {   // стрелки вниз-вверх: из строки к результатам и по ним
+      if (ev.key !== 'ArrowDown' && ev.key !== 'ArrowUp') return;
+      var links = Array.prototype.slice.call(box.querySelectorAll('a')), i = links.indexOf(d.activeElement);
+      if (d.activeElement === input) {
+        if (ev.key === 'ArrowDown' && links.length) { ev.preventDefault(); links[0].focus(); }
+        return;
+      }
+      if (i < 0) return;
+      ev.preventDefault();
+      (ev.key === 'ArrowDown' ? links[i + 1] || links[i] : links[i - 1] || input).focus();
+    });
+  })();
 
   // ——— Видео «за кадром»: играет без звука, пока на экране; кнопка пауза/смотреть ———
   // При «уменьшить движение» и экономии трафика само не запускается.

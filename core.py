@@ -190,6 +190,13 @@ def clean_product(d):
     dims = [num(size.get(k)) for k in ('w', 'h', 'd')]
     strap = tri(d.get('strap'))
     price_v = num(d.get('price'))
+    price = int(price_v) if price_v else None
+    # Цена со скидкой (sale_price): только при обычной цене и меньше неё — так же проверяет админка; иначе скидки нет
+    sale_v = num(d.get('sale_price'))
+    sale = int(sale_v) if sale_v else None
+    if sale and not (price and sale < price):
+        warn(f'products/{f}.json: цена со скидкой {sale} — {"нет обычной цены" if not price else "не меньше обычной"}, скидки нет')
+        sale = None
     stock = num(d.get('stock'))
     return {
         'slug': f, 'id': str(d.get('id') or f), 'order': num(d.get('order')) or 9999,
@@ -198,7 +205,8 @@ def clean_product(d):
         'name': name, 'type': tri(d.get('type')), 'color': color, 'desc': tri(d.get('desc')),
         'strap': strap if strap['ru'] else None,
         'size': [f'{v:g}' for v in dims] if all(dims) else None,
-        'price': int(price_v) if price_v else None,          # нет цены — «цена по запросу»
+        'price': price,                                      # нет цены — «цена по запросу»
+        'sale': sale,                                        # цена со скидкой или None — см. price_now()
         'stock': int(stock) if stock is not None else None,  # нет остатка — просто «в наличии»
         'srcs': srcs, 'focus': d.get('focus') or {}, 'variants': variants,
     }
@@ -252,8 +260,14 @@ def money(n, lang):
     return s + NBSP + '₸'
 
 
+def price_now(p):
+    """Цена, по которой продаём: со скидкой, если она есть. Она — в корзине и её итоге, в WhatsApp, в фильтре,
+    сортировке и бегунке цены, в разметке для поисковиков; обычная цена остаётся зачёркнутой рядом."""
+    return p['sale'] or p['price']
+
+
 def price_text(p, lang):
-    return money(p['price'], lang) if p['price'] else t('price_request', lang)
+    return money(price_now(p), lang) if p['price'] else t('price_request', lang)
 
 
 def wa_link(text):

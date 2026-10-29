@@ -4,7 +4,8 @@
     ATTRE_BASE=/ ATTRE_ORIGIN=https://attre.pages.dev python build.py    # для Cloudflare Pages
     ATTRE_BASE=/ ATTRE_ORIGIN=http://localhost:8000 python build.py      # локальный просмотр
 
-Страницы — /ru/, /kz/, /en/, корень сайта выбирает язык; фото, шрифт, стили и скрипты — site/assets/.
+Страницы — /ru/, /kz/, /en/, корень сайта выбирает язык; фото, шрифт, стили и скрипты — site/assets/,
+индекс поиска — site/assets/search/<язык>.json.
 Старые адреса не ломаются: «Витрина» жила в /v4/, другие варианты дизайна — в /v1/…/v6/ (их список — /variants/).
 По каждому такому адресу лежит страница-переадресация на тот же путь в корне (?параметры и #якорь сохраняются).
 Сборка в корень домена (ATTRE_BASE=/, Cloudflare Pages) пишет ещё _redirects — те же переадресации ответом
@@ -27,12 +28,15 @@ OLD = ['v4/', 'v1/', 'v2/', 'v3/', 'v5/', 'v6/']
 # Правило «/*» с Cache-Control не добавлять: значения всех совпавших правил склеиваются через запятую.
 HEADERS = '''# Сроки кэша на Cloudflare Pages. Файл пишет build.py — правьте там.
 
-# Стили и скрипты — всегда с ?v=<хеш> в адресе (asset_version в themes/v4.py); шрифт менять под новым именем
+# Стили и скрипты — всегда с ?v=<хеш> в адресе (asset_version в themes/v4.py); шрифт менять под новым именем.
+# Индекс поиска — тоже с ?v=<хеш содержимого> (search_index в themes/v4.py): на другой странице не перезапрашивается
 /assets/css/*
   Cache-Control: public, max-age=31536000, immutable
 /assets/js/*
   Cache-Control: public, max-age=31536000, immutable
 /assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/search/*
   Cache-Control: public, max-age=31536000, immutable
 
 # Фото и видео — имена без хеша (фото можно заменить под тем же именем): 10 минут без запросов к серверу,
@@ -104,6 +108,10 @@ def main():
     core.write('404.html', core.not_found(f"{core.asset('assets/css/' + theme.CSS)}?v={theme.VER}"))
     core.write('robots.txt', 'User-agent: *\nDisallow: /\n' if core.PROTOTYPE else 'User-agent: *\nAllow: /\n')
     core.write('.nojekyll', '')
+    # Индекс поиска — маленький JSON на язык (v4.js грузит его при первом открытии поиска). До страниц:
+    # в их разметке — адрес индекса с хешем содержимого
+    for l in core.LANGS:
+        core.write(f'assets/search/{l["code"]}.json', theme.search_index(l['code']))
     paths = []
     for l in core.LANGS:
         for path, page in pages():

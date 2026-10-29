@@ -479,6 +479,16 @@
       "kz": "бағасы сұрау бойынша",
       "en": "price on request"
     },
+    "price_old": {
+      "ru": "старая цена",
+      "kz": "бұрынғы бағасы",
+      "en": "original price"
+    },
+    "price_sale": {
+      "ru": "цена со скидкой",
+      "kz": "жеңілдікпен бағасы",
+      "en": "sale price"
+    },
     "menu": {
       "ru": "Меню",
       "kz": "Мәзір",
@@ -488,6 +498,41 @@
       "ru": "закрыть",
       "kz": "жабу",
       "en": "close"
+    },
+    "search": {
+      "ru": "Поиск",
+      "kz": "Іздеу",
+      "en": "Search"
+    },
+    "search_label": {
+      "ru": "Поиск по каталогу",
+      "kz": "Каталогтан іздеу",
+      "en": "Search the catalogue"
+    },
+    "search_ph": {
+      "ru": "Название, тип или цвет",
+      "kz": "Атауы, түрі немесе түсі",
+      "en": "Name, type or colour"
+    },
+    "search_res": {
+      "ru": "Результаты поиска",
+      "kz": "Іздеу нәтижелері",
+      "en": "Search results"
+    },
+    "search_n": {
+      "ru": "найдено: {n}",
+      "kz": "табылды: {n}",
+      "en": "found: {n}"
+    },
+    "search_none": {
+      "ru": "Ничего не нашлось.",
+      "kz": "Ештеңе табылмады.",
+      "en": "Nothing found."
+    },
+    "search_err": {
+      "ru": "Поиск не загрузился — проверьте интернет и попробуйте ещё раз.",
+      "kz": "Іздеу жүктелмеді — интернетті тексеріп, қайта көріңіз.",
+      "en": "Search didn’t load — check your connection and try again."
     },
     "all_items": {
       "ru": "все товары",

@@ -1,8 +1,8 @@
 """Тема «Вариант 4 — Витрина»: структура Ushatava × лёгкая типографика Massimo Dutti × крупные фото Antihero.
 
 Сайт как тихая витрина, без анимаций при прокрутке: фото просто стоят на местах. Сверху полоса «дарим 2 000 ₸»
-(чёрная; красная — по ссылке ?bar=red, для сравнения), шапка 44px: бургер · логотип по центру · избранное · корзина ·
-WhatsApp. Главная: слайдер из пяти фото с кнопкой «каталог» → новинки → популярное → видео «за кадром» с текстом
+(чёрная; красная — по ссылке ?bar=red, для сравнения), шапка 44px: бургер и лупа поиска · логотип по центру · избранное ·
+корзина · WhatsApp. Главная: слайдер из пяти фото с кнопкой «каталог» → новинки → популярное → видео «за кадром» с текстом
 о бренде → «нас носят» → магазин. Каталог — ритм «одна вещь крупно → две рядом», категории строкой, фильтр в нижнем
 листе (сортировка, материал, цвет, цена). Товар — фото листаются вправо-влево, липкая панель: «в корзину», WhatsApp
 и сердечко. Избранное и корзина хранятся в браузере (localStorage); список избранного отправляется в WhatsApp,
@@ -10,6 +10,7 @@ WhatsApp. Главная: слайдер из пяти фото с кнопко�
 Поведение: src/js/v4.js. Без JS всё видно: ленты листаются пальцем, фото товара — свайпом, листы — блоками на странице.
 """
 import datetime
+import hashlib
 import json
 
 from core import *  # noqa: F401,F403 — данные и помощники ядра
@@ -53,6 +54,9 @@ HEART = ('<svg class="heart" viewBox="0 0 24 24" stroke="currentColor" stroke-wi
 # Сумка: линии на полупикселях сетки 16px — чёткие и при масштабе 100 %; на странице корзины тело сумки залито
 BAG = ('<svg class="bag" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
        '<path d="M2.5 5.5h11v9h-11z"/><path fill="none" d="M5.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5"/></svg>')
+# Лупа поиска — той же линией 1px на сетке 16px
+LOUPE = ('<svg class="loupe" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
+         '<circle cx="6.5" cy="6.5" r="5"/><path d="M10 10l5 5"/></svg>')
 # Соцсети у «открыть в 2ГИС» на главной: тонкие линии, как у остальных значков, без цветных логотипов
 IG_ICON = ('<svg class="soc__i" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">'
            '<rect x="2.5" y="2.5" width="15" height="15" rx="4.5"/><circle cx="10" cy="10" r="3.5"/>'
@@ -189,6 +193,64 @@ def menu(lang, suffix, cur):
 </div>'''
 
 
+SEARCH = {}   # язык → адрес индекса поиска с ?v=<хеш содержимого>; заполняет search_index() до сборки страниц
+
+
+def search_index(lang):
+    """Индекс поиска на языке lang — маленький JSON: адрес вещи, названия на всех языках сайта (первое — на этом),
+    тип, материал и раздел (на всех языках), цвета — у каждого своё фото и адрес ?c=, цена как на сайте (p — по которой
+    продаём, o — зачёркнутая старая), бирка «продано» / «скоро в наличии». v4.js грузит его при первом открытии поиска."""
+    order = [lang] + [c for c in CODES if c != lang]
+
+    def uniq(*groups):   # без повторов и пустых: у большинства моделей название одно на всех языках
+        seen, out = set(), []
+        for s in (x for g in groups for x in g):
+            if s and s.lower() not in seen:
+                seen.add(s.lower())
+                out.append(s)
+        return out
+
+    items = []
+    for p in ordered(DATA['products']):
+        url_p = item_url(p, lang)
+        it = {'u': url_p, 'n': uniq(p['name'][c] for c in order), 't': uniq(p['type'][c] for c in order),
+              'm': uniq(MATS[m][c] for m in p['materials'] for c in order),
+              'g': uniq(CATS[k][c] for k in dict.fromkeys((p['cat'], top_cat(p['cat']))) for c in order),
+              'i': asset(f"assets/img/p/{p['images'][0]}-600.webp"), 'p': price_now(p)}
+        if p['sale']:
+            it['o'] = p['price']
+        if sold(p) or p['soon']:
+            it['s'] = t('sold' if sold(p) else 'soon', lang)
+        if p['variants']:   # свой оттенок (карамельный) и цвет палитры (коричневый) — найдётся по обоим
+            it['v'] = [{'n': uniq((v['name'][c] for c in order), (COLORS[v['key']][c] for c in order)),
+                        'i': asset(f"assets/img/p/{v['images'][0]}-600.webp"), 'u': url_p + (f"?c={v['id']}" if i else '')}
+                       for i, v in enumerate(p['variants'])]
+        elif p['colors']:
+            it['v'] = [{'n': uniq(COLORS[k][c] for c in order)} for k in p['colors']]
+        items.append(it)
+    text = json.dumps({'items': items}, ensure_ascii=False, separators=(',', ':'))
+    SEARCH[lang] = f"{asset(f'assets/search/{lang}.json')}?v={hashlib.sha1(text.encode()).hexdigest()[:8]}"
+    return text
+
+
+def search_panel(lang):
+    """Поиск по названию — белая панель, как меню: на телефоне на весь экран, с планшета — слева. Строка поиска сверху,
+    результаты сразу под ней — клавиатура телефона их не закрывает. Индекс (search_index) v4.js грузит при первом
+    открытии. Без JS панели и лупы в шапке нет."""
+    return f'''<div class="srch" id="search" data-panel data-search="{e(SEARCH.get(lang, ''))}" aria-label="{e(t('search', lang))}">
+<div class="srch__bar">
+<form class="srch__f" role="search" action="#" data-search-form>{LOUPE}<input class="srch__in" type="search" name="q" data-focus autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search" placeholder="{e(t('search_ph', lang))}" aria-label="{e(t('search_label', lang))}"></form>
+<button class="ibtn srch__x" type="button" data-close aria-label="{e(t('close', lang))}">{X_ICON}</button>
+</div>
+<div class="srch__body" data-search-body>
+<p class="srch__n" data-search-n aria-hidden="true"></p>
+<p class="sr-only" role="status" data-search-live></p>
+<p class="srch__all" data-search-none hidden><a class="ulink" href="{url(lang + '/catalog/')}">{e(t('all_catalog', lang))}{ARROW}</a></p>
+<ul class="srch__res" data-search-res aria-label="{e(t('search_res', lang))}"></ul>
+</div>
+</div>'''
+
+
 def sheet(sid, title, inner, lang, cls=''):
     """Нижний лист. Без JS — обычный блок на своём месте; v4.js переносит его в конец body и делает диалогом."""
     return f'''<section class="sheet{cls}" id="{sid}" data-panel data-sheet aria-labelledby="{sid}-t">
@@ -270,6 +332,8 @@ def js_texts(lang):
         'waCartItem': t('wa_cart_item', lang), 'waCartTotal': t('wa_cart_total', lang),
         'waCartAsk': t('wa_cart_ask', lang), 'waCartBonus': t('wa_cart_bonus', lang),
         'waColor': t('wa_color', lang), 'waProductC': t('wa_product_c', lang),
+        'priceAsk': t('price_request', lang), 'priceOld': t('price_old', lang), 'priceSale': t('price_sale', lang),
+        'searchN': t('search_n', lang), 'searchNone': t('search_none', lang), 'searchErr': t('search_err', lang),
     }, ensure_ascii=False).replace('</', '<\\/')
 
 
@@ -280,7 +344,7 @@ HEAD_JS = ("(function(d){d.classList.add('js');try{var m=/[?&]bar=(red|black)/.e
            "setTimeout(function(){if(!window.__v4)d.classList.remove('js')},6000)})(document.documentElement)")
 
 
-def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', page='', cur=None):
+def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', page='', cur=None, head=''):
     cfg = next(l for l in LANGS if l['code'] == lang)
     alternates = ''.join(
         f'<link rel="alternate" hreflang="{l["html"]}" href="{e(abs_url(l["code"] + "/" + suffix))}">' for l in LANGS)
@@ -308,6 +372,7 @@ def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', page
 <meta property="og:image" content="{e(og_image)}">
 <meta property="og:locale" content="{cfg['og']}">
 <meta name="twitter:card" content="summary_large_image">
+{head}
 <link rel="icon" href="{asset('assets/img/brand/favicon.png')}" type="image/png">
 <link rel="icon" href="{asset('assets/img/brand/favicon.svg')}" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{asset('assets/img/brand/apple-touch-icon.png')}">
@@ -319,7 +384,10 @@ def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', page
 <a class="skip" href="#main">{e(tx('skip', lang))}</a>
 <a class="promo" href="{url(lang + '/info/')}#bonus">{e(t('promo', lang))}</a>
 <header class="hdr">
+<div class="hdr__l">
 <button class="ibtn hdr__menu js-only" type="button" aria-controls="menu" aria-expanded="false" aria-haspopup="dialog" data-open="menu"><span class="burger" aria-hidden="true"></span><span class="sr-only">{e(t('menu', lang))}</span></button>
+<button class="ibtn hdr__search js-only" type="button" aria-controls="search" aria-expanded="false" aria-haspopup="dialog" data-open="search">{LOUPE}<span class="sr-only">{e(t('search', lang))}</span></button>
+</div>
 <a class="logo" href="{url(lang + '/')}"><img src="{asset('assets/img/brand/logo-black.svg')}" alt="{e(t('home', lang))}" width="52" height="20"></a>
 <div class="hdr__r">
 <a class="ibtn hdr__fav" href="{url(lang + '/fav/')}"{CUR if key == 'fav' else ''}>{HEART}<span class="hdr__n tnum" data-fav-n aria-hidden="true"></span><span class="sr-only">{e(t('fav_title', lang))}</span></a>
@@ -332,6 +400,7 @@ def layout(lang, *, title, desc, body, suffix, og_image, og_type='website', page
 </main>
 {footer(lang, suffix)}
 {menu(lang, suffix, cur)}
+{search_panel(lang)}
 <script type="application/json" id="v4-t">{js_texts(lang)}</script>
 <script src="{asset('assets/js/v4.js')}?v={VER}" defer onerror="{no_js}"></script>
 </body>
@@ -352,6 +421,15 @@ def tag(p, lang):
     if p['is_new']:
         return f'<p class="tag tag--on tag--new">{e(t("new_tag", lang))}</p>'
     return ''
+
+
+def price_html(p, lang):
+    """Цена в карточке, на товаре и в корзине. Со скидкой — как у примера заказчиц, без процента: старая зачёркнута,
+    рядом новая красным. Зачёркивание диктор не читает — ему подписи «старая цена», «цена со скидкой»."""
+    if not p['sale']:
+        return e(price_text(p, lang))
+    return (f'<span class="sr-only">{e(t("price_old", lang))}:</span><s class="price__was">{e(money(p["price"], lang))}</s> '
+            f'<span class="sr-only">{e(t("price_sale", lang))}:</span><span class="price__now">{e(money(p["sale"], lang))}</span>')
 
 
 def fav_btn(p, lang, cls='fav'):
@@ -430,7 +508,7 @@ def card(p, lang, kind, *, h='h2', load='lazy', hidden=False):
     cls = 'vc' + {'row': ' vc--row'}.get(kind, '') + (' vc--w' if wide else '') + (' vc--2' if kind == 'h2' else '')
     cls += (' vc--r' if kind.endswith(' r') else '') + (' vc--gal' if gal else ' vc--one') + (' vc--sold' if sold(p) else '')
     data = (f' data-slug="{p["slug"]}" data-id="{e(p["id"])}" data-name="{e(p["name"][lang])}"'
-            f' data-mat="{" ".join(p["materials"])}" data-col="{" ".join(p["colors"])}" data-price="{p["price"] or ""}"'
+            f' data-mat="{" ".join(p["materials"])}" data-col="{" ".join(p["colors"])}" data-price="{price_now(p) or ""}"'
             + (f' data-v="{vs[0]["id"]}" data-v0="{vs[0]["id"]}"' if multi else '')
             + (' data-new' if p['is_new'] else '') + (' data-pop' if p['popular'] else '')
             + (' data-sold' if sold(p) else '') + (' hidden' if hidden else ''))
@@ -449,7 +527,7 @@ def card(p, lang, kind, *, h='h2', load='lazy', hidden=False):
                 + (''.join(vswatch(v, ' sw--s') for v in vs) if vs else ''.join(swatch(c, ' sw--s') for c in p['colors'])) + '</p>')
     return f'''<li class="{cls}"{data}>
 <div class="vc__media"><a class="vc__ph" href="{url_p}" tabindex="-1" aria-hidden="true"><span class="vc__track">{pics(p['images'])}</span></a>{extra}</div>
-<a class="vc__a" href="{url_p}"><div class="vc__cap">{tag(p, lang)}<{h} class="vc__name">{e(p['name'][lang])}</{h}>{f'<p class="vc__meta">{e(meta)}</p>' if meta and kind != 'row' else ''}<p class="vc__price tnum">{e(price_text(p, lang))}</p>{said}</div></a>
+<a class="vc__a" href="{url_p}"><div class="vc__cap">{tag(p, lang)}<{h} class="vc__name">{e(p['name'][lang])}</{h}>{f'<p class="vc__meta">{e(meta)}</p>' if meta and kind != 'row' else ''}<p class="vc__price tnum">{price_html(p, lang)}</p>{said}</div></a>
 {dots}{tpls}{fav_btn(p, lang)}</li>'''
 
 
@@ -495,7 +573,7 @@ def shelf(sid, title, link, link_label, items, lang):
 def filter_sheet(items, lang):
     mats = [m for m in MATS if any(m in p['materials'] for p in items)]
     cols = [c for c in COLORS if any(c in p['colors'] for p in items)]
-    prices = [p['price'] for p in items if p['price']]
+    prices = [price_now(p) for p in items if p['price']]   # со скидкой — цена со скидкой
     lo = min([PRICE_RANGE[0], *prices]) // PRICE_STEP * PRICE_STEP
     hi = -(-max([PRICE_RANGE[1], *prices]) // PRICE_STEP) * PRICE_STEP
     off = '' if len(prices) > 1 else ' disabled'
@@ -560,6 +638,23 @@ def catalog(lang, cat=None):
 
 
 # ——— Товар ———
+
+def product_ld(p, lang, page_url):
+    """Разметка товара для поисковиков (schema.org Product) — только у вещи с ценой: в offers цена, по которой продаём
+    (со скидкой, если она есть). Без цены («цена по запросу») разметки нет: Product без offers Google считает ошибкой."""
+    if not p['price']:
+        return ''
+    state = 'SoldOut' if sold(p) else 'OutOfStock' if p['soon'] else 'InStock'
+    ld = {'@context': 'https://schema.org', '@type': 'Product', 'name': p['name'][lang], 'sku': p['id'], 'url': page_url,
+          'image': [abs_asset(f'assets/img/p/{x}-1200.webp') for x in p['images']],
+          'brand': {'@type': 'Brand', 'name': 'attré'}}
+    if p['desc'][lang]:
+        ld['description'] = p['desc'][lang]
+    ld['offers'] = {'@type': 'Offer', 'price': price_now(p), 'priceCurrency': 'KZT', 'url': page_url,
+                    'availability': f'https://schema.org/{state}'}
+    data = json.dumps(ld, ensure_ascii=False).replace('</', '<\\/')
+    return f'<script type="application/ld+json">{data}</script>'
+
 
 def product(p, lang):
     name = p['name'][lang]
@@ -653,7 +748,7 @@ def product(p, lang):
 {gallery}
 <div class="pp__side">
 <div class="pp__bar">
-<div class="pp__head"><h1 class="pp__name">{e(name)}</h1><p class="pp__price tnum">{e(price_text(p, lang))}</p></div>
+<div class="pp__head"><h1 class="pp__name">{e(name)}</h1><p class="pp__price tnum">{price_html(p, lang)}</p></div>
 <div class="pp__acts{' pp__acts--cart' if buy else ''}">{to_cart}<a class="btn btn--wa" href="{e(wa_link(msg))}" target="_blank" rel="noopener"{wa_data}>{WA_ICON}<span class="btn__l">{e(label)}</span></a>{fav_btn(p, lang, 'fav fav--box')}</div>
 </div>
 <div class="pp__info">
@@ -673,7 +768,7 @@ def product(p, lang):
     desc_meta = ' · '.join(x for x in (meta, price_text(p, lang)) if x)
     return layout(lang, title=f'{name} — attré', desc=desc_meta, body=body, suffix=f"p/{p['slug']}/",
                   og_image=abs_asset(f"assets/img/p/{p['slug']}-og.jpg"), og_type='product', page='p-prod',
-                  cur=(p['cat'], False))
+                  cur=(p['cat'], False), head=product_ld(p, lang, page_url))
 
 
 # ——— Главная ———
@@ -823,14 +918,16 @@ def cart_row(p, lang, v=None):
         state = (f'<p class="ci__off">{e(t("sold" if sold(p) else "soon", lang))} · {e(t("cart_off", lang))}</p>'
                  f'<div class="ci__row">{remove}</div>')
     else:
-        state = f'''<p class="ci__price tnum" data-cart-sum>{e(price_text(p, lang))}</p>
+        state = f'''<p class="ci__price tnum" data-cart-sum>{price_html(p, lang)}</p>
 <div class="ci__row"><div class="qty" role="group" aria-label="{e(t('cart_qty', lang))}: {e(name)}">
 <button class="qty__b" type="button" data-cart-step="-1" aria-label="{e(t('cart_less', lang))}">{MINUS}</button>
 <output class="qty__n tnum" data-cart-qty>1</output>
 <button class="qty__b" type="button" data-cart-step="1" aria-label="{e(t('cart_more', lang))}">{PLUS}</button>
 </div>{remove}</div>'''
-    data = (f' data-slug="{p["slug"]}" data-id="{e(p["id"])}" data-name="{e(name)}" data-price="{p["price"] or ""}"'
-            f' data-max="{cart_max(p)}"' + (f' data-v="{v["id"]}" data-color="{e(v["name"][lang])}"' if v else '')
+    # data-price — цена, по которой продаём (итог и WhatsApp), data-price-old — зачёркнутая обычная, если есть скидка
+    data = (f' data-slug="{p["slug"]}" data-id="{e(p["id"])}" data-name="{e(name)}" data-price="{price_now(p) or ""}"'
+            + (f' data-price-old="{p["price"]}"' if p['sale'] else '')
+            + f' data-max="{cart_max(p)}"' + (f' data-v="{v["id"]}" data-color="{e(v["name"][lang])}"' if v else '')
             + (' data-off' if off else ''))
     img = (v['images'] if v else p['images'])[0]
     return f'''<li class="ci{' ci--off' if off else ''}"{data} hidden>
