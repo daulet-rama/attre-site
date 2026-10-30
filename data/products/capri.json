@@ -14,55 +14,46 @@
     "en": "bucket bag"
   },
   "new": false,
-  "popular": true,
+  "popular": false,
   "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "CAPRI — летняя плетёная сумка с лёгким и непринуждённым характером. Дополнена съёмной металлической цепочкой для ношения через плечо и съёмным хлопковым мешочком внутри.",
     "kz": "",
     "en": ""
   },
   "strap": {
-    "ru": "",
+    "ru": "съёмная металлическая цепь",
     "kz": "",
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 21,
+    "h": 15,
+    "d": 23
   },
-  "price": null,
-  "stock": null,
+  "price": 24500,
+  "sale_price": 12250,
+  "stock": 4,
   "variants": [
     {
       "color": "beige",
       "material": "textile",
       "images": [
+        "media/products/capri-beige-5.jpg",
         "media/products/capri-beige-1.jpg",
-        "media/products/capri-beige-2.jpg",
         "media/products/capri-beige-3.jpg",
         "media/products/capri-beige-4.jpg",
-        "media/products/capri-beige-5.jpg"
-      ]
-    },
-    {
-      "color": "black",
-      "material": "textile",
-      "images": [
-        "media/products/capri-black-1.jpg",
-        "media/products/capri-black-2.jpg",
-        "media/products/capri-black-3.jpg",
-        "media/products/capri-black-4.jpg"
+        "media/products/capri-beige-2.jpg"
       ]
     },
     {
       "color": "milky",
       "material": "textile",
       "images": [
-        "media/products/capri-milky-1.jpg",
-        "media/products/capri-milky-2.jpg",
+        "media/products/capri-milky-4.jpg",
         "media/products/capri-milky-3.jpg",
-        "media/products/capri-milky-4.jpg"
+        "media/products/capri-milky-1.jpg",
+        "media/products/capri-milky-2.jpg"
       ]
     }
   ]
