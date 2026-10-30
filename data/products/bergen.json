@@ -17,40 +17,39 @@
   "popular": true,
   "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "BERGEN — компактная сумка из натуральной зернистой кожи с лаконичным силуэтом и магнитной застёжкой. Два внутренних отделения с хлопковой подкладкой позволяют удобно разместить всё необходимое: телефон, паспорт, ключи, очки и другие повседневные мелочи. Универсальная модель, которая легко дополнит повседневный гардероб.",
     "kz": "",
     "en": ""
   },
   "strap": {
-    "ru": "",
+    "ru": "длина ремня регулируется",
     "kz": "",
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 12,
+    "h": 19,
+    "d": 5
   },
-  "price": null,
-  "stock": null,
+  "price": 24900,
+  "stock": 2,
   "variants": [
     {
       "color": "milky",
       "material": "leather",
       "images": [
-        "media/products/bergen-milky-1.jpg",
         "media/products/bergen-milky-2.jpg",
         "media/products/bergen-milky-3.jpg",
-        "media/products/bergen-milky-4.jpg"
+        "media/products/bergen-milky-4.jpg",
+        "media/products/bergen-milky-4d31a2.jpg"
       ]
     },
     {
       "color": "black",
       "material": "leather",
       "images": [
-        "media/products/bergen-black-1.jpg",
-        "media/products/bergen-black-2.jpg",
         "media/products/bergen-black-3.jpg",
+        "media/products/bergen-black-2.jpg",
         "media/products/bergen-black-4.jpg"
       ]
     }
