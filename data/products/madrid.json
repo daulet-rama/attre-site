@@ -38,11 +38,12 @@
       "color": "black",
       "material": "leather",
       "images": [
+        "media/products/madrid-black-5.jpg",
+        "media/products/madrid-black-eb1dd9.jpg",
+        "media/products/madrid-black-56a3ae.jpg",
         "media/products/madrid-black-1.jpg",
         "media/products/madrid-black-2.jpg",
-        "media/products/madrid-black-3.jpg",
-        "media/products/madrid-black-4.jpg",
-        "media/products/madrid-black-5.jpg"
+        "media/products/madrid-black-3.jpg"
       ]
     }
   ]
