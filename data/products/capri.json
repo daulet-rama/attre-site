@@ -36,6 +36,16 @@
   "stock": 4,
   "variants": [
     {
+      "color": "milky",
+      "material": "textile",
+      "images": [
+        "media/products/capri-milky-4.jpg",
+        "media/products/capri-milky-3.jpg",
+        "media/products/capri-milky-1.jpg",
+        "media/products/capri-milky-2.jpg"
+      ]
+    },
+    {
       "color": "beige",
       "material": "textile",
       "images": [
@@ -44,16 +54,6 @@
         "media/products/capri-beige-3.jpg",
         "media/products/capri-beige-4.jpg",
         "media/products/capri-beige-2.jpg"
-      ]
-    },
-    {
-      "color": "milky",
-      "material": "textile",
-      "images": [
-        "media/products/capri-milky-4.jpg",
-        "media/products/capri-milky-3.jpg",
-        "media/products/capri-milky-1.jpg",
-        "media/products/capri-milky-2.jpg"
       ]
     }
   ]
