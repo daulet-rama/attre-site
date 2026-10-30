@@ -13,36 +13,37 @@
     "kz": "кросс-боди",
     "en": "crossbody bag"
   },
-  "new": true,
-  "popular": false,
+  "new": false,
+  "popular": true,
   "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "HAMBURG — вместительная сумка прямоугольной формы, выполненная из сочетания зернистой и гладкой натуральной кожи. Дополнена съёмным регулируемым плечевым ремнём, который позволяет менять способ ношения. Практичная модель для повседневных образов.",
     "kz": "",
     "en": ""
   },
   "strap": {
-    "ru": "",
+    "ru": "съемный ремень, регулируется",
     "kz": "",
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 26,
+    "h": 16,
+    "d": 11
   },
-  "price": null,
-  "stock": null,
+  "price": 48000,
+  "stock": 5,
   "variants": [
     {
       "color": "black",
       "material": "leather",
       "images": [
+        "media/products/hamburg-black-2b314d.jpg",
+        "media/products/hamburg-black-4.jpg",
         "media/products/hamburg-black-1.jpg",
         "media/products/hamburg-black-2.jpg",
         "media/products/hamburg-black-3.jpg",
-        "media/products/hamburg-black-4.jpg",
-        "media/products/hamburg-black-5.jpg"
+        "media/products/hamburg-black-9464d0.jpg"
       ]
     },
     {
