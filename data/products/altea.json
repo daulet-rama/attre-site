@@ -13,11 +13,11 @@
     "kz": "шелек сөмке",
     "en": "bucket bag"
   },
-  "new": true,
-  "popular": false,
+  "new": false,
+  "popular": true,
   "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "ALTEA — базовая модель из натуральной зернистой кожи с лаконичным дизайном и универсальным силуэтом. Вместительная форма позволяет разместить всё необходимое на каждый день, а съёмный регулируемый плечевой ремень обеспечивает комфорт в носке.",
     "kz": "",
     "en": ""
   },
@@ -27,41 +27,41 @@
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 18,
+    "h": 18,
+    "d": 18
   },
-  "price": null,
+  "price": 32500,
   "stock": null,
   "variants": [
-    {
-      "color": "milky",
-      "material": "leather",
-      "images": [
-        "media/products/altea-milky-1.jpg",
-        "media/products/altea-milky-2.jpg",
-        "media/products/altea-milky-3.jpg",
-        "media/products/altea-milky-4.jpg",
-        "media/products/altea-milky-5.jpg"
-      ]
-    },
     {
       "color": "black",
       "material": "leather",
       "images": [
-        "media/products/altea-black-1.jpg",
-        "media/products/altea-black-2.jpg",
         "media/products/altea-black-3.jpg",
-        "media/products/altea-black-4.jpg"
+        "media/products/altea-black-1.jpg",
+        "media/products/altea-black-4.jpg",
+        "media/products/altea-black-2.jpg"
+      ]
+    },
+    {
+      "color": "milky",
+      "material": "leather",
+      "images": [
+        "media/products/altea-milky-4.jpg",
+        "media/products/altea-milky-1.jpg",
+        "media/products/altea-milky-5.jpg",
+        "media/products/altea-milky-2.jpg",
+        "media/products/altea-milky-3.jpg"
       ]
     },
     {
       "color": "red",
       "material": "leather",
       "images": [
+        "media/products/altea-red-3.jpg",
         "media/products/altea-red-1.jpg",
         "media/products/altea-red-2.jpg",
-        "media/products/altea-red-3.jpg",
         "media/products/altea-red-4.jpg"
       ]
     }
