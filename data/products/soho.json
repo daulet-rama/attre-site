@@ -35,6 +35,16 @@
   "stock": null,
   "variants": [
     {
+      "color": "green",
+      "material": "suede",
+      "images": [
+        "media/products/soho-green-1.jpg",
+        "media/products/soho-green-4.jpg",
+        "media/products/soho-green-2.jpg",
+        "media/products/soho-green-3.jpg"
+      ]
+    },
+    {
       "color": "brown",
       "material": "suede",
       "images": [
@@ -43,16 +53,6 @@
         "media/products/soho-brown-3.jpg",
         "media/products/soho-brown-4.jpg",
         "media/products/soho-brown-5.jpg"
-      ]
-    },
-    {
-      "color": "green",
-      "material": "suede",
-      "images": [
-        "media/products/soho-green-1.jpg",
-        "media/products/soho-green-2.jpg",
-        "media/products/soho-green-3.jpg",
-        "media/products/soho-green-4.jpg"
       ]
     }
   ]
