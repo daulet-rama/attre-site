@@ -17,7 +17,7 @@
   "popular": false,
   "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "VERDE — стильная сумка в форме ведёрка из натуральной гладкой кожи, сочетающая лаконичный дизайн и практичность. Два съёмных ремешка позволяют менять способ ношения, а хлопковый мешочек внутри помогает удобно организовать вещи. Универсальная модель, которая легко дополнит повседневный гардероб и останется актуальной вне сезона.",
     "kz": "",
     "en": ""
   },
@@ -27,11 +27,11 @@
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 15,
+    "h": 22,
+    "d": 14
   },
-  "price": null,
+  "price": 34800,
   "stock": null,
   "variants": [
     {
@@ -39,26 +39,10 @@
       "material": "leather",
       "images": [
         "media/products/verde-black-1.jpg",
-        "media/products/verde-black-2.jpg",
-        "media/products/verde-black-3.jpg",
         "media/products/verde-black-4.jpg",
-        "media/products/verde-black-5.jpg"
-      ]
-    },
-    {
-      "color": "brown",
-      "name": {
-        "ru": "карамельный",
-        "kz": "карамель түсті",
-        "en": "caramel"
-      },
-      "hex": "#9b6732",
-      "material": "suede",
-      "images": [
-        "media/products/verde-brown-1.jpg",
-        "media/products/verde-brown-2.jpg",
-        "media/products/verde-brown-3.jpg",
-        "media/products/verde-brown-4.jpg"
+        "media/products/verde-black-5.jpg",
+        "media/products/verde-black-2.jpg",
+        "media/products/verde-black-3.jpg"
       ]
     },
     {
@@ -71,38 +55,18 @@
       "hex": "#46302b",
       "material": "leather",
       "images": [
-        "media/products/verde-brown-2-1.jpg",
-        "media/products/verde-brown-2-2.jpg",
         "media/products/verde-brown-2-3.jpg",
-        "media/products/verde-brown-2-4.jpg"
-      ]
-    },
-    {
-      "color": "green",
-      "material": "suede",
-      "images": [
-        "media/products/verde-green-1.jpg",
-        "media/products/verde-green-2.jpg",
-        "media/products/verde-green-3.jpg"
+        "media/products/verde-brown-2-2.jpg"
       ]
     },
     {
       "color": "red",
       "material": "leather",
       "images": [
-        "media/products/verde-red-1.jpg",
         "media/products/verde-red-2.jpg",
-        "media/products/verde-red-3.jpg",
-        "media/products/verde-red-4.jpg"
-      ]
-    },
-    {
-      "color": "burgundy",
-      "material": "suede",
-      "images": [
-        "media/products/verde-burgundy-1.jpg",
-        "media/products/verde-burgundy-2.jpg",
-        "media/products/verde-burgundy-3.jpg"
+        "media/products/verde-red-b80f26.jpg",
+        "media/products/verde-red-79c81c.jpg",
+        "media/products/verde-red-707506.jpg"
       ]
     }
   ]
