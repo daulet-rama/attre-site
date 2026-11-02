@@ -13,11 +13,11 @@
     "kz": "тубус сөмке",
     "en": "barrel bag"
   },
-  "new": true,
+  "new": false,
   "popular": false,
   "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "NAIROBI TUBE — акцентная сумка из натурального конского ворса с выразительным принтом. Компактная форма и два ремешка в комплекте позволяют менять настроение образа и способ ношения. Модель, которая станет яркой деталью даже самого лаконичного гардероба.",
     "kz": "",
     "en": ""
   },
@@ -27,32 +27,37 @@
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 21,
+    "h": 10,
+    "d": 10
   },
-  "price": null,
+  "price": 42900,
   "stock": null,
   "variants": [
-    {
-      "color": "leopard",
-      "material": "pony",
-      "images": [
-        "media/products/nairobi-tube-leopard-1.jpg",
-        "media/products/nairobi-tube-leopard-2.jpg",
-        "media/products/nairobi-tube-leopard-3.jpg",
-        "media/products/nairobi-tube-leopard-4.jpg",
-        "media/products/nairobi-tube-leopard-5.jpg"
-      ]
-    },
     {
       "color": "cow",
       "material": "pony",
       "images": [
+        "media/products/nairobi-tube-cow-2af877.jpg",
         "media/products/nairobi-tube-cow-1.jpg",
         "media/products/nairobi-tube-cow-2.jpg",
         "media/products/nairobi-tube-cow-3.jpg",
-        "media/products/nairobi-tube-cow-4.jpg"
+        "media/products/nairobi-tube-cow-4f4b02.jpg",
+        "media/products/nairobi-tube-cow-6e83fd.jpg",
+        "media/products/nairobi-tube-cow-256191.jpg"
+      ]
+    },
+    {
+      "color": "leopard",
+      "material": "pony",
+      "images": [
+        "media/products/nairobi-tube-leopard-ac7c2a.jpg",
+        "media/products/nairobi-tube-leopard-0ea9d4.jpg",
+        "media/products/nairobi-tube-leopard-292bac.jpg",
+        "media/products/nairobi-tube-leopard-1.jpg",
+        "media/products/nairobi-tube-leopard-2.jpg",
+        "media/products/nairobi-tube-leopard-3.jpg",
+        "media/products/nairobi-tube-leopard-4.jpg"
       ]
     }
   ]
