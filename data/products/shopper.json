@@ -13,25 +13,25 @@
     "kz": "шопер",
     "en": "shopper"
   },
-  "new": true,
+  "new": false,
   "popular": false,
   "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "Вместительный текстильный шопер с контрастным цветочным принтом, удобными длинными ручками и фирменной вышивкой ATTRE.",
     "kz": "",
     "en": ""
   },
   "strap": {
-    "ru": "",
+    "ru": "57 см",
     "kz": "",
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 40,
+    "h": 35,
+    "d": 15
   },
-  "price": null,
+  "price": 19900,
   "stock": null,
   "variants": [
     {
