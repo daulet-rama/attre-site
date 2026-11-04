@@ -1,0 +1,53 @@
+{
+  "id": "050",
+  "published": true,
+  "order": 1000,
+  "cat": "bags",
+  "name": {
+    "ru": "Harper",
+    "kz": "",
+    "en": ""
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "new": true,
+  "popular": false,
+  "soon": false,
+  "price": 69900,
+  "stock": null,
+  "desc": {
+    "ru": "Harper -  сумка из мягкой замши с объёмным силуэтом, удлинёнными ручками и металлическими люверсами. В комплекте косметичка.",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "72 см",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": 60,
+    "h": 22,
+    "d": 17
+  },
+  "variants": [
+    {
+      "color": "green",
+      "name": {
+        "ru": "фисташковый",
+        "kz": "",
+        "en": ""
+      },
+      "material": "suede",
+      "images": [
+        "media/products/harper-green-056198.jpg",
+        "media/products/harper-green-421c6e.jpg",
+        "media/products/harper-green-b0dd11.jpg",
+        "media/products/harper-green-3516ee.jpg"
+      ]
+    }
+  ]
+}
