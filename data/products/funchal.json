@@ -17,21 +17,21 @@
   "popular": false,
   "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "Funchal - вместительная сумка из натуральной зернистой кожи с геометричным силуэтом, широким основанием и удлинёнными ручками. Сдержанный дизайн и продуманные пропорции.",
     "kz": "",
     "en": ""
   },
   "strap": {
-    "ru": "",
+    "ru": "60 см",
     "kz": "",
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 29,
+    "h": 16,
+    "d": 14
   },
-  "price": null,
+  "price": 39000,
   "stock": null,
   "variants": [
     {
@@ -42,16 +42,6 @@
         "media/products/funchal-brown-2.jpg",
         "media/products/funchal-brown-3.jpg",
         "media/products/funchal-brown-4.jpg"
-      ]
-    },
-    {
-      "color": "yellow",
-      "material": "leather",
-      "images": [
-        "media/products/funchal-yellow-1.jpg",
-        "media/products/funchal-yellow-2.jpg",
-        "media/products/funchal-yellow-3.jpg",
-        "media/products/funchal-yellow-4.jpg"
       ]
     },
     {
