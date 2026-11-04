@@ -15,23 +15,23 @@
   },
   "new": false,
   "popular": false,
-  "soon": true,
+  "soon": false,
   "desc": {
     "ru": "",
     "kz": "",
     "en": ""
   },
   "strap": {
-    "ru": "",
+    "ru": "съемный ремень 107 см, регулируется",
     "kz": "",
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 26,
+    "h": 16,
+    "d": 12
   },
-  "price": null,
+  "price": 54800,
   "stock": null,
   "variants": [
     {
