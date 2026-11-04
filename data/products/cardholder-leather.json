@@ -31,37 +31,14 @@
     "h": null,
     "d": null
   },
-  "price": null,
+  "price": 9500,
   "stock": null,
   "variants": [
-    {
-      "color": "green",
-      "material": "leather",
-      "images": [
-        "media/products/cardholder-leather-green-1.jpg",
-        "media/products/cardholder-leather-green-2.jpg"
-      ]
-    },
     {
       "color": "black",
       "material": "leather",
       "images": [
         "media/products/cardholder-leather-black-1.jpg"
-      ]
-    },
-    {
-      "color": "grey",
-      "material": "leather",
-      "images": [
-        "media/products/cardholder-leather-grey-1.jpg",
-        "media/products/cardholder-leather-grey-2.jpg"
-      ]
-    },
-    {
-      "color": "brown",
-      "material": "leather",
-      "images": [
-        "media/products/cardholder-leather-brown-1.jpg"
       ]
     }
   ]
