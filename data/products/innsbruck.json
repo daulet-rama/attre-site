@@ -17,33 +17,23 @@
   "popular": false,
   "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "Innsbruck - сумка из натуральной кожи с мягким силуэтом, выразительными складками и изогнутой ручкой. Закрывается на магнитный клапан.",
     "kz": "",
     "en": ""
   },
   "strap": {
-    "ru": "",
+    "ru": "45 см",
     "kz": "",
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 42,
+    "h": 29,
+    "d": 18
   },
   "price": null,
   "stock": null,
   "variants": [
-    {
-      "color": "burgundy",
-      "material": "leather",
-      "images": [
-        "media/products/innsbruck-burgundy-1.jpg",
-        "media/products/innsbruck-burgundy-2.jpg",
-        "media/products/innsbruck-burgundy-3.jpg",
-        "media/products/innsbruck-burgundy-4.jpg"
-      ]
-    },
     {
       "color": "black",
       "material": "leather",
