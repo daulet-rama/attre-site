@@ -38,9 +38,9 @@
       "color": "grey",
       "material": "leather",
       "images": [
-        "media/products/aarhus-milky-1.jpg",
         "media/products/aarhus-milky-2.jpg",
         "media/products/aarhus-milky-3.jpg",
+        "media/products/aarhus-milky-1.jpg",
         "media/products/aarhus-milky-4.jpg"
       ]
     }
