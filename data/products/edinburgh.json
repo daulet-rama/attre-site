@@ -13,25 +13,25 @@
     "kz": "багет сөмке",
     "en": "baguette bag"
   },
-  "new": false,
+  "new": true,
   "popular": false,
-  "soon": true,
+  "soon": false,
   "desc": {
-    "ru": "",
+    "ru": "Edinburgh - вместительная сумка из мягкой замши с широким силуэтом и удлинённым плечевым ремнём. Модель в сдержанном оттенке с акцентом на фактуру материала.",
     "kz": "",
     "en": ""
   },
   "strap": {
-    "ru": "",
+    "ru": "72 см",
     "kz": "",
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 35,
+    "h": 15,
+    "d": 14
   },
-  "price": null,
+  "price": 55600,
   "stock": null,
   "variants": [
     {
