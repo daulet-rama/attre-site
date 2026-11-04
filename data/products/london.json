@@ -14,26 +14,35 @@
     "en": "tote"
   },
   "new": false,
-  "popular": false,
-  "soon": false,
+  "popular": true,
+  "soon": true,
   "desc": {
-    "ru": "",
+    "ru": "London - сумка из зернистой кожи с объёмным силуэтом и декоративной металлической фурнитурой. Вместительное основное отделение, удобные ручки и застёжка на поворотный замок.",
     "kz": "",
     "en": ""
   },
   "strap": {
-    "ru": "",
+    "ru": "68 см",
     "kz": "",
     "en": ""
   },
   "size": {
-    "w": null,
-    "h": null,
-    "d": null
+    "w": 40,
+    "h": 30,
+    "d": 17
   },
-  "price": null,
+  "price": 98000,
   "stock": null,
   "variants": [
+    {
+      "color": "yellow",
+      "material": "leather",
+      "images": [
+        "media/products/london-yellow-1.jpg",
+        "media/products/london-yellow-2.jpg",
+        "media/products/london-yellow-3.jpg"
+      ]
+    },
     {
       "color": "brown",
       "material": "leather",
@@ -52,15 +61,6 @@
         "media/products/london-black-2.jpg",
         "media/products/london-black-3.jpg",
         "media/products/london-black-4.jpg"
-      ]
-    },
-    {
-      "color": "yellow",
-      "material": "leather",
-      "images": [
-        "media/products/london-yellow-1.jpg",
-        "media/products/london-yellow-2.jpg",
-        "media/products/london-yellow-3.jpg"
       ]
     }
   ]
