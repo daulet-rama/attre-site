@@ -44,16 +44,6 @@
       ]
     },
     {
-      "color": "brown",
-      "material": "leather",
-      "images": [
-        "media/products/london-brown-1.jpg",
-        "media/products/london-brown-2.jpg",
-        "media/products/london-brown-3.jpg",
-        "media/products/london-brown-4.jpg"
-      ]
-    },
-    {
       "color": "black",
       "material": "leather",
       "images": [
