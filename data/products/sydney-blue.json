@@ -1,0 +1,49 @@
+{
+  "id": "052",
+  "published": true,
+  "order": 1000,
+  "cat": "bags",
+  "name": {
+    "ru": "Sydney blue",
+    "kz": "",
+    "en": ""
+  },
+  "type": {
+    "ru": "тубус",
+    "kz": "тубус сөмке",
+    "en": "barrel bag"
+  },
+  "new": false,
+  "popular": false,
+  "soon": false,
+  "price": 48000,
+  "sale_price": 33600,
+  "stock": null,
+  "desc": {
+    "ru": "Sydney - компактная сумка из натуральной кожи с контрастным сочетанием оттенков и лаконичным силуэтом. Удобный регулируемый ремешок позволяет носить её через плечо.",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "съемный ремень 125 см, регулируется",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": 28,
+    "h": 9,
+    "d": 6
+  },
+  "variants": [
+    {
+      "color": "blue",
+      "material": "leather",
+      "images": [
+        "media/products/sydney-blue-blue-0b2287.jpg",
+        "media/products/sydney-blue-blue-0284b1.jpg",
+        "media/products/sydney-blue-blue-d16fd4.jpg",
+        "media/products/sydney-blue-blue-fc6535.jpg"
+      ]
+    }
+  ]
+}
