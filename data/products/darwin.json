@@ -38,8 +38,8 @@
       "color": "brown",
       "material": "leather",
       "images": [
-        "media/products/darwin-brown-1.jpg",
         "media/products/darwin-brown-2.jpg",
+        "media/products/darwin-brown-1.jpg",
         "media/products/darwin-brown-3.jpg",
         "media/products/darwin-brown-4.jpg",
         "media/products/darwin-brown-5.jpg"
