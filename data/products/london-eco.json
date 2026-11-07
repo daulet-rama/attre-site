@@ -1,0 +1,48 @@
+{
+  "id": "051",
+  "published": true,
+  "order": 1000,
+  "cat": "bags",
+  "name": {
+    "ru": "London eco",
+    "kz": "",
+    "en": ""
+  },
+  "type": {
+    "ru": "тоут",
+    "kz": "тоут",
+    "en": "tote"
+  },
+  "new": false,
+  "popular": true,
+  "soon": true,
+  "price": 69500,
+  "stock": null,
+  "desc": {
+    "ru": "London - сумка из эко-кожи с объёмным силуэтом и декоративной металлической фурнитурой. Вместительное основное отделение, удобные ручки и застёжка на поворотный замок.",
+    "kz": "",
+    "en": ""
+  },
+  "strap": {
+    "ru": "68 см",
+    "kz": "",
+    "en": ""
+  },
+  "size": {
+    "w": 40,
+    "h": 30,
+    "d": 17
+  },
+  "variants": [
+    {
+      "color": "brown",
+      "material": "eco-leather",
+      "images": [
+        "media/products/london-eco-brown-b74035.jpg",
+        "media/products/london-eco-brown-f20f83.jpg",
+        "media/products/london-eco-brown-7082e4.jpg",
+        "media/products/london-eco-brown-856700.jpg"
+      ]
+    }
+  ]
+}
